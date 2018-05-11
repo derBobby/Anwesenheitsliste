@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head lang="de" th:replace="template :: header"></head>
+	<body>
+		<nav th:replace="template :: nav"></nav>
+	    <main class="container pt-5">
+	        <div class="card mb-3">
+	            <div class="card-header" th:text="${title}"></div>
+	            <div class="card-block p-0">
+       				<p class="m-3" th:if="${participants} and ${#lists.isEmpty(participants)}">Keine Teilnehmer vorhanden.</p>
+	                <div class="table-responsive" th:unless="${participants} and ${#lists.isEmpty(participants)}">
+	                    <table class="table table-bordered table-hover table-sm m-0 text-nowrap">
+	                        <thead class="">
+	                            <tr>
+	                                <th th:each="heading : ${headings}" th:text="${heading}"></th>
+	                            </tr>
+	                        </thead>
+							<tbody>
+								<tr th:each="participant : ${participants}" th:object="${participant}" th:classappend="*{idParticipant} == ${markedParticipantId} ? table-success">
+									<td th:text="*{idParticipant}"></td>
+									<td th:text="*{firstName}"></td>
+									<td th:text="*{lastName}"></td>
+									<td th:text="*{phone}"></td>
+									<td th:text="*{email}"></td>
+									<td>
+		                            	<div class="custom-control custom-checkbox">
+	                                    	<input type="checkbox" class="custom-control-input" th:checked="*{isActive}">
+	                                    	<label class="custom-control-label" for=""></label>
+	                                	</div>
+									</td>
+									<td>
+										<a th:href="@{'/participantedit/' + *{idParticipant}}" class="btn btn-secondary">
+											<span class="fa fa-pencil"></span>
+										</a>
+									</td>
+								</tr>
+							</tbody>
+	                    </table>
+	                </div>
+	            </div>
+	            <div class="card-footer">
+	                <div>
+	                    <a th:href="@{'/' + ${newButtonUrl}}" class="btn btn-primary">
+	                        <span class="fa fa-plus-square-o"></span> [[${newButtonText}]]
+	                    </a>
+	                </div>
+	            </div>
+	        </div>
+	    </main>
+	    <footer th:replace="template :: footer"></footer>
+	</body>
+</html>

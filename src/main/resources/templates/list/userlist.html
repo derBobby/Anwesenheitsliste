@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head lang="de" th:replace="template :: header"></head>
+	<body>
+		<nav th:replace="template :: nav"></nav>
+	    <main class="container pt-5">
+	        <div class="card mb-3">
+	            <div class="card-header" th:text="${title}"></div>
+	            <div class="card-block p-0">
+	            	<p class="m-3" th:if="${users} and ${#lists.isEmpty(users)}">Keine Benutzer vorhanden.</p>
+	                <div class="table-responsive" th:unless="${users} and ${#lists.isEmpty(users)}">
+	                    <table class="table table-bordered table-hover table-sm m-0 text-nowrap">
+	                        <thead class="">
+	                            <tr>
+	                                <th th:each="heading : ${headings}" th:text="${heading}"></th>
+	                            </tr>
+	                        </thead>
+							<tbody>
+								<tr th:each="user : ${users}" th:object="${user}" th:classappend="*{idUser} == ${markedUserId} ? table-success">
+									<td th:text="*{idUser}"></td>
+									<td th:text="*{firstName}"></td>
+									<td th:text="*{lastName}"></td>
+									<td th:text="*{loginName}"></td>
+									<td th:text="*{email}"></td>
+									<td>
+										<div class="custom-control custom-checkbox">
+											<input type="checkbox" class="custom-control-input" th:checked="*{isActive}"></input>
+											<label class="custom-control-label" for=""></label>
+										</div>
+									</td>
+									<td>
+										<div class="custom-control custom-checkbox">
+											<input type="checkbox" class="custom-control-input" th:checked="*{isAdmin}"></input>
+											<label class="custom-control-label" for=""></label>
+										</div>
+									</td>
+									<td>
+										<a th:href="@{'/useredit/' + *{idUser}}" class="btn btn-secondary">
+											<span class="fa fa-pencil"></span>
+										</a>
+										<a th:href="@{'/userpasswordreset/' + *{idUser}}" class="btn btn-secondary">
+											<span class="fa fa-undo"></span>
+										</a>
+									</td>
+								</tr>
+							</tbody>
+	                    </table>
+	                </div>
+	            </div>
+	            <div class="card-footer">
+	                <div>
+	                    <a th:href="@{${newButtonUrl}}" class="btn btn-primary">
+	                        <span class="fa fa-plus-square-o"></span> [[${newButtonText}]]
+	                    </a>
+	                </div>
+	            </div>
+	        </div>
+	    </main>
+	    <footer th:replace="template :: footer"></footer>
+	</body>
+</html>

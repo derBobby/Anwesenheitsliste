@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head lang="de" th:replace="template :: header"></head>
+	<body>
+		<nav th:replace="template :: nav"></nav>
+	    <main class="container pt-5">
+	        <div class="card mb-3">
+    			<form action="#" th:action="@{${newButtonUrl}}" th:object="${team}" method="post">
+    				<input type="hidden" th:field="*{idTeam}" />
+	            	<div class="card-header" th:text="${title}"></div>
+		            <div class="card-block p-3">
+						<div class="form-group">
+							<label th:for="teamName">Gruppenname</label>
+							<input th:field="*{teamName}" class="form-control" />
+							<span th:errors="*{teamName}" class="text-warning"></span>
+                 		</div>
+	            	</div>
+		            <div class="card-footer">
+		                <div class="btn-group">
+		                	<input type="submit" th:value="${newButtonText}" id="submit" class="btn btn-primary"  />
+		              		<a th:href="@{/teamlist}" class="btn btn-secondary">
+		                        <i class="fa fa-times"></i> 
+		                    </a>
+		                </div>
+	                </div>
+                </form>
+            </div>
+	    </main>
+	    <footer th:replace="template :: footer"></footer>
+	</body>
+</html>
+
+
+
+
+            
+
+            

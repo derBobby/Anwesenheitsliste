@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head lang="de" th:replace="template :: header"></head>
+	<body>
+		<nav th:replace="template :: nav"></nav>
+	    <main class="container pt-5">
+	        <div class="card mb-3">
+    			<form action="#" th:action="@{${newButtonUrl}}" th:object="${participant}" method="post">
+    				<input type="hidden" th:field="*{idParticipant}" />
+	            	<div class="card-header" th:text="${title}"></div>
+		            <div class="card-block p-3">
+		            	<div class="form-group">
+							<label th:for="firstName">Vorname</label>
+							<input th:field="*{firstName}" class="form-control" />
+							<span th:errors="*{firstName}" class="text-warning"></span>
+                 		</div>
+						<div class="form-group">
+							<label th:for="lastName">Nachname</label>
+							<input th:field="*{lastName}" class="form-control" />
+							<span th:errors="*{lastName}" class="text-warning"></span>
+                 		</div>
+						<div class="form-group">
+							<label th:for="email">E-Mail</label>
+							<input th:field="*{email}" class="form-control" />
+							<span th:errors="*{email}" class="text-warning"></span>
+                 		</div>
+						<div class="form-group">
+							<label th:for="phone">Telefon</label>
+							<input th:field="*{phone}" class="form-control" />
+							<span th:errors="*{phone}" class="text-warning"></span>
+                 		</div>
+						<div class="form-group">
+							<div class="custom-control custom-checkbox">
+						  		<input type="checkbox" th:field="*{isActive}" th:value="*{isActive}" class="custom-control-input" />
+						  		<label th:for="${#ids.prev('isActive')}" class="custom-control-label">Aktiv</label>
+							</div>
+						</div>
+					</div>
+		            <div class="card-footer">
+		                <div class="btn-group">
+		                	<input type="submit" th:value="${newButtonText}" id="submit" class="btn btn-primary"  />
+		              		<a th:href="@{/participantlist}" class="btn btn-secondary">
+		                        <i class="fa fa-times"></i> 
+		                    </a>
+		                </div>
+	                </div>
+                </form>
+            </div>
+	    </main>
+	    <footer th:replace="template :: footer"></footer>
+	</body>
+</html>
+
+
+
+
+            
+
+            

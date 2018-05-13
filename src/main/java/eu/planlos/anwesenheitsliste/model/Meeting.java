@@ -1,5 +1,6 @@
 package eu.planlos.anwesenheitsliste.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -7,8 +8,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Entity
@@ -19,7 +21,8 @@ public class Meeting {
 	private Long idMeeting;
 
 	@Column(nullable = false)
-	@NotNull
+	@NotNull(message = "darf nicht leer sein")
+	@NotBlank
 	private String meetingDate;
 
 	@Column(nullable = false)
@@ -27,11 +30,12 @@ public class Meeting {
 	private String description;
 	
 	@ManyToOne
+	@NotNull(message = "darf nicht leer sein") 
 	private Team team;
 	
-	@OneToMany
-	private List<Participant> participants;
-
+	@ManyToMany
+	private List<Participant> participants = new ArrayList<Participant>(); 
+	
 	/**
 	 * Standard constructor
 	 */
@@ -43,9 +47,14 @@ public class Meeting {
 	 * @param meetingDate
 	 * @param description
 	 */
-	public Meeting(String meetingDate, String description) {
+	public Meeting(String meetingDate, String description, Team team) {
 		this.meetingDate = meetingDate;
 		this.description = description;
+		this.team = team;
+	}
+
+	public Meeting(Team team) {
+		this.team = team;
 	}
 
 	/**

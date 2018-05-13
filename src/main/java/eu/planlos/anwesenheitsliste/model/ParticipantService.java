@@ -26,4 +26,8 @@ public class ParticipantService {
 	public Participant findById(Long idParticipant) {
 		return participantRepo.findById(idParticipant).get();
 	}
+	
+	public List<Participant> findAllByTeamIdTeam(Long idTeam) {
+		return participantRepo.findAllByTeamIdTeam(idTeam);
+	}
 }

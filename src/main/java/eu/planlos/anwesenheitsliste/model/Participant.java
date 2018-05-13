@@ -1,12 +1,16 @@
 package eu.planlos.anwesenheitsliste.model;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Entity
@@ -20,10 +24,11 @@ public class Participant {
 	private Long idParticipant;
 
 	@Column(nullable = false)
-	@NotNull
+	@NotBlank
 	private String firstName;
 	
 	@Column
+	@NotBlank
 	private String lastName;
 	
 	@Column
@@ -35,6 +40,10 @@ public class Participant {
 	@Column(nullable = false)
 	@NotNull
 	private Boolean isActive;
+	
+	@Column(nullable = false)
+	@ManyToMany
+	private List<Team> team;
 	
 	/**
 	 * Standard constructor
@@ -127,6 +136,20 @@ public class Participant {
 	 */
 	public void setIsActive(Boolean isActive) {
 		this.isActive = isActive;
+	}
+
+	/**
+	 * @return the team
+	 */
+	public List<Team> getTeam() {
+		return team;
+	}
+
+	/**
+	 * @param team the team to set
+	 */
+	public void setTeam(List<Team> team) {
+		this.team = team;
 	}
 
 	/**

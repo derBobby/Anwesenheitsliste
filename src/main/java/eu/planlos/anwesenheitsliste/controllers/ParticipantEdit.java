@@ -3,7 +3,7 @@ package eu.planlos.anwesenheitsliste.controllers;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -15,7 +15,7 @@ import eu.planlos.anwesenheitsliste.model.Participant;
 import eu.planlos.anwesenheitsliste.model.ParticipantService;
 import eu.planlos.anwesenheitsliste.viewhelper.GeneralAttributeCreator;
 
-@Service
+@Controller
 public class ParticipantEdit {
 
 	@Autowired
@@ -41,7 +41,7 @@ public class ParticipantEdit {
 		
 		participantService.save(participant);
 		
-		return "redirect:/participantlist" + participant.getIdParticipant();
+		return "redirect:/participantlist/" + participant.getIdParticipant();
 	}
 
 	private void prepareContent(Model model) {

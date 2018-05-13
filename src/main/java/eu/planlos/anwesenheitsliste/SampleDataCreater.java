@@ -38,17 +38,17 @@ public class SampleDataCreater implements ApplicationRunner {
 		teamRepo.deleteAll();
 		userRepo.deleteAll();
 		
-		meetingsRepo.save(new Meeting("01.01.2018", "Just a Test"));
-		meetingsRepo.save(new Meeting("02.01.2018", "Just a Test"));
-		meetingsRepo.save(new Meeting("03.01.2018", "Just a Test"));
-		
 		participantRepo.save(new Participant("Eva", "Tester", "013371337", "a@sam.de", true));
 		participantRepo.save(new Participant("Ava", "Tester", "013371338", "b@sam.de", true));
 		participantRepo.save(new Participant("Iva", "Tester", "013371339", "c@sam.de", true));
 		
-		teamRepo.save(new Team("Cool Team"));
-		teamRepo.save(new Team("Chilly Team"));
-		teamRepo.save(new Team("Morons"));
+		Team team1 = teamRepo.save(new Team("Cool Team"));
+		Team team2 = teamRepo.save(new Team("Chilly Team"));
+		Team team3 = teamRepo.save(new Team("Morons"));
+		
+		meetingsRepo.save(new Meeting("01.01.2018", "Just a Test", team1));
+		meetingsRepo.save(new Meeting("02.01.2018", "Just a Test", team2));
+		meetingsRepo.save(new Meeting("03.01.2018", "Just a Test", team3));
 
 		userRepo.save(new User("Adam", "Sample", "asam", "a@sam.de", "securepw", false, false));
 		userRepo.save(new User("Bdam", "Sample", "bsam", "b@sam.de", "securepw", false, true));

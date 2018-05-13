@@ -14,9 +14,11 @@
 		<link rel="stylesheet" media="screen" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" />				
 		<link rel="stylesheet" media="screen" th:href="@{/webjars/font-awesome/css/font-awesome.min.css}" />
 		<link rel="stylesheet" media="screen" th:href="@{/custom.css}" />
+		
 		<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
-		<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
-			
+		<script th:src="@{/webjars/jquery/jquery.js}"></script>
+		<script th:src="@{/webjars/bootstrap-datepicker/js/bootstrap-datepicker.js}"></script>
+		
 	    <!-- Custom styles for this template -->
 	    <style>
 			body {
@@ -41,10 +43,8 @@
 	        </button>
 	        <div class="collapse navbar-collapse" id="navbarResponsive">
 	          <ul class="navbar-nav ml-auto">
-	            <li class="nav-item active">
-	              <a class="nav-link" href="www.google.de">Home
-	                <span class="sr-only">(current)</span>
-	              </a>
+	            <li class="nav-item active"> <!--  TODO active -->
+	              <a class="nav-link" th:href="@{/}">Start</a>
 	            </li>
 	<!--            <li class="nav-item">
 	              <a class="nav-link" href="#">About</a>
@@ -65,7 +65,7 @@
 	              <a class="nav-link" th:href="@{/participantlist}">Teilnehmer</a>
 	            </li>
 	            <li class="nav-item">
-	              <a class="nav-link" th:href="@{/meetinglist}">Termine</a>
+	              <a class="nav-link" th:href="@{/meetinglist/full}">Termine</a>
 	            </li>
 	            <li class="nav-item">
 	              <a class="nav-link" th:href="@{/permissionlist}">Berechtigungen</a>

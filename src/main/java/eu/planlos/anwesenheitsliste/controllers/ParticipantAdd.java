@@ -38,7 +38,7 @@ public class ParticipantAdd {
 		}
 		
 		Participant newParticipant = participantService.save(participant);
-		return "redirect:/participantlist" + newParticipant.getIdParticipant();
+		return "redirect:/participantlist/" + newParticipant.getIdParticipant();
 	}
 
 	private void prepareContent(Model model) {

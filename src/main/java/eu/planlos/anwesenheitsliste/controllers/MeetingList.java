@@ -19,38 +19,67 @@ public class MeetingList {
 	@Autowired
 	private MeetingService meetingService;
 	
-	@RequestMapping(path = "/meetinglist/{idMeeting}")
-	public String markedMeetingList(Model model, @PathVariable Long idMeeting) {
-		
-		prepareContent(model, idMeeting);
+	@RequestMapping(path = "/meetinglist/forteam/{idTeam}")
+	public String meetingListForTeam(Model model, @PathVariable Long idTeam) {
+			
+		prepareContentForTeam(model, idTeam);
 		return "list/meetinglist";
 	}
 	
-	@RequestMapping(path = "/meetinglist")
-	public String meetingList(Model model) {
+	@RequestMapping(path = "/meetinglist/forteam/{idTeam}/marked/{idMeeting}")
+	public String meetingListForTeamMarked(Model model, @PathVariable Long idTeam, @PathVariable Long idMeeting) {
 		
+		model.addAttribute("markedMeetingId", idMeeting);
+		prepareContentForTeam(model, idTeam);
+		return "list/meetinglist";
+	}
+	
+	@RequestMapping(path = "/meetinglist/full")
+	public String meetingListFull(Model model) {
+		
+		model.addAttribute("newButtonUrl", "meetingadd/chooseteam");
 		prepareContent(model, null);
 		return "list/meetinglist";
 	}
+	
+	// CONTENT PREPARATION
+	
+	private void prepareContentForTeam(Model model, Long idTeam) {
+		
+		model.addAttribute("newButtonUrl", "meetingadd/forteam/" + idTeam);
+		prepareContent(model, idTeam);
+	}
 
-	private void prepareContent(Model model, Long markedMeetingId) {
+	private void prepareContent(Model model, Long idTeam) {
+
+		model.addAttribute("headings", getHeadingsForTeam(idTeam));
+		model.addAttribute("meetings", getMeetingsForTeam(idTeam));
+		model.addAttribute("newButtonText", "Neuer Termin");
+		
+		GeneralAttributeCreator generalAttributeCreator = new GeneralAttributeCreator();
+		generalAttributeCreator.create(model, "Terminverwaltung", "Liste der Termine");
+	}
+	
+	private List<Meeting> getMeetingsForTeam(Long idTeam) {
+
+		if(idTeam == null) {
+			return meetingService.findAll();
+		}
+		return meetingService.findAllByTeam(idTeam);
+	}
+	
+	private List<String> getHeadingsForTeam(Long idTeam) {
 		
 		List<String> headings = new ArrayList<String>();	
 		headings.add("#");
 		headings.add("Datum");
-		//TODO Add group when no filter an group
+
+		if(idTeam == null) {
+			headings.add("Gruppe");
+		}
+
 		headings.add("Beschreibung");
 		headings.add("Funktionen");
-				
-		List<Meeting> meetings = meetingService.findAll();
-
-		model.addAttribute("headings", headings);
-		model.addAttribute("meetings", meetings);
-		model.addAttribute("markedTeamId", markedMeetingId);
-		model.addAttribute("newButtonText", "Neuer Termin");
-		model.addAttribute("newButtonUrl", "meetingadd");
-
-		GeneralAttributeCreator generalAttributeCreator = new GeneralAttributeCreator();
-		generalAttributeCreator.create(model, "Terminverwaltung", "Liste der Termine");
+		return headings;
 	}
 }

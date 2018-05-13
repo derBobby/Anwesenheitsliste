@@ -23,6 +23,10 @@ public class MeetingService {
 		return (List<Meeting>) meetingRepo.findAll();
 	}
 	
+	public List<Meeting> findAllByTeam(Long idTeam) {
+		return (List<Meeting>) meetingRepo.findAllByTeamIdTeam(idTeam);
+	}
+	
 	public Meeting findById(Long idMeeting) {
 		return meetingRepo.findById(idMeeting).get();
 	}

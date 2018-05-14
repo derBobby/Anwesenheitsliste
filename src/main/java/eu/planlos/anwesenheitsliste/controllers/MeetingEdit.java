@@ -37,9 +37,7 @@ public class MeetingEdit {
 	@RequestMapping(path = "/meetingedit/{idMeeting}", method = RequestMethod.GET)
 	public String showForm(Model model, @PathVariable Long idMeeting) {
 		
-
 		prepareContent(model, idMeeting);
-		
 		return "detail/meetingdetail";
 	}
 	
@@ -47,7 +45,7 @@ public class MeetingEdit {
 	public String edit(Model model, @Valid @ModelAttribute Meeting meeting, Errors errors) {
 		
 		if(errors.hasErrors()) {
-//			prepareContent(model);
+			prepareContent(model, meeting.getIdMeeting());
 			return "detail/meetingdetail";
 		}
 		

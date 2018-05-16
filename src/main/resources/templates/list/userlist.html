@@ -35,7 +35,7 @@
 										</div>
 									</td>
 									<td>
-										<a th:href="@{'/useredit/' + *{idUser}}" class="btn btn-secondary">
+										<a th:href="@{'/userdetail/' + *{idUser}}" class="btn btn-secondary">
 											<span class="fa fa-pencil"></span>
 										</a>
 										<a th:href="@{'/userpasswordreset/' + *{idUser}}" class="btn btn-secondary">
@@ -49,8 +49,8 @@
 	            </div>
 	            <div class="card-footer">
 	                <div>
-	                    <a th:href="@{${newButtonUrl}}" class="btn btn-primary">
-	                        <span class="fa fa-plus-square-o"></span> [[${newButtonText}]]
+	                    <a th:href="@{/useradd}" class="btn btn-primary">
+	                        <span class="fa fa-plus-square-o"></span> Neuer Benutzer
 	                    </a>
 	                </div>
 	            </div>

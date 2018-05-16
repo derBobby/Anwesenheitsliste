@@ -1,5 +1,8 @@
 package eu.planlos.anwesenheitsliste;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -38,21 +41,44 @@ public class SampleDataCreater implements ApplicationRunner {
 		teamRepo.deleteAll();
 		userRepo.deleteAll();
 		
-		participantRepo.save(new Participant("Eva", "Tester", "013371337", "a@sam.de", true));
-		participantRepo.save(new Participant("Ava", "Tester", "013371338", "b@sam.de", true));
-		participantRepo.save(new Participant("Iva", "Tester", "013371339", "c@sam.de", true));
+		Participant p1 = participantRepo.save(new Participant("Eva", "Tester", "013371337", "a@sam.de", true));
+		Participant p2 = participantRepo.save(new Participant("Ava", "Tester", "013371338", "b@sam.de", true));
+		Participant p3 = participantRepo.save(new Participant("Iva", "Tester", "013371339", "c@sam.de", true));
+		
+		List<Participant> pList1 = new ArrayList<>();
+		pList1.add(p1);
+		pList1.add(p2);
+		pList1.add(p3);
+		
+		List<Participant> pList2 = new ArrayList<>();
+		pList2.add(p1);
+		pList2.add(p2);
+		
+		List<Participant> pList3 = new ArrayList<>();
+		pList3.add(p1);
 		
 		Team team1 = teamRepo.save(new Team("Cool Team"));
 		Team team2 = teamRepo.save(new Team("Chilly Team"));
 		Team team3 = teamRepo.save(new Team("Morons"));
 		
-		meetingsRepo.save(new Meeting("01.01.2018", "Just a Test", team1));
-		meetingsRepo.save(new Meeting("02.01.2018", "Just a Test", team2));
-		meetingsRepo.save(new Meeting("03.01.2018", "Just a Test", team3));
+		Meeting m1 = meetingsRepo.save(new Meeting("01.01.2018", "Just a Test", team1));
+		Meeting m2 = meetingsRepo.save(new Meeting("02.01.2018", "Just a Test", team2));
+		Meeting m3 = meetingsRepo.save(new Meeting("03.01.2018", "Just a Test", team3));
 
-		userRepo.save(new User("Adam", "Sample", "asam", "a@sam.de", "securepw", false, false));
-		userRepo.save(new User("Bdam", "Sample", "bsam", "b@sam.de", "securepw", false, true));
-		userRepo.save(new User("Cdam", "Sample", "csam", "c@sam.de", "securepw", true, false));
-		userRepo.save(new User("Ddam", "Sample", "dsam", "d@sam.de", "securepw", true, true));
+		User u1 = userRepo.save(new User("Adam", "Sample", "asam", "a@sam.de", "securepw", false, false));
+		User u2 = userRepo.save(new User("Bdam", "Sample", "bsam", "b@sam.de", "securepw", false, true));
+		User u3 = userRepo.save(new User("Cdam", "Sample", "csam", "c@sam.de", "securepw", true, false));
+		User u4 = userRepo.save(new User("Ddam", "Sample", "dsam", "d@sam.de", "securepw", true, true));
+		
+		//
+		
+		team1.setParticipants(pList1);
+		team2.setParticipants(pList2);
+		team3.setParticipants(pList3);
+
+		teamRepo.save(team1);
+		teamRepo.save(team2);
+		teamRepo.save(team3);
+		
     }
 }

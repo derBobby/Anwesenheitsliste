@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotBlank;
 
@@ -20,10 +21,13 @@ public class Team {
 	@Column(nullable = false, unique = true)
 	@NotBlank
 	private String teamName;
-	
-	@OneToMany
+
+	@ManyToMany(mappedBy = "teams")
 	private List<Participant> participants;
 	
+	@OneToMany(mappedBy = "team")
+	private List<Meeting> meetings;
+			
 	/**
 	 * Standard constructor
 	 */

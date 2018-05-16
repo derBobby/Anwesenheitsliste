@@ -28,6 +28,6 @@ public class ParticipantService {
 	}
 	
 	public List<Participant> findAllByTeamIdTeam(Long idTeam) {
-		return participantRepo.findAllByTeamIdTeam(idTeam);
+		return participantRepo.findAllByTeamsIdTeam(idTeam);
 	}
 }

@@ -20,7 +20,7 @@
 									<td th:text="*{idTeam}"></td>
 									<td th:text="*{teamName}"></td>
 									<td>
-	                                    <a th:href="@{'/teamedit/' + *{idTeam}}" class="btn btn-secondary">
+	                                    <a th:href="@{'/teamdetail/' + *{idTeam}}" class="btn btn-secondary">
     	                                    <span class="fa fa-pencil"></span>
         	                            </a>
 	                                    <a th:href="@{'/teamparticipation/' + *{idTeam}}" class="btn btn-secondary">
@@ -37,8 +37,8 @@
 	            </div>
 	            <div class="card-footer">
 	                <div>
-	                    <a th:href="@{'/' + ${newButtonUrl}}" class="btn btn-primary">
-	                        <span class="fa fa-plus-square-o"></span> [[${newButtonText}]]
+	                    <a th:href="@{/teamdetail}" class="btn btn-primary">
+	                        <span class="fa fa-plus-square-o"></span> Gruppe hinzufügen
 	                    </a>
 	                </div>
 	            </div>

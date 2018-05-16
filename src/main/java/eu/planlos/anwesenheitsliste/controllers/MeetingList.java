@@ -37,7 +37,6 @@ public class MeetingList {
 	@RequestMapping(path = "/meetinglist/full")
 	public String meetingListFull(Model model) {
 		
-		model.addAttribute("newButtonUrl", "meetingadd/chooseteam");
 		prepareContent(model, null);
 		return "list/meetinglist";
 	}
@@ -46,7 +45,7 @@ public class MeetingList {
 	
 	private void prepareContentForTeam(Model model, Long idTeam) {
 		
-		model.addAttribute("newButtonUrl", "meetingadd/forteam/" + idTeam);
+		model.addAttribute("idTeam", idTeam);
 		prepareContent(model, idTeam);
 	}
 
@@ -54,18 +53,8 @@ public class MeetingList {
 
 		model.addAttribute("headings", getHeadingsForTeam(idTeam));
 		model.addAttribute("meetings", getMeetingsForTeam(idTeam));
-		model.addAttribute("newButtonText", "Neuer Termin");
 		
-		GeneralAttributeCreator generalAttributeCreator = new GeneralAttributeCreator();
-		generalAttributeCreator.create(model, "Terminverwaltung", "Liste der Termine");
-	}
-	
-	private List<Meeting> getMeetingsForTeam(Long idTeam) {
-
-		if(idTeam == null) {
-			return meetingService.findAll();
-		}
-		return meetingService.findAllByTeam(idTeam);
+		GeneralAttributeCreator.create(model, "Terminverwaltung", "Liste der Termine");
 	}
 	
 	private List<String> getHeadingsForTeam(Long idTeam) {
@@ -81,5 +70,13 @@ public class MeetingList {
 		headings.add("Beschreibung");
 		headings.add("Funktionen");
 		return headings;
+	}
+	
+	private List<Meeting> getMeetingsForTeam(Long idTeam) {
+
+		if(idTeam == null) {
+			return meetingService.findAll();
+		}
+		return meetingService.findAllByTeam(idTeam);
 	}
 }

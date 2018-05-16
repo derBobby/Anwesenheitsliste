@@ -35,7 +35,7 @@ public class ParticipantList {
 
 	private void prepareContent(Model model, Long markedParticipantId) {
 		
-		List<String> headings = new ArrayList<String>();	
+		List<String> headings = new ArrayList<>();	
 		headings.add("#");
 		headings.add("Vorname");
 		headings.add("Nachname");
@@ -49,10 +49,7 @@ public class ParticipantList {
 		model.addAttribute("headings", headings);
 		model.addAttribute("participants", participants);
 		model.addAttribute("markedParticipantId", markedParticipantId);
-		model.addAttribute("newButtonText", "Neuer Teilnehmer");
-		model.addAttribute("newButtonUrl", "participantadd");
 				
-		GeneralAttributeCreator generalAttributeCreator = new GeneralAttributeCreator();
-		generalAttributeCreator.create(model, "Teilnehmerverwaltung", "Liste der Teilnehmer");
+		GeneralAttributeCreator.create(model, "Teilnehmerverwaltung", "Liste der Teilnehmer");
 	}
 }

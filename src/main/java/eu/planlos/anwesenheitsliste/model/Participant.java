@@ -41,9 +41,9 @@ public class Participant {
 	@NotNull
 	private Boolean isActive;
 	
-	@Column(nullable = false)
+	@Column
 	@ManyToMany
-	private List<Team> team;
+	private List<Team> teams;
 	
 	/**
 	 * Standard constructor
@@ -142,14 +142,14 @@ public class Participant {
 	 * @return the team
 	 */
 	public List<Team> getTeam() {
-		return team;
+		return teams;
 	}
 
 	/**
 	 * @param team the team to set
 	 */
-	public void setTeam(List<Team> team) {
-		this.team = team;
+	public void setTeam(List<Team> teams) {
+		this.teams = teams;
 	}
 
 	/**

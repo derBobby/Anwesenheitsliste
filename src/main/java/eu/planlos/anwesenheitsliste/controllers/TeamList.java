@@ -47,7 +47,6 @@ public class TeamList {
 		model.addAttribute("newButtonText", "Neue Gruppe");
 		model.addAttribute("newButtonUrl", "teamadd");
 		
-		GeneralAttributeCreator generalAttributeCreator = new GeneralAttributeCreator();
-		generalAttributeCreator.create(model, "Gruppenverwaltung", "Liste der Gruppen");
+		GeneralAttributeCreator.create(model, "Gruppenverwaltung", "Liste der Gruppen");
 	}
 }

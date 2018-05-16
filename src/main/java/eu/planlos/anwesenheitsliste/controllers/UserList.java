@@ -8,7 +8,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import eu.planlos.anwesenheitsliste.model.User;
 import eu.planlos.anwesenheitsliste.model.UserService;
 import eu.planlos.anwesenheitsliste.viewhelper.GeneralAttributeCreator;
 
@@ -34,7 +33,7 @@ public class UserList {
 	
 	private void prepareContent(Model model, Long markedUserId) {
 		
-		List<String> headings = new ArrayList<String>();	
+		List<String> headings = new ArrayList<>();	
 		headings.add("#");
 		headings.add("Vorname");
 		headings.add("Nachname");
@@ -43,17 +42,11 @@ public class UserList {
 		headings.add("Aktiv");
 		headings.add("Admin");
 		headings.add("Funktionen");
-
-		List<User> users = userService.findAll();
-		
-		model.addAttribute("listtemplate", "userlist");
+	
 		model.addAttribute("headings", headings);
-		model.addAttribute("users", users);
+		model.addAttribute("users", userService.findAll());
 		model.addAttribute("markedUserId", markedUserId);
-		model.addAttribute("newButtonText", "Neuer Benutzer");
-		model.addAttribute("newButtonUrl", "/useradd");
 		
-		GeneralAttributeCreator generalAttributeCreator = new GeneralAttributeCreator();
-		generalAttributeCreator.create(model, "Benutzerverwaltung", "Liste der Benutzer");
+		GeneralAttributeCreator.create(model, "Benutzerverwaltung", "Liste der Benutzer");
 	}
 }

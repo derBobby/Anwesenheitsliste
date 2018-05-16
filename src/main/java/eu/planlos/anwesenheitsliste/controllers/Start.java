@@ -12,8 +12,7 @@ public class Start {
     @RequestMapping(path = "/")
     public String home(Model model) {
 		
-    	GeneralAttributeCreator attributeCreator = new GeneralAttributeCreator();
-    	attributeCreator.create(model, "Anwesenheitsliste", "Startseite");
+    	GeneralAttributeCreator.create(model, "Anwesenheitsliste", "Startseite");
     	return "start";
     }
 }

@@ -5,7 +5,11 @@
 		<nav th:replace="template :: nav"></nav>
 	    <main class="container pt-5">
 	        <div class="card mb-3">
+<<<<<<< HEAD
     			<form action="#" th:action="${#lists.isEmpty(participants)} ? @{/meetingdetail/chooseteam/addparticipants} : @{/meetingdetail/submit}" th:object="${meeting}" method="post">
+=======
+    			<form action="#" th:action="@{/meetingdetail}" th:object="${meeting}" method="post">
+>>>>>>> branch 'master' of https://github.com/derBobby/Anwesenheitsliste.git
     				<input type="hidden" th:field="*{idMeeting}" />
 	            	<div class="card-header" th:text="${title}"></div>
 		            <div class="card-block p-3">
@@ -55,7 +59,11 @@
 	            	</div>
 		            <div class="card-footer">
 		                <div class="btn-group">
+<<<<<<< HEAD
 		                	<input type="submit" th:value="${#lists.isEmpty(participants)} ? ${'Weiter'} : ${*{team} ? 'Termin ändern' : 'Termin hinzufügen'}" id="submit" class="btn btn-primary"  />
+=======
+		                	<input type="submit" th:value="*{team} ? 'Termin ändern' : 'Termin hinzufügen'" id="submit" class="btn btn-primary"  />
+>>>>>>> branch 'master' of https://github.com/derBobby/Anwesenheitsliste.git
 		              		<a th:href="*{team} ? @{'/meetinglist/forteam/' + *{team.idTeam}} : @{'/meetinglist/full'}" class="btn btn-secondary">
 		                        <i class="fa fa-times"></i> 
 		                    </a>

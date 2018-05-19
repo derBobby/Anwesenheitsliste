@@ -1,5 +1,6 @@
 package eu.planlos.anwesenheitsliste.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -43,7 +44,7 @@ public class Participant {
 	
 	@Column
 	@ManyToMany
-	private List<Team> teams;
+	private List<Team> teams = new ArrayList<>();
 	
 	/**
 	 * Standard constructor
@@ -150,6 +151,13 @@ public class Participant {
 	 */
 	public void setTeam(List<Team> teams) {
 		this.teams = teams;
+	}
+
+	/**
+	 * @param team a team to add
+	 */
+	public void addTeam(Team team) {
+		this.teams.add(team);
 	}
 
 	/**

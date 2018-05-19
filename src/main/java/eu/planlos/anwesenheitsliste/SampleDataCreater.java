@@ -44,19 +44,7 @@ public class SampleDataCreater implements ApplicationRunner {
 		Participant p1 = participantRepo.save(new Participant("Eva", "Tester", "013371337", "a@sam.de", true));
 		Participant p2 = participantRepo.save(new Participant("Ava", "Tester", "013371338", "b@sam.de", true));
 		Participant p3 = participantRepo.save(new Participant("Iva", "Tester", "013371339", "c@sam.de", true));
-		
-		List<Participant> pList1 = new ArrayList<>();
-		pList1.add(p1);
-		pList1.add(p2);
-		pList1.add(p3);
-		
-		List<Participant> pList2 = new ArrayList<>();
-		pList2.add(p1);
-		pList2.add(p2);
-		
-		List<Participant> pList3 = new ArrayList<>();
-		pList3.add(p1);
-		
+			
 		Team team1 = teamRepo.save(new Team("Cool Team"));
 		Team team2 = teamRepo.save(new Team("Chilly Team"));
 		Team team3 = teamRepo.save(new Team("Morons"));
@@ -71,14 +59,18 @@ public class SampleDataCreater implements ApplicationRunner {
 		User u4 = userRepo.save(new User("Ddam", "Sample", "dsam", "d@sam.de", "securepw", true, true));
 		
 		//
-		
-		team1.setParticipants(pList1);
-		team2.setParticipants(pList2);
-		team3.setParticipants(pList3);
 
-		teamRepo.save(team1);
-		teamRepo.save(team2);
-		teamRepo.save(team3);
+		p1.addTeam(team1);
+		p1.addTeam(team2);
+		p1.addTeam(team3);
+
+		p2.addTeam(team2);
+		p2.addTeam(team3);
 		
+		p3.addTeam(team3);
+
+		participantRepo.save(p1);
+		participantRepo.save(p2);
+		participantRepo.save(p3);
     }
 }

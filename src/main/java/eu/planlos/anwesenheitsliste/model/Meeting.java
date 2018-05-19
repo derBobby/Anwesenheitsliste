@@ -34,7 +34,7 @@ public class Meeting {
 	private Team team;
 	
 	@ManyToMany
-	private List<Participant> participants = new ArrayList<Participant>(); 
+	private List<Participant> participants = new ArrayList<>(); 
 	
 	/**
 	 * Standard constructor

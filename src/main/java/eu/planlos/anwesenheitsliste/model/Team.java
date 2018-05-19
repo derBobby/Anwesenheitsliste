@@ -1,5 +1,6 @@
 package eu.planlos.anwesenheitsliste.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -23,10 +24,10 @@ public class Team {
 	private String teamName;
 
 	@ManyToMany(mappedBy = "teams")
-	private List<Participant> participants;
+	private List<Participant> participants = new ArrayList<>();
 	
 	@OneToMany(mappedBy = "team")
-	private List<Meeting> meetings;
+	private List<Meeting> meetings = new ArrayList<>();
 			
 	/**
 	 * Standard constructor

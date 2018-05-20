@@ -44,7 +44,10 @@ public class Participant {
 	
 	@Column
 	@ManyToMany
-	private List<Team> teams = new ArrayList<>();
+	private List<Team> teams;
+	
+	@ManyToMany(mappedBy = "participants")
+	private List<Meeting> meetings;
 	
 	/**
 	 * Standard constructor
@@ -142,14 +145,14 @@ public class Participant {
 	/**
 	 * @return the team
 	 */
-	public List<Team> getTeam() {
+	public List<Team> getTeams() {
 		return teams;
 	}
 
 	/**
 	 * @param team the team to set
 	 */
-	public void setTeam(List<Team> teams) {
+	public void setTeams(List<Team> teams) {
 		this.teams = teams;
 	}
 
@@ -157,6 +160,9 @@ public class Participant {
 	 * @param team a team to add
 	 */
 	public void addTeam(Team team) {
+		if(this.teams == null) {
+			this.teams = new ArrayList<>();
+		}
 		this.teams.add(team);
 	}
 

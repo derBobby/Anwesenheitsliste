@@ -35,17 +35,23 @@
 							<span th:errors="*{password}" class="text-warning"></span>
                  		</div>
 						<div class="form-group">
+           					<label>Eigenschaften</label>
 							<div class="custom-control custom-checkbox">
 						  		<input type="checkbox" th:field="*{isActive}" th:value="${isActive}" class="custom-control-input" />
 						  		<label th:for="${#ids.prev('isActive')}" class="custom-control-label">Aktiv</label>
 							</div>
-						</div>
-						<div class="form-group">
 							<div class="custom-control custom-checkbox">
 						  		<input type="checkbox" th:field="*{isAdmin}" th:value="*{isAdmin}" class="custom-control-input" />
 						  		<label th:for="${#ids.prev('isAdmin')}" class="custom-control-label">Admin</label>
 							</div>
 						</div>
+						<div class="form-group">
+            				<label>Mitarbeiter in folgenden Gruppen</label>
+							<div th:each="team : ${teams}" class="custom-control custom-checkbox">
+						  		<input type="checkbox" th:id="${#ids.seq('team')}" th:field="*{teams}" th:value="${team.idTeam}" class="custom-control-input" />
+						  		<label th:for="${#ids.prev('team')}" class="custom-control-label" th:inline="text">[[${team.teamName}]]</label>
+							</div>
+						</div>	
 	            	</div>
 		            <div class="card-footer">
 		                <div class="btn-group">

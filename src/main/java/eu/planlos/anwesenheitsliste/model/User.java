@@ -1,10 +1,13 @@
 package eu.planlos.anwesenheitsliste.model;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Email;
@@ -14,9 +17,23 @@ import javax.validation.constraints.Size;
 
 @Entity
 @Table(
-		uniqueConstraints={@UniqueConstraint(columnNames = {"firstName", "lastName"})}
+	uniqueConstraints={@UniqueConstraint(columnNames = {"firstName", "lastName"})}
 )
 public class User {
+
+	/**
+	 * @return the teams
+	 */
+	public List<Team> getTeams() {
+		return teams;
+	}
+
+	/**
+	 * @param teams the teams to set
+	 */
+	public void setTeams(List<Team> teams) {
+		this.teams = teams;
+	}
 
 	@Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -54,6 +71,9 @@ public class User {
 	@Column(nullable = false)
 	@NotNull
 	private Boolean isAdmin;
+	
+	@OneToMany
+	private List<Team> teams;
 	
 	/**
 	 * Standard constructor

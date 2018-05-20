@@ -1,13 +1,15 @@
 package eu.planlos.anwesenheitsliste.model;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Email;
@@ -20,20 +22,6 @@ import javax.validation.constraints.Size;
 	uniqueConstraints={@UniqueConstraint(columnNames = {"firstName", "lastName"})}
 )
 public class User {
-
-	/**
-	 * @return the teams
-	 */
-	public List<Team> getTeams() {
-		return teams;
-	}
-
-	/**
-	 * @param teams the teams to set
-	 */
-	public void setTeams(List<Team> teams) {
-		this.teams = teams;
-	}
 
 	@Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -71,8 +59,8 @@ public class User {
 	@Column(nullable = false)
 	@NotNull
 	private Boolean isAdmin;
-	
-	@OneToMany
+
+	@ManyToMany
 	private List<Team> teams;
 	
 	/**
@@ -227,4 +215,58 @@ public class User {
 	public void setIsAdmin(Boolean isAdmin) {
 		this.isAdmin = isAdmin;
 	}
+
+	/**
+	 * @return the teams
+	 */
+	public List<Team> getTeams() {
+		return teams;
+	}
+
+	/**
+	 * @param teams the teams to set
+	 */
+	public void setTeams(List<Team> teams) {
+		this.teams = teams;
+	}
+	
+	/**
+	 * @param team the team to add
+	 */
+	public void addTeam(Team team) {
+		if(this.teams == null) {
+			this.teams = new ArrayList<Team>();
+		}
+		
+		this.teams.add(team);
+	}
+
+	/**
+	 * @param team the team to remove
+	 */
+	public void removeTeam(Team team) {
+		if(this.teams != null && this.teams.contains(team)) {
+			this.teams.remove(team);
+		}
+	}
+	
+    //TODO correct?
+    @Override
+    public boolean equals(Object o) {
+
+        if (o == this) return true;
+        if (!(o instanceof User)) {
+            return false;
+        }
+        User user = (User) o;
+        return this.idUser == user.getIdUser();
+    }
+
+    //TODO correct?
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.idUser);
+    }
+	
+	
 }

@@ -1,6 +1,7 @@
 package eu.planlos.anwesenheitsliste.model;
 
 import java.util.List;
+import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -28,7 +29,7 @@ public class Team {
 	@OneToMany(mappedBy = "team")
 	private List<Meeting> meetings;
 	
-	@OneToMany(mappedBy = "teams")
+	@ManyToMany(mappedBy = "teams")
 	private List<User> users;
 			
 	/**
@@ -116,4 +117,22 @@ public class Team {
 	public void setUsers(List<User> users) {
 		this.users = users;
 	}
+	
+    //TODO correct?
+    @Override
+    public boolean equals(Object o) {
+
+        if (o == this) return true;
+        if (!(o instanceof Team)) {
+            return false;
+        }
+        Team team = (Team) o;
+        return this.idTeam == team.getIdTeam();
+    }
+
+    //TODO correct?
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.idTeam);
+    }
 }

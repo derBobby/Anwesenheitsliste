@@ -9,7 +9,7 @@
 	            <div class="card-block p-0">
        				<p class="m-3" th:if="${teams} and ${#lists.isEmpty(teams)}">Keine Gruppen vorhanden.</p>
 	                <div class="table-responsive" th:unless="${teams} and ${#lists.isEmpty(teams)}">
-	                    <table class="table table-bordered table-hover table-sm m-0 text-nowrap">
+	                    <table class="table table-bordered table-hover table-striped table-sm m-0 text-nowrap">
 	                        <thead class="">
                           		<tr>
 	                                <th th:each="heading : ${headings}" th:text="${heading}"></th>
@@ -22,9 +22,6 @@
 									<td>
 	                                    <a th:href="@{'/teamdetail/' + *{idTeam}}" class="btn btn-secondary">
     	                                    <span class="fa fa-pencil"></span>
-        	                            </a>
-	                                    <a th:href="@{'/teamparticipation/' + *{idTeam}}" class="btn btn-secondary">
-    	                                    <span class="fa fa-users"></span>
         	                            </a>
 	                                    <a th:href="@{'/meetinglist/forteam/' + *{idTeam}}" class="btn btn-secondary">
     	                                    <span class="fa fa-calendar"></span>

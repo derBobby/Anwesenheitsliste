@@ -9,7 +9,7 @@
 	            <div class="card-block p-0">
        				<p class="m-3" th:if="${participants} and ${#lists.isEmpty(participants)}">Keine Teilnehmer vorhanden.</p>
 	                <div class="table-responsive" th:unless="${participants} and ${#lists.isEmpty(participants)}">
-	                    <table class="table table-bordered table-hover table-sm m-0 text-nowrap">
+	                    <table class="table table-bordered table-hover table-striped table-sm m-0 text-nowrap">
 	                        <thead class="">
 	                            <tr>
 	                                <th th:each="heading : ${headings}" th:text="${heading}"></th>

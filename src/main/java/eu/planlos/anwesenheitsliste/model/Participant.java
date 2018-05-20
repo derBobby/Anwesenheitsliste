@@ -2,6 +2,7 @@ package eu.planlos.anwesenheitsliste.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -179,4 +180,33 @@ public class Participant {
 	public void setIdParticipant(Long idParticipant) {
 		this.idParticipant = idParticipant;
 	}
+
+	/**
+	 * @param team the team to remove
+	 */
+	public void removeTeam(Team team) {
+		if(this.teams != null) {
+			if(this.teams.contains(team)) {
+				this.teams.remove(team);
+			}
+		}
+	}
+	
+    //TODO correct?
+    @Override
+    public boolean equals(Object o) {
+
+        if (o == this) return true;
+        if (!(o instanceof Participant)) {
+            return false;
+        }
+        Participant participant = (Participant) o;
+        return this.idParticipant == participant.getIdParticipant();
+    }
+
+    //TODO correct?
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.idParticipant);
+    }
 }

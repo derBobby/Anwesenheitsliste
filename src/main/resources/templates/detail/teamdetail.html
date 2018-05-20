@@ -14,7 +14,21 @@
 							<input th:field="*{teamName}" class="form-control" />
 							<span th:errors="*{teamName}" class="text-warning"></span>
                  		</div>
-	            	</div>
+						<div class="form-group">
+	          				<label>Mitarbeiter der Gruppe</label>
+							<div th:each="user : ${users}" class="custom-control custom-checkbox">
+						  		<input type="checkbox" th:id="${#ids.seq('user')}" th:field="*{users}" th:value="${user.idUser}" class="custom-control-input" th:disabled="${not user.isActive}" />
+						  		<label th:for="${#ids.prev('user')}" class="custom-control-label" th:inline="text">[[${user.firstName}]] [[${user.lastName}]]</label>
+							</div>
+						</div>
+						<div class="form-group">
+	          				<label>Teilnehmer der Gruppe</label>
+							<div th:each="participant : ${participants}" class="custom-control custom-checkbox">
+						  		<input type="checkbox" th:id="${#ids.seq('participant')}" th:field="*{participants}" th:value="${participant.idParticipant}" class="custom-control-input" th:disabled="${not participant.isActive}" />
+						  		<label th:for="${#ids.prev('participant')}" class="custom-control-label" th:inline="text">[[${participant.firstName}]] [[${participant.lastName}]]</label>
+							</div>
+						</div>
+	            	</div>		
 		            <div class="card-footer">
 		                <div class="btn-group">
 		                	<input type="submit" th:value="*{idTeam} ? 'Gruppe ändern' : 'Gruppe hinzufügen'" id="submit" class="btn btn-primary"  />
@@ -22,7 +36,7 @@
 		                        <i class="fa fa-times"></i> 
 		                    </a>
 		                </div>
-	                </div>
+	                </div>                
                 </form>
             </div>
 	    </main>

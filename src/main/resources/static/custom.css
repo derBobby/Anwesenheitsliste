@@ -10,3 +10,9 @@ body {
 .table td {
   vertical-align: middle;
 }
+
+.checkbox input,
+.radio input {
+  horizontal-align: middle;
+  height: 100%;
+}

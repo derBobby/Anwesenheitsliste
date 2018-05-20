@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head lang="de" th:replace="template :: header"></head>
+	<body>
+		<nav th:replace="template :: nav"></nav>
+	    <main class="container pt-5">
+	        <div class="card mb-3">
+	            <div class="card-header" th:text="${title}"></div>
+	            <div class="card-block p-0">
+       				<p class="m-3" th:if="${teams} and ${#lists.isEmpty(teams)}">Keine Termine vorhanden.</p>
+       				<p class="m-3" th:if="${users} and ${#lists.isEmpty(users)}">Keine Benutzer vorhanden.</p>
+	                <div class="table-responsive" th:unless="${teams} and ${#lists.isEmpty(teams)} and ${users} and ${#lists.isEmpty(users)}">
+	                    <table class="table table-bordered table-hover table-striped table-sm m-0 text-nowrap">
+	                        <thead class="">
+	                            <tr>
+	                            	<th>Benutzer</th>
+	                                <th th:each="team : ${teams}" th:text="${team.teamName}"></th>
+	                            </tr>
+	                        </thead>
+							<tbody>
+								<tr th:each="user : ${users}" th:object="${user}">
+									<td th:text="*{firstName + ' ' + lastName}"></td>
+ 									<td th:each="team : ${teams}">
+										<div class="custom-control custom-checkbox">
+											<input type="checkbox" class="custom-control-input" th:checked="${user.teams.contains(team)}"></input>
+											<label class="custom-control-label" for=""></label>
+										</div>
+									</td>
+								</tr>
+							</tbody>
+	                    </table>
+	                </div>
+	            </div>
+	            <div class="card-footer">
+		            <p> </p>
+	            </div>
+	        </div>
+	    </main>
+	    <footer th:replace="template :: footer"></footer>
+	</body>
+</html>

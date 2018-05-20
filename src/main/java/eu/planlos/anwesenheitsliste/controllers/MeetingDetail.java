@@ -61,7 +61,7 @@ public class MeetingDetail {
 		teams.add(team);
 		
 		model.addAttribute("teams", teams);
-		model.addAttribute("participants", participantService.findAllByTeamIdTeam(idTeam));
+		model.addAttribute("participants", participantService.findAllByTeamsIdTeam(idTeam));
 	}
 	
 	@RequestMapping(path = "/meetingdetail/chooseteam", method = RequestMethod.GET)

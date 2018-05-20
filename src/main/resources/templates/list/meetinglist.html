@@ -9,7 +9,7 @@
 	            <div class="card-block p-0">
        				<p class="m-3" th:if="${meetings} and ${#lists.isEmpty(meetings)}">Keine Termine vorhanden.</p>
 	                <div class="table-responsive" th:unless="${meetings} and ${#lists.isEmpty(meetings)}">
-	                    <table class="table table-bordered table-hover table-sm m-0 text-nowrap">
+	                    <table class="table table-bordered table-hover table-striped table-sm m-0 text-nowrap">
 	                        <thead class="">
 	                            <tr>
 	                                <th th:each="heading : ${headings}" th:text="${heading}"></th>
@@ -18,7 +18,7 @@
 							<tbody>
 								<tr th:each="meeting : ${meetings}" th:object="${meeting}" th:classappend="*{idMeeting} == ${markedMeetingId} ? table-success">
 									<td th:text="*{idMeeting}"></td>
-									<td th:text="*{meetingDate}"></td>
+									<td th:text="*{meetingDate}"></td> <!-- TODO *{#calendars.format(meetingDate,'dd MMM yyyy')} -->
 									<td th:if="${#lists.contains(headings, 'Gruppe')}" th:text="*{team.teamName}"></td>
 									<td th:text="*{description}"></td>
 									<td>

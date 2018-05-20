@@ -27,7 +27,26 @@ public class ParticipantService {
 		return participantRepo.findById(idParticipant).get();
 	}
 	
-	public List<Participant> findAllByTeamIdTeam(Long idTeam) {
+	public List<Participant> findAllByTeamsIdTeam(Long idTeam) {
 		return participantRepo.findAllByTeamsIdTeam(idTeam);
+	}
+	
+	public void updateTeamForParticipants(Team team, List<Participant> chosenParticipants) {
+		
+		List<Participant> participantsForTeam = participantRepo.findAllByTeamsIdTeam(team.getIdTeam());
+		
+		for(Participant chosenParticipant : chosenParticipants) {
+			if(! participantsForTeam.contains(chosenParticipant)) {
+				chosenParticipant.addTeam(team);
+				participantRepo.save(chosenParticipant);
+			}
+		}
+		
+		for(Participant participantForTeam : participantsForTeam) {
+			if(! chosenParticipants.contains(participantForTeam)) {
+				participantForTeam.removeTeam(team);
+				participantRepo.save(participantForTeam);
+			}
+		}
 	}
 }

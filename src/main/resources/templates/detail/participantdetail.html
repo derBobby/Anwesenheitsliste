@@ -37,7 +37,7 @@
 							</div>
 						</div>
 						<div class="form-group">
-            				<label>Teilnahme in folgenden Gruppen</label>
+            				<label>Teilnehmer in Gruppen</label>
 							<div th:each="team : ${teams}" class="custom-control custom-checkbox">
 						  		<input type="checkbox" th:id="${#ids.seq('team')}" th:field="*{teams}" th:value="${team.idTeam}" class="custom-control-input" />
 						  		<label th:for="${#ids.prev('team')}" class="custom-control-label" th:inline="text">[[${team.teamName}]]</label>

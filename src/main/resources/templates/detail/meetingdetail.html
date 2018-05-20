@@ -9,8 +9,6 @@
     				<input type="hidden" th:field="*{idMeeting}" />
 	            	<div class="card-header" th:text="${title}"></div>
 		            <div class="card-block p-3">
-
-
 		                <div class="form-group">
              				<label for="team">Gruppe</label> <!--TODO field no effect -->
 							<select th:field="*{team}" class="custom-select form-control"> <!-- disabled="disabled"  -->
@@ -19,7 +17,6 @@
            					</select>
         					<span th:errors="*{team}" class="text-warning"></span>
 		                </div>
-
 		                <div class="form-group">
             				<label for="meetingDate">Datum</label>
             				<div class="input-group date" id="datepicker">
@@ -38,15 +35,13 @@
  								});
  							</script>
 		                </div>
-		                
 						<div class="form-group">
 							<label th:for="description">Beschreibung / Kommentar</label>
 							<input th:field="*{description}" class="form-control" />
 							<span th:errors="*{description}" class="text-warning"></span>
-                 		</div>		                
-
-						<div class="form-group">
-            				<label>Teilnehmer</label>
+                 		</div>		
+						<div th:unless="${#lists.isEmpty(participants)}" class="form-group">
+            				<label>Teilnehmer des Termins</label>
 							<div th:each="participant : ${participants}" class="custom-control custom-checkbox">
 						  		<input type="checkbox" th:id="${#ids.seq('participant')}" th:field="*{participants}" th:value="${participant.idParticipant}" class="custom-control-input" th:disabled="${not participant.isActive}" />
 						  		<label th:for="${#ids.prev('participant')}" class="custom-control-label" th:inline="text">[[${participant.firstName}]] [[${participant.lastName}]]</label>
@@ -55,7 +50,7 @@
 	            	</div>
 		            <div class="card-footer">
 		                <div class="btn-group">
-		                	<input type="submit" th:value="${#lists.isEmpty(participants)} ? ${'Weiter'} : (*{team} ? ${'Termin ändern'} : ${'Termin hinzufügen'})" id="submit" class="btn btn-primary"  />
+		                	<input type="submit" th:value="${#lists.isEmpty(participants)} ? ${'Weiter'} : (*{idMeeting} ? ${'Termin ändern'} : ${'Termin hinzufügen'})" id="submit" class="btn btn-primary"  />
 		              		<a th:href="*{team} ? @{'/meetinglist/forteam/' + *{team.idTeam}} : @{'/meetinglist/full'}" class="btn btn-secondary">
 		                        <i class="fa fa-times"></i> 
 		                    </a>

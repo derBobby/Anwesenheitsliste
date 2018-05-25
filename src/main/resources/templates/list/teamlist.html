@@ -9,7 +9,11 @@
 	            <div class="card-block p-0">
        				<p class="m-3" th:if="${teams} and ${#lists.isEmpty(teams)}">Keine Gruppen vorhanden.</p>
 	                <div class="table-responsive" th:unless="${teams} and ${#lists.isEmpty(teams)}">
+<<<<<<< HEAD
 	                    <table class="table table-bordered table-hover table-striped table-sm m-0 text-nowrap">
+=======
+	                    <table class="table table-bordered table-hover table-sm m-0 text-nowrap">
+>>>>>>> branch 'master' of https://github.com/derBobby/Anwesenheitsliste.git
 	                        <thead class="">
                           		<tr>
 	                                <th th:each="heading : ${headings}" th:text="${heading}"></th>

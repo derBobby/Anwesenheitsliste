@@ -5,27 +5,27 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import eu.planlos.anwesenheitsliste.model.ParticipantService;
 import eu.planlos.anwesenheitsliste.model.TeamService;
-import eu.planlos.anwesenheitsliste.model.UserService;
 import eu.planlos.anwesenheitsliste.viewhelper.GeneralAttributeCreator;
 
 @Controller
-public class PermissionOverview {
+public class ParticipationOverview {
 
 	@Autowired
-	private UserService userService;
+	private ParticipantService participantService;
 	
 	@Autowired
 	private TeamService teamService;
-	
-	@RequestMapping(path = "/permissionoverview")
-	public String permissionOverview(Model model) {
+
+	@RequestMapping(path = "/participationoverview")
+	public String participationOverview(Model model) {
 		
 		model.addAttribute("teams", teamService.findAll());
-		model.addAttribute("users", userService.findAll());
+		model.addAttribute("participants", participantService.findAll());
 		
-		GeneralAttributeCreator.create(model, "Übersicht", "Übersicht der Berechtigungen");
+		GeneralAttributeCreator.create(model, "Übersicht", "Übersicht der Gruppenteilnahmen");
 		
-		return "overview/permissionoverview";
+		return "overview/participationoverview";
 	}
 }

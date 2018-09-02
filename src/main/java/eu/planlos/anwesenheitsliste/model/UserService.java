@@ -30,6 +30,10 @@ public class UserService {
 		return userRepo.findAllByTeamsIdTeam(idTeam);
 	}
 
+	public User findByLoginName(String loginName) {
+		return userRepo.findByLoginName(loginName);
+	}
+
 	public void updateTeamForUsers(Team team, List<User> chosenUsers) {
 		
 		List<User> usersForTeam = userRepo.findAllByTeamsIdTeam(team.getIdTeam());

@@ -38,10 +38,10 @@ public class SampleDataCreater implements ApplicationRunner {
 		teamRepo.deleteAll();
 		userRepo.deleteAll();
 		
-		Participant p1 = participantRepo.save(new Participant("Eva", "Tester", "013371337", "a@sam.de", true));
-		Participant p2 = participantRepo.save(new Participant("Ava", "Tester", "013371338", "b@sam.de", true));
-		Participant p3 = participantRepo.save(new Participant("Iva", "Tester", "013371339", "c@sam.de", true));
-		Participant p4 = participantRepo.save(new Participant("Ova", "Tester", "013371339", "d@sam.de", true));
+		Participant p1 = participantRepo.save(new Participant("Eva", "Tester", "013371337", "a@example.com", true));
+		Participant p2 = participantRepo.save(new Participant("Ava", "Tester", "013371338", "b@example.com", true));
+		Participant p3 = participantRepo.save(new Participant("Iva", "Tester", "013371339", "c@example.com", true));
+		Participant p4 = participantRepo.save(new Participant("Ova", "Tester", "013371339", "d@example.com", true));
 			
 		Team team1 = teamRepo.save(new Team("Cool Team"));
 		Team team2 = teamRepo.save(new Team("Chilly Team"));
@@ -54,10 +54,10 @@ public class SampleDataCreater implements ApplicationRunner {
 		@SuppressWarnings("unused")
 		Meeting m3 = meetingsRepo.save(new Meeting("03.01.2018", "Just a Test", team3));
 
-		User u1 = userRepo.save(new User("Adam", "Sample", "asam", "a@sam.de", "securepw", false, false));
-		User u2 = userRepo.save(new User("Bdam", "Sample", "bsam", "b@sam.de", "securepw", false, true));
-		User u3 = userRepo.save(new User("Cdam", "Sample", "csam", "c@sam.de", "securepw", true, false));
-		User u4 = userRepo.save(new User("Ddam", "Sample", "dsam", "d@sam.de", "securepw", true, false));
+		User u1 = userRepo.save(new User("Adam", "Sample", "asam", "a@example.com", "securepw", false, false));
+		User u2 = userRepo.save(new User("Bdam", "Sample", "bsam", "b@example.com", "securepw", false, true));
+		User u3 = userRepo.save(new User("Cdam", "Sample", "csam", "c@example.com", "securepw", true, false));
+		User u4 = userRepo.save(new User("Ddam", "Sample", "dsam", "d@example.com", "securepw", true, false));
 		
 		//
 

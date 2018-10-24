@@ -21,8 +21,8 @@ import javax.validation.constraints.Size;
 @Table(
 	uniqueConstraints={@UniqueConstraint(columnNames = {"firstName", "lastName"})}
 )
+//public class User extends org.springframework.security.core.userdetails.User {
 public class User {
-
 	@Id
     @GeneratedValue(strategy = GenerationType.AUTO)
 	private Long idUser;
@@ -44,9 +44,9 @@ public class User {
 	@Email(message="muss eine gültige E-Mailadresse sein")
 	private String email;
 	
+	//TODO validation length unsecure
 	@Column(nullable = false)
 	@NotNull
-	@Size(min = 8, max = 20)
 	private String password;
 	
 	@Column

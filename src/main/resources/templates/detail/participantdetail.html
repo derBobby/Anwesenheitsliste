@@ -5,7 +5,7 @@
 		<nav th:replace="template :: nav"></nav>
 	    <main class="container pt-5">
 	        <div class="card mb-3">
-    			<form action="#" th:action="@{/participantdetail}" th:object="${participant}" method="post">
+    			<form action="#" th:action="@{${formAction}}" th:object="${participant}" method="post">
     				<input type="hidden" th:field="*{idParticipant}" />
 	            	<div class="card-header" th:text="${title}"></div>
 		            <div class="card-block p-3">
@@ -47,7 +47,7 @@
 		            <div class="card-footer">
 		                <div class="btn-group">
 		                	<input type="submit" th:value="*{idParticipant} ? 'Teilnehmer ändern' : 'Teilnehmer hinzufügen'" id="submit" class="btn btn-primary"  />
-		              		<a th:href="@{/participantlist}" class="btn btn-secondary">
+		              		<a th:href="@{${formCancel}}" class="btn btn-secondary">
 		                        <i class="fa fa-times"></i> 
 		                    </a>
 		                </div>

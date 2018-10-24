@@ -1,4 +1,4 @@
-package eu.planlos.anwesenheitsliste.controllers;
+package eu.planlos.anwesenheitsliste.controllers.user;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +21,14 @@ import eu.planlos.anwesenheitsliste.model.Team;
 import eu.planlos.anwesenheitsliste.model.TeamService;
 import eu.planlos.anwesenheitsliste.viewhelper.GeneralAttributeCreator;
 
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_MEETINGFORTEAM;
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_MEETINGCHOOSETEAM;
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_MEETINGADDPARTICIPANTS;
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_MEETINGSUBMIT;
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_MEETINGLIST;
+
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.RES_MEETING;
+
 @Controller
 public class MeetingDetail {
 
@@ -33,25 +41,24 @@ public class MeetingDetail {
 	@Autowired
 	private ParticipantService participantService;
 	
-	@RequestMapping(path = "/meetingdetail/forteam/{idTeam}/{idMeeting}", method = RequestMethod.GET)
+	@RequestMapping(path = URL_MEETINGFORTEAM + "{idTeam}/{idMeeting}", method = RequestMethod.GET)
 	public String edit(Model model, @PathVariable Long idTeam, @PathVariable Long idMeeting) {
 	
 		model.addAttribute(meetingService.findById(idMeeting));
 		prepareContentWithTeam(model, idTeam);
 		GeneralAttributeCreator.create(model, "Terminverwaltung", "Termin ändern");
 		
-		return "detail/meetingdetail";
+		return RES_MEETING;
 	}
 
-	@RequestMapping(path = "/meetingdetail/forteam/{idTeam}", method = RequestMethod.GET)
+	@RequestMapping(path = URL_MEETINGFORTEAM + "{idTeam}", method = RequestMethod.GET)
 	public String addForTeam(Model model, @PathVariable Long idTeam) {
 		
-//		model.addAttribute("meeting", new Meeting(team));
 		model.addAttribute("meeting", new Meeting());
 		prepareContentWithTeam(model, idTeam);
 		GeneralAttributeCreator.create(model, "Terminverwaltung", "Termin hinzufügen");
 		
-		return "detail/meetingdetail";
+		return RES_MEETING;
 	}
 	
 	private void prepareContentWithTeam(Model model, Long idTeam) {
@@ -62,29 +69,31 @@ public class MeetingDetail {
 		
 		model.addAttribute("teams", teams);
 		model.addAttribute("participants", participantService.findAllByTeamsIdTeam(idTeam));
+		
+		model.addAttribute("formCancel", URL_MEETINGLIST);
 	}
 	
-	@RequestMapping(path = "/meetingdetail/chooseteam", method = RequestMethod.GET)
+	@RequestMapping(path = URL_MEETINGCHOOSETEAM, method = RequestMethod.GET)
 	public String addWithoutTeam(Model model) {
 		
 		model.addAttribute("meeting", new Meeting());
 		prepareContentWithoutTeam(model);
 		GeneralAttributeCreator.create(model, "Terminverwaltung", "Termin hinzufügen");
 			
-		return "detail/meetingdetail";
+		return RES_MEETING;
 	}
 	
-	@RequestMapping(path = "/meetingdetail/chooseteam/addparticipants", method = RequestMethod.POST)
+	@RequestMapping(path = URL_MEETINGADDPARTICIPANTS, method = RequestMethod.POST)
 	public String addWithoutTeam(Model model, @Valid @ModelAttribute Meeting meeting, Errors errors) {
 
 		if(errors.hasErrors()) {
 			handleValidationErrors(model, meeting);
-			return "detail/meetingdetail"; 
+			return RES_MEETING; 
 		}
 		
 		prepareContentWithTeam(model, meeting.getTeam().getIdTeam());
 		
-		return "detail/meetingdetail"; 
+		return RES_MEETING; 
 	}
 
 	private void handleValidationErrors(Model model, Meeting meeting) {
@@ -102,21 +111,29 @@ public class MeetingDetail {
 		}
 	}
 
-	@RequestMapping(path = "/meetingdetail/submit", method = RequestMethod.POST)
+	@RequestMapping(path = URL_MEETINGSUBMIT, method = RequestMethod.POST)
 	public String submit(Model model, @Valid @ModelAttribute Meeting meeting, Errors errors) {
 		
 		if(errors.hasErrors()) {
 			handleValidationErrors(model, meeting);
-			return "detail/meetingdetail"; 
+			return RES_MEETING; 
 		}
 		
 		Meeting newMeeting = meetingService.save(meeting);
-		return "redirect:/meetinglist/forteam/" + newMeeting.getTeam().getIdTeam() + "/marked/" + newMeeting.getIdMeeting();
+		return "redirect:" + URL_MEETINGLIST + newMeeting.getTeam().getIdTeam() + "/marked/" + newMeeting.getIdMeeting();
 	}
 
 	private void prepareContentWithoutTeam(Model model) {
 		
 		model.addAttribute("teams", teamService.findAll());
 		model.addAttribute("participants", new ArrayList<>()); //TODO No participants. Which to load? JQuery?
+		
+		prepareUrls(model);
+	}
+
+	private void prepareUrls(Model model) {
+
+		model.addAttribute("formAction", URL_MEETINGADDPARTICIPANTS);
+		model.addAttribute("formAction", URL_MEETINGSUBMIT);
 	}
 }

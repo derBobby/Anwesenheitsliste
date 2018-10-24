@@ -1,4 +1,4 @@
-package eu.planlos.anwesenheitsliste.controllers;
+package eu.planlos.anwesenheitsliste.controllers.user;
 
 import javax.validation.Valid;
 
@@ -17,6 +17,11 @@ import eu.planlos.anwesenheitsliste.model.TeamService;
 import eu.planlos.anwesenheitsliste.model.UserService;
 import eu.planlos.anwesenheitsliste.viewhelper.GeneralAttributeCreator;
 
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_TEAM;
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_TEAMLIST;
+
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.RES_TEAM;
+
 @Controller
 public class TeamDetail {
 
@@ -29,47 +34,60 @@ public class TeamDetail {
 	@Autowired
 	private UserService userService;
 	
-	@RequestMapping(path = "/teamdetail/{idTeam}", method = RequestMethod.GET)
+	@RequestMapping(path = URL_TEAM + "{idTeam}", method = RequestMethod.GET)
 	public String edit(Model model, @PathVariable Long idTeam) {
 
 		model.addAttribute(teamService.findById(idTeam));
 		model.addAttribute("participants", participantService.findAll());
-		model.addAttribute("users", userService.findAll());
+		
+		prepareContent(model);
 		
 		GeneralAttributeCreator.create(model, "Gruppenverwaltung", "Gruppe ändern");
 		
-		return "detail/teamdetail";
+		return RES_TEAM;
 	}
 	
-	@RequestMapping(path = "/teamdetail", method = RequestMethod.GET)
+	@RequestMapping(path = URL_TEAM, method = RequestMethod.GET)
 	public String add(Model model) {
 		
 		model.addAttribute(new Team());
 		model.addAttribute("participants", participantService.findAll());
-		model.addAttribute("users", userService.findAll());
+		prepareContent(model);
+		
 		GeneralAttributeCreator.create(model, "Gruppenverwaltung", "Gruppe hinzufügen");
 		
-		return "detail/teamdetail";
+		return RES_TEAM;
 	}
 
 	//TODO Transactional
-	@RequestMapping(path = "/teamdetail", method = RequestMethod.POST)
+	@RequestMapping(path = URL_TEAM, method = RequestMethod.POST)
 	public String submit(Model model, @Valid @ModelAttribute Team team, Errors errors) {
 		
 		if(errors.hasErrors()) {
+			
+			prepareContent(model);
 			
 			if(team.getIdTeam() != null) {
 				GeneralAttributeCreator.create(model, "Gruppenverwaltung", "Gruppe ändern");
 			} else {
 				GeneralAttributeCreator.create(model, "Gruppenverwaltung", "Gruppe hinzufügen");
 			}
-			return "detail/teamdetail"; 
+			return RES_TEAM; 
 		}
+
+		Team savedTeam = teamService.save(team);
 		
 		userService.updateTeamForUsers(team, team.getUsers());
 		participantService.updateTeamForParticipants(team, team.getParticipants());
 		
-		Team savedTeam = teamService.save(team);
-		return "redirect:/teamlist/" + savedTeam.getIdTeam();
+		return "redirect:" + URL_TEAMLIST + savedTeam.getIdTeam();
+	}
+	
+	private void prepareContent(Model model) {
+		
+		model.addAttribute("users", userService.findAll());
+
+		model.addAttribute("formAction", URL_TEAM);
+		model.addAttribute("formCancel", URL_TEAMLIST);
 	}
 }

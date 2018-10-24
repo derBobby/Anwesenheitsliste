@@ -1,5 +1,8 @@
 package eu.planlos.anwesenheitsliste;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -17,6 +20,8 @@ import eu.planlos.anwesenheitsliste.model.UserRepository;
 @Component
 public class SampleDataCreater implements ApplicationRunner {
 
+	private static final Logger logger = LoggerFactory.getLogger(SampleDataCreater.class);	
+
     private MeetingRepository meetingsRepo;
     private ParticipantRepository participantRepo;
     private TeamRepository teamRepo;
@@ -32,7 +37,20 @@ public class SampleDataCreater implements ApplicationRunner {
     
     @Override
     public void run(ApplicationArguments args) {
-		
+
+    	
+    	
+    	
+    	if(args.containsOption("initdb")) {
+    		logger.debug("Startparameter \"initdb\" gefunden -> Initialisiere Datenbank");
+    		initDB();
+    		return;
+    	}
+    	
+    	logger.debug("Startparameter \"initdb\" nicht gefunden -> Initialisiere Datenbank nicht");
+    }
+
+	private void initDB() {
 		meetingsRepo.deleteAll();
 		participantRepo.deleteAll();
 		teamRepo.deleteAll();
@@ -54,12 +72,12 @@ public class SampleDataCreater implements ApplicationRunner {
 		@SuppressWarnings("unused")
 		Meeting m3 = meetingsRepo.save(new Meeting("03.01.2018", "Just a Test", team3));
 
-		User u1 = userRepo.save(new User("Adam", "Sample", "asam", "a@example.com", "securepw", false, false));
-		User u2 = userRepo.save(new User("Bdam", "Sample", "bsam", "b@example.com", "securepw", false, true));
-		User u3 = userRepo.save(new User("Cdam", "Sample", "csam", "c@example.com", "securepw", true, false));
-		User u4 = userRepo.save(new User("Ddam", "Sample", "dsam", "d@example.com", "securepw", true, false));
-		
-		//
+		//securepw
+		User u1 = userRepo.save(new User("Adam", "Sample", "asam", "a@example.com", "$2a$10$iZjfi6dsjgj.qIBBnrMjHuhlb6LkBEO.SfeP0wUmz9lNp5mhiyfIG", false, false));
+		User u2 = userRepo.save(new User("Bdam", "Sample", "bsam", "b@example.com", "$2a$10$iZjfi6dsjgj.qIBBnrMjHuhlb6LkBEO.SfeP0wUmz9lNp5mhiyfIG", false, true));
+		User u3 = userRepo.save(new User("Cdam", "Sample", "csam", "c@example.com", "$2a$10$iZjfi6dsjgj.qIBBnrMjHuhlb6LkBEO.SfeP0wUmz9lNp5mhiyfIG", true, false));
+		User u4 = userRepo.save(new User("Ddam", "Sample", "dsam", "d@example.com", "$2a$10$iZjfi6dsjgj.qIBBnrMjHuhlb6LkBEO.SfeP0wUmz9lNp5mhiyfIG", true, false));
+		User u5 = userRepo.save(new User("Bobson", "obby", "bobby", "uetz@example.com", "$2a$10$iZjfi6dsjgj.qIBBnrMjHuhlb6LkBEO.SfeP0wUmz9lNp5mhiyfIG", true, false));
 
 		u1.addTeam(team1);
 		u1.addTeam(team2);
@@ -71,11 +89,15 @@ public class SampleDataCreater implements ApplicationRunner {
 		u3.addTeam(team3);
 		
 		u4.addTeam(team3);
+
+		u5.addTeam(team1);
+		u5.addTeam(team2);
 		
 		userRepo.save(u1);
 		userRepo.save(u2);
 		userRepo.save(u3);
 		userRepo.save(u4);
+		userRepo.save(u5);
 		
 		//
 		
@@ -94,5 +116,5 @@ public class SampleDataCreater implements ApplicationRunner {
 		participantRepo.save(p2);
 		participantRepo.save(p3);
 		participantRepo.save(p4);
-    }
+	}
 }

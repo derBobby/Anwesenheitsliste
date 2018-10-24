@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head lang="de" th:replace="template :: header"></head>
+	<body>
+		<nav th:replace="template :: nav"></nav>
+	    <main class="container pt-5">
+	   	        <div class="card mb-3">
+		            <div class="card-header" th:text="${title}"></div>
+		            <div class="card-block p-0">
+						<!-- Page Content -->
+						<div class="col-lg-12 text-center mb-5">
+							<h1 class="mt-5">Anwesenheitserfassung PG</h1>
+							<p class="lead">Login erfolgreich!</p>
+						</div>
+		            </div>
+		            <div class="card-footer">
+		            <p> </p>
+		            </div>			
+				</div>	
+		</main>
+	    <footer th:replace="template :: footer"></footer>		
+	</body>
+</html>

@@ -1,4 +1,4 @@
-package eu.planlos.anwesenheitsliste.controllers;
+package eu.planlos.anwesenheitsliste.controllers.user;
 
 import javax.validation.Valid;
 
@@ -16,6 +16,11 @@ import eu.planlos.anwesenheitsliste.model.ParticipantService;
 import eu.planlos.anwesenheitsliste.model.TeamService;
 import eu.planlos.anwesenheitsliste.viewhelper.GeneralAttributeCreator;
 
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_PARTICIPANT;
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_PARTICIPANTLIST;
+
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.RES_PARTICIPANT;
+
 @Controller
 public class ParticipantDetail {
 
@@ -25,31 +30,37 @@ public class ParticipantDetail {
 	@Autowired
 	private TeamService teamService;
 	
-	@RequestMapping(path = "/participantdetail/{idParticipant}", method = RequestMethod.GET)
+	@RequestMapping(path = URL_PARTICIPANT + "{idParticipant}", method = RequestMethod.GET)
 	public String edit(Model model, @PathVariable Long idParticipant) {
 
 		model.addAttribute(participantService.findById(idParticipant));
 		model.addAttribute("teams", teamService.findAll());
-		GeneralAttributeCreator.create(model, "Teilnehmerverwaltung", "Teilnehmer ändern");
 		
-		return "detail/participantdetail";
+		prepareContent(model);
+		GeneralAttributeCreator.create(model, "Teilnehmerverwaltung", "Teilnehmer ändern");
+
+		
+		return RES_PARTICIPANT;
 	}
 	
-	@RequestMapping(path = "/participantdetail", method = RequestMethod.GET)
+	@RequestMapping(path = URL_PARTICIPANT, method = RequestMethod.GET)
 	public String add(Model model) {
 		
 		model.addAttribute(new Participant());
 		model.addAttribute("teams", teamService.findAll());
+		
+		prepareContent(model);
 		GeneralAttributeCreator.create(model, "Teilnehmerverwaltung", "Teilnehmer hinzufügen");
 		
-		return "detail/participantdetail";
+		return RES_PARTICIPANT;
 	}
 
-	@RequestMapping(path = "/participantdetail", method = RequestMethod.POST)
+	@RequestMapping(path = URL_PARTICIPANT, method = RequestMethod.POST)
 	public String submit(Model model, @Valid @ModelAttribute Participant participant, Errors errors) {
 		
 		if(errors.hasErrors()) {
 
+			prepareContent(model);
 			model.addAttribute("teams", teamService.findAll());
 
 			if(participant.getIdParticipant() != null) {
@@ -57,10 +68,16 @@ public class ParticipantDetail {
 			} else {
 				 GeneralAttributeCreator.create(model, "Teilnehmerverwaltung", "Teilnehmer hinzufügen");
 			}
-			return "detail/participantdetail"; 
+			return RES_PARTICIPANT; 
 		}
 		
 		Participant savedParticipant = participantService.save(participant);
-		return "redirect:/participantlist/" + savedParticipant.getIdParticipant();
+		return "redirect:" + URL_PARTICIPANTLIST + savedParticipant.getIdParticipant();
+	}
+
+	private void prepareContent(Model model) {
+		
+		model.addAttribute("formAction", URL_PARTICIPANT);
+		model.addAttribute("formCancel", URL_PARTICIPANTLIST);
 	}
 }

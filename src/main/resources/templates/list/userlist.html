@@ -35,10 +35,10 @@
 										</div>
 									</td>
 									<td>
-										<a th:href="@{'/userdetail/' + *{idUser}}" class="btn btn-secondary">
+										<a th:href="@{${functionEdit} + *{idUser}}" class="btn btn-secondary">
 											<span class="fa fa-pencil"></span>
 										</a>
-										<a th:href="@{'/userpasswordreset/' + *{idUser}}" class="btn btn-secondary">
+										<a th:href="@{${functionResetPW} + *{idUser}}" class="btn btn-secondary">
 											<span class="fa fa-undo"></span>
 										</a>
 									</td>
@@ -49,7 +49,7 @@
 	            </div>
 	            <div class="card-footer">
 	                <div>
-	                    <a th:href="@{/userdetail}" class="btn btn-primary">
+	                    <a th:href="@{${functionAdd}}" class="btn btn-primary">
 	                        <span class="fa fa-plus-square-o"></span> Neuer Benutzer
 	                    </a>
 	                </div>

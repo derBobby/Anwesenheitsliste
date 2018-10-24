@@ -1,4 +1,4 @@
-package eu.planlos.anwesenheitsliste.controllers;
+package eu.planlos.anwesenheitsliste.controllers.admin;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -9,6 +9,9 @@ import eu.planlos.anwesenheitsliste.model.TeamService;
 import eu.planlos.anwesenheitsliste.model.UserService;
 import eu.planlos.anwesenheitsliste.viewhelper.GeneralAttributeCreator;
 
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_PERMISSIONS;
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.RES_PERMISSIONS;
+
 @Controller
 public class PermissionOverview {
 
@@ -18,7 +21,7 @@ public class PermissionOverview {
 	@Autowired
 	private TeamService teamService;
 	
-	@RequestMapping(path = "/permissionoverview")
+	@RequestMapping(path = URL_PERMISSIONS)
 	public String permissionOverview(Model model) {
 		
 		model.addAttribute("teams", teamService.findAll());
@@ -26,6 +29,6 @@ public class PermissionOverview {
 		
 		GeneralAttributeCreator.create(model, "Übersicht", "Übersicht der Berechtigungen");
 		
-		return "overview/permissionoverview";
+		return RES_PERMISSIONS;
 	}
 }

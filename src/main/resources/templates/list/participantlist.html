@@ -29,7 +29,7 @@
 	                                	</div>
 									</td>
 									<td>
-										<a th:href="@{'/participantdetail/' + *{idParticipant}}" class="btn btn-secondary">
+										<a th:href="@{${functionEdit} + *{idParticipant}}" class="btn btn-secondary">
 											<span class="fa fa-pencil"></span>
 										</a>
 									</td>
@@ -40,7 +40,7 @@
 	            </div>
 	            <div class="card-footer">
 	                <div>
-	                    <a th:href="@{/participantdetail}" class="btn btn-primary">
+	                    <a th:href="@{${functionAdd}}" class="btn btn-primary">
 	                        <span class="fa fa-plus-square-o"></span> Neuer Teilnehmer
 	                    </a>
 	                </div>

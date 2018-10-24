@@ -51,7 +51,7 @@
 		            <div class="card-footer">
 		                <div class="btn-group">
 		                	<input type="submit" th:value="${#lists.isEmpty(participants)} ? ${'Weiter'} : (*{idMeeting} ? ${'Termin ändern'} : ${'Termin hinzufügen'})" id="submit" class="btn btn-primary"  />
-		              		<a th:href="*{team} ? @{'/meetinglist/forteam/' + *{team.idTeam}} : @{'/meetinglist/full'}" class="btn btn-secondary">
+		              		<a th:href="@{$formCancel + *{team.idTeam}}" class="btn btn-secondary">
 		                        <i class="fa fa-times"></i> 
 		                    </a>
 		                </div>

@@ -7,6 +7,12 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_AREA_ADMIN;
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_AREA_USER;
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_AREA_ACTUATOR;
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_LOGIN;
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_LOGOUT;
+
 //@EnableGlobalMethodSecurity(securedEnabled = true)
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
@@ -32,25 +38,25 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers("/resources/**", "/static/**", "/css/**", "/js/**", "/images/**") //TODO
 					.permitAll()
 
-					.antMatchers("/user/**")
+					.antMatchers(URL_AREA_USER + "/**")
 //						.hasAnyRole("ADMIN", "USER")
 						 .hasAnyAuthority("ADMIN", "USER") //or authenticated()
 
-					.antMatchers("/admin/**")
+					.antMatchers(URL_AREA_ADMIN + "/**")
 //						.hasRole("ADMIN") 				//hasAuthority() or authenticated()
 						 .hasAnyAuthority("ADMIN", "USER") //or authenticated()
 
-						 .antMatchers("/actuator**")
+						 .antMatchers(URL_AREA_ACTUATOR + "/**")
 						.hasRole("ADMIN")
 
 				.and().formLogin()
 				.successHandler(successHandler)
-					.loginPage("/login")
-//					.loginProcessingUrl("/login")
+					.loginPage(URL_LOGIN)
+//					.loginProcessingUrl(URL_LOGIN)
 					
 				.and().logout()
-					.logoutUrl("/logout")
-					.logoutSuccessUrl("/login")
+					.logoutUrl(URL_LOGOUT)
+					.logoutSuccessUrl(URL_LOGIN)
 					.invalidateHttpSession(true)
 					.clearAuthentication(true)
 					
@@ -58,7 +64,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 					.accessDeniedHandler(deniedHandler)
 				
 				.and().exceptionHandling()
-					.accessDeniedPage("/login");
+					.accessDeniedPage(URL_LOGIN);
 		
 //					.loginProcessingUrl("/login")
 //					.failureUrl("/loginpage")

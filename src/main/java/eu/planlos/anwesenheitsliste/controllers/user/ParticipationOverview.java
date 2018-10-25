@@ -16,6 +16,9 @@ import static eu.planlos.anwesenheitsliste.ApplicationPaths.RES_PARTICIPATIONOVE
 @Controller
 public class ParticipationOverview {
 
+	public final String STR_MODULE = "Übersicht";
+	public final String STR_TITLE = "Übersicht der Gruppenteilnahmen";
+	
 	@Autowired
 	private ParticipantService participantService;
 	
@@ -28,7 +31,7 @@ public class ParticipationOverview {
 		model.addAttribute("teams", teamService.findAll());
 		model.addAttribute("participants", participantService.findAll());
 		
-		GeneralAttributeCreator.create(model, "Übersicht", "Übersicht der Gruppenteilnahmen");
+		GeneralAttributeCreator.create(model, STR_MODULE, STR_TITLE);
 		
 		return RES_PARTICIPATIONOVERVIEW;
 	}

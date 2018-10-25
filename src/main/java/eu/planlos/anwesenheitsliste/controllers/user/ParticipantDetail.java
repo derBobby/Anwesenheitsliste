@@ -24,6 +24,10 @@ import static eu.planlos.anwesenheitsliste.ApplicationPaths.RES_PARTICIPANT;
 @Controller
 public class ParticipantDetail {
 
+	public final String STR_MODULE = "Teilnehmerverwaltung";
+	public final String STR_TITLE_ADD_USER = "Teilnehmer hinzufügen";
+	public final String STR_TITLE_EDIT_USER = "Teilnehmer ändern";
+	
 	@Autowired
 	private ParticipantService participantService;
 
@@ -37,7 +41,7 @@ public class ParticipantDetail {
 		model.addAttribute("teams", teamService.findAll());
 		
 		prepareContent(model);
-		GeneralAttributeCreator.create(model, "Teilnehmerverwaltung", "Teilnehmer ändern");
+		GeneralAttributeCreator.create(model, STR_MODULE, STR_TITLE_EDIT_USER);
 
 		
 		return RES_PARTICIPANT;
@@ -50,7 +54,7 @@ public class ParticipantDetail {
 		model.addAttribute("teams", teamService.findAll());
 		
 		prepareContent(model);
-		GeneralAttributeCreator.create(model, "Teilnehmerverwaltung", "Teilnehmer hinzufügen");
+		GeneralAttributeCreator.create(model, STR_MODULE, STR_TITLE_ADD_USER);
 		
 		return RES_PARTICIPANT;
 	}
@@ -64,9 +68,9 @@ public class ParticipantDetail {
 			model.addAttribute("teams", teamService.findAll());
 
 			if(participant.getIdParticipant() != null) {
-				GeneralAttributeCreator.create(model, "Teilnehmerverwaltung", "Teilnehmer ändern");
+				GeneralAttributeCreator.create(model, STR_MODULE, STR_TITLE_EDIT_USER);
 			} else {
-				 GeneralAttributeCreator.create(model, "Teilnehmerverwaltung", "Teilnehmer hinzufügen");
+				 GeneralAttributeCreator.create(model, STR_MODULE, STR_TITLE_ADD_USER);
 			}
 			return RES_PARTICIPANT; 
 		}

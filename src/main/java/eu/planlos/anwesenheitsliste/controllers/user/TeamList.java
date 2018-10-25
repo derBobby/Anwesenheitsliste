@@ -14,7 +14,6 @@ import eu.planlos.anwesenheitsliste.viewhelper.GeneralAttributeCreator;
 
 import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_TEAMLIST;
 import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_TEAM;
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_MEETINGFORTEAM;
 import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_MEETINGLIST;
 
 import static eu.planlos.anwesenheitsliste.ApplicationPaths.RES_TEAMLIST;
@@ -22,6 +21,9 @@ import static eu.planlos.anwesenheitsliste.ApplicationPaths.RES_TEAMLIST;
 @Controller
 public class TeamList {
 
+	public final String STR_MODULE = "Gruppenverwaltung";
+	public final String STR_TITLE = "Liste der Gruppen";
+	
 	@Autowired
     private TeamService teamService;
 
@@ -58,6 +60,6 @@ public class TeamList {
 		model.addAttribute("functionMeetings", URL_MEETINGLIST);
 		model.addAttribute("functionAdd", URL_TEAM);
 		
-		GeneralAttributeCreator.create(model, "Gruppenverwaltung", "Liste der Gruppen");
+		GeneralAttributeCreator.create(model, STR_MODULE, STR_TITLE);
 	}
 }

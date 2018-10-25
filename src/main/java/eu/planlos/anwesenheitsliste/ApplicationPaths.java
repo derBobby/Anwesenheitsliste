@@ -39,8 +39,10 @@ public class ApplicationPaths {
 
 	public static final String URL_TEAM = URL_AREA_USER + DELIMETER + "teamdetail" + DELIMETER;
 	public static final String URL_TEAMLIST = URL_AREA_USER + DELIMETER + "teamlist" + DELIMETER;
-	
-	
+
+	public static final String URL_LOGOUT = URL_AREA_USER + DELIMETER + "logout";
+	public static final String URL_LOGIN = "/login"; //TODO
+
 	public static final String RES_MEETING = "detail/meetingdetail";
 	public static final String RES_MEETINGLIST = "list/meetinglist";
 	
@@ -51,6 +53,8 @@ public class ApplicationPaths {
 	public static final String RES_TEAM = "detail/teamdetail";
 	public static final String RES_TEAMLIST = "list/teamlist";
 	
+	public static final String RES_LOGIN = "session/login"; //TODO
+		
 	/*
 	 * ANONYMOUS AREA
 	 */
@@ -64,4 +68,8 @@ public class ApplicationPaths {
 	public static final String RES_ABOUT = "about";
 	public static final String RES_PRIVACY = "datenschutz";
 	
+	/*
+	 * ACTUATOR AREA
+	 */
+	public static final String URL_AREA_ACTUATOR = "/actuator";
 }

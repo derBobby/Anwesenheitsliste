@@ -26,12 +26,17 @@ import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_MEETINGCHOOSETEA
 import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_MEETINGADDPARTICIPANTS;
 import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_MEETINGSUBMIT;
 import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_MEETINGLIST;
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.DELIMETER;
 
 import static eu.planlos.anwesenheitsliste.ApplicationPaths.RES_MEETING;
 
 @Controller
 public class MeetingDetail {
 
+	public final String STR_MODULE = "Terminverwaltung";
+	public final String STR_TITLE_ADD_MEETING = "Termin hinzufügen";
+	public final String STR_TITLE_EDIT_MEETING = "Termin ändern";
+	
 	@Autowired
 	private MeetingService meetingService;
 
@@ -46,7 +51,7 @@ public class MeetingDetail {
 	
 		model.addAttribute(meetingService.findById(idMeeting));
 		prepareContentWithTeam(model, idTeam);
-		GeneralAttributeCreator.create(model, "Terminverwaltung", "Termin ändern");
+		GeneralAttributeCreator.create(model, STR_MODULE, STR_TITLE_EDIT_MEETING);
 		
 		return RES_MEETING;
 	}
@@ -56,7 +61,7 @@ public class MeetingDetail {
 		
 		model.addAttribute("meeting", new Meeting());
 		prepareContentWithTeam(model, idTeam);
-		GeneralAttributeCreator.create(model, "Terminverwaltung", "Termin hinzufügen");
+		GeneralAttributeCreator.create(model, STR_MODULE, STR_TITLE_ADD_MEETING);
 		
 		return RES_MEETING;
 	}
@@ -78,7 +83,7 @@ public class MeetingDetail {
 		
 		model.addAttribute("meeting", new Meeting());
 		prepareContentWithoutTeam(model);
-		GeneralAttributeCreator.create(model, "Terminverwaltung", "Termin hinzufügen");
+		GeneralAttributeCreator.create(model, STR_MODULE, STR_TITLE_ADD_MEETING);
 			
 		return RES_MEETING;
 	}
@@ -105,9 +110,9 @@ public class MeetingDetail {
 		}
 
 		if(meeting.getIdMeeting() != null) {
-			GeneralAttributeCreator.create(model, "Terminverwaltung", "Termin ändern");
+			GeneralAttributeCreator.create(model, STR_MODULE, STR_TITLE_EDIT_MEETING);
 		} else {
-			GeneralAttributeCreator.create(model, "Terminverwaltung", "Termin hinzufügen");
+			GeneralAttributeCreator.create(model, STR_MODULE, STR_TITLE_ADD_MEETING);
 		}
 	}
 
@@ -120,7 +125,7 @@ public class MeetingDetail {
 		}
 		
 		Meeting newMeeting = meetingService.save(meeting);
-		return "redirect:" + URL_MEETINGLIST + newMeeting.getTeam().getIdTeam() + "/marked/" + newMeeting.getIdMeeting();
+		return "redirect:" + URL_MEETINGLIST + newMeeting.getTeam().getIdTeam() + DELIMETER + newMeeting.getIdMeeting();
 	}
 
 	private void prepareContentWithoutTeam(Model model) {

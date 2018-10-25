@@ -21,6 +21,9 @@ import static eu.planlos.anwesenheitsliste.ApplicationPaths.RES_PARTICIPANTLIST;
 @Controller
 public class ParticipantList {
 
+	public final String STR_MODULE = "Teilnehmerverwaltung";
+	public final String STR_TITLE = "Liste der Teilnehmer";
+	
 	@Autowired
 	private ParticipantService participantService;
 	
@@ -58,6 +61,6 @@ public class ParticipantList {
 		model.addAttribute("functionEdit", URL_PARTICIPANT);
 		model.addAttribute("functionAdd", URL_PARTICIPANT);
 		
-		GeneralAttributeCreator.create(model, "Teilnehmerverwaltung", "Liste der Teilnehmer");
+		GeneralAttributeCreator.create(model, STR_MODULE, STR_TITLE);
 	}
 }

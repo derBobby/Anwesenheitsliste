@@ -6,15 +6,20 @@ import org.springframework.web.bind.annotation.GetMapping;
 import eu.planlos.anwesenheitsliste.uicontainer.LoginFormContainer;
 import eu.planlos.anwesenheitsliste.viewhelper.GeneralAttributeCreator;
 
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_LOGIN;
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.RES_LOGIN;
+
 @Controller
 public class Login {
 	
+	public static String STR_MODULE = "Login";
+	public static String STR_TITLE = "Login";
 	
-	@GetMapping(path = "/login")
+	@GetMapping(path = URL_LOGIN)
 	public String loginpage(Model model) {
 		
 		prepareContent(model);
-		return "session/login";
+		return RES_LOGIN;
 	}
 	
 //	@PostMapping(path = "/login")
@@ -37,6 +42,7 @@ public class Login {
 	private void prepareContent(Model model) {
 
 		model.addAttribute("loginFormContainer", new LoginFormContainer());
-		GeneralAttributeCreator.create(model, "Login", "Login");
+		model.addAttribute("formAction", URL_LOGIN);
+		GeneralAttributeCreator.create(model, STR_MODULE, STR_TITLE);
 	}
 }

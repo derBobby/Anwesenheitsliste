@@ -14,13 +14,20 @@ import eu.planlos.anwesenheitsliste.model.MeetingService;
 import eu.planlos.anwesenheitsliste.viewhelper.GeneralAttributeCreator;
 
 import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_MEETINGLIST;
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_MEETING;
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_MEETINGFORTEAM;
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_MEETINGCHOOSETEAM;
 import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_MEETINGLISTFULL;
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.DELIMETER;
+
 import static eu.planlos.anwesenheitsliste.ApplicationPaths.RES_MEETINGLIST;
 
 @Controller
 public class MeetingList {
 
+	public final String STR_MODULE = "Terminverwaltung";
+	public final String STR_TITLE = "Liste der Termine";
+	
+	
 	@Autowired
 	private MeetingService meetingService;
 	
@@ -31,7 +38,7 @@ public class MeetingList {
 		return RES_MEETINGLIST;
 	}
 	
-	@RequestMapping(path = URL_MEETINGLIST + "{idTeam}/{idMeeting}")
+	@RequestMapping(path = URL_MEETINGLIST + "{idTeam}" + DELIMETER + "{idMeeting}")
 	public String meetingListForTeamMarked(Model model, @PathVariable Long idTeam, @PathVariable Long idMeeting) {
 		
 		model.addAttribute("markedMeetingId", idMeeting);
@@ -42,7 +49,12 @@ public class MeetingList {
 	@RequestMapping(path = URL_MEETINGLISTFULL)
 	public String meetingListFull(Model model) {
 		
+
+		model.addAttribute("functionEdit", URL_MEETINGCHOOSETEAM);
+		model.addAttribute("functionAdd", URL_MEETINGCHOOSETEAM);
+		
 		prepareContent(model, null);
+		
 		return RES_MEETINGLIST;
 	}
 	
@@ -51,6 +63,10 @@ public class MeetingList {
 	private void prepareContentForTeam(Model model, Long idTeam) {
 		
 		model.addAttribute("idTeam", idTeam);
+		
+		model.addAttribute("functionEdit", URL_MEETINGFORTEAM);
+		model.addAttribute("functionAdd", URL_MEETINGFORTEAM);
+		
 		prepareContent(model, idTeam);
 	}
 
@@ -58,11 +74,8 @@ public class MeetingList {
 
 		model.addAttribute("headings", getHeadingsForTeam(idTeam));
 		model.addAttribute("meetings", getMeetingsForTeam(idTeam));
-
-		model.addAttribute("functionEdit", URL_MEETING);
-		model.addAttribute("functionAdd", URL_MEETING);
 		
-		GeneralAttributeCreator.create(model, "Terminverwaltung", "Liste der Termine");
+		GeneralAttributeCreator.create(model, STR_MODULE, STR_TITLE);
 	}
 	
 	private List<String> getHeadingsForTeam(Long idTeam) {

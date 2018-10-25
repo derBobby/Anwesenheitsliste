@@ -25,6 +25,10 @@ import static eu.planlos.anwesenheitsliste.ApplicationPaths.RES_TEAM;
 @Controller
 public class TeamDetail {
 
+	public final String STR_MODULE = "Gruppenverwaltung";
+	public final String STR_TITLE_ADD_TEAM = "Gruppe hinzufügen";
+	public final String STR_TITLE_EDIT_TEAM = "Gruppe ändern";
+	
 	@Autowired
 	private TeamService teamService;
 
@@ -42,7 +46,7 @@ public class TeamDetail {
 		
 		prepareContent(model);
 		
-		GeneralAttributeCreator.create(model, "Gruppenverwaltung", "Gruppe ändern");
+		GeneralAttributeCreator.create(model, STR_MODULE, STR_TITLE_EDIT_TEAM);
 		
 		return RES_TEAM;
 	}
@@ -54,7 +58,7 @@ public class TeamDetail {
 		model.addAttribute("participants", participantService.findAll());
 		prepareContent(model);
 		
-		GeneralAttributeCreator.create(model, "Gruppenverwaltung", "Gruppe hinzufügen");
+		GeneralAttributeCreator.create(model, STR_MODULE, STR_TITLE_ADD_TEAM);
 		
 		return RES_TEAM;
 	}
@@ -68,9 +72,9 @@ public class TeamDetail {
 			prepareContent(model);
 			
 			if(team.getIdTeam() != null) {
-				GeneralAttributeCreator.create(model, "Gruppenverwaltung", "Gruppe ändern");
+				GeneralAttributeCreator.create(model, STR_MODULE, STR_TITLE_EDIT_TEAM);
 			} else {
-				GeneralAttributeCreator.create(model, "Gruppenverwaltung", "Gruppe hinzufügen");
+				GeneralAttributeCreator.create(model, STR_MODULE, STR_TITLE_ADD_TEAM);
 			}
 			return RES_TEAM; 
 		}

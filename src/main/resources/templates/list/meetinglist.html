@@ -33,7 +33,7 @@
 	            </div>
 	            <div class="card-footer">
 	                <div>
-	                    <a th:href="@{${functionAdd} + ${idTeam}}" class="btn btn-primary">
+	                    <a th:href="@{ ${idTeam} ? ${functionAdd} + ${idTeam} : ${functionAdd} }" class="btn btn-primary">
 	                        <span class="fa fa-plus-square-o"></span> Neuer Termin
 	                    </a>
 	                </div>
@@ -43,3 +43,4 @@
 	    <footer th:replace="template :: footer"></footer>
 	</body>
 </html>
+

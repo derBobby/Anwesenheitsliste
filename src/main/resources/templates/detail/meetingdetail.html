@@ -5,7 +5,7 @@
 		<nav th:replace="template :: nav"></nav>
 	    <main class="container pt-5">
 	        <div class="card mb-3">
-    			<form action="#" th:action="${#lists.isEmpty(participants)} ? @{/meetingdetail/chooseteam/addparticipants} : @{/meetingdetail/submit}" th:object="${meeting}" method="post">
+    			<form action="#" th:action="${formAction}" th:object="${meeting}" method="post">
     				<input type="hidden" th:field="*{idMeeting}" />
 	            	<div class="card-header" th:text="${title}"></div>
 		            <div class="card-block p-3">
@@ -51,7 +51,7 @@
 		            <div class="card-footer">
 		                <div class="btn-group">
 		                	<input type="submit" th:value="${#lists.isEmpty(participants)} ? ${'Weiter'} : (*{idMeeting} ? ${'Termin ändern'} : ${'Termin hinzufügen'})" id="submit" class="btn btn-primary"  />
-		              		<a th:href="@{$formCancel + *{team.idTeam}}" class="btn btn-secondary">
+		              		<a th:href="@{${formCancel} + *{team?.idTeam}}" class="btn btn-secondary">
 		                        <i class="fa fa-times"></i> 
 		                    </a>
 		                </div>

@@ -26,6 +26,7 @@ import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_MEETINGCHOOSETEA
 import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_MEETINGADDPARTICIPANTS;
 import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_MEETINGSUBMIT;
 import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_MEETINGLIST;
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_MEETINGLISTFULL;
 import static eu.planlos.anwesenheitsliste.ApplicationPaths.DELIMETER;
 
 import static eu.planlos.anwesenheitsliste.ApplicationPaths.RES_MEETING;
@@ -66,28 +67,6 @@ public class MeetingDetail {
 		return RES_MEETING;
 	}
 	
-	private void prepareContentWithTeam(Model model, Long idTeam) {
-		
-		Team team = teamService.findById(idTeam);
-		List<Team> teams = new ArrayList<>();
-		teams.add(team);
-		
-		model.addAttribute("teams", teams);
-		model.addAttribute("participants", participantService.findAllByTeamsIdTeam(idTeam));
-		
-		model.addAttribute("formCancel", URL_MEETINGLIST);
-	}
-	
-	@RequestMapping(path = URL_MEETINGCHOOSETEAM, method = RequestMethod.GET)
-	public String addWithoutTeam(Model model) {
-		
-		model.addAttribute("meeting", new Meeting());
-		prepareContentWithoutTeam(model);
-		GeneralAttributeCreator.create(model, STR_MODULE, STR_TITLE_ADD_MEETING);
-			
-		return RES_MEETING;
-	}
-	
 	@RequestMapping(path = URL_MEETINGADDPARTICIPANTS, method = RequestMethod.POST)
 	public String addWithoutTeam(Model model, @Valid @ModelAttribute Meeting meeting, Errors errors) {
 
@@ -100,7 +79,51 @@ public class MeetingDetail {
 		
 		return RES_MEETING; 
 	}
+	
+	private void prepareContentWithTeam(Model model, Long idTeam) {
+		
+		Team team = teamService.findById(idTeam);
+		List<Team> teams = new ArrayList<>();
+		teams.add(team);
+		
+		model.addAttribute("teams", teams);
+		model.addAttribute("participants", participantService.findAllByTeamsIdTeam(idTeam));
 
+		model.addAttribute("formAction", URL_MEETINGSUBMIT);
+		model.addAttribute("formCancel", URL_MEETINGFORTEAM + idTeam);
+	}
+	
+	@RequestMapping(path = URL_MEETINGCHOOSETEAM, method = RequestMethod.GET)
+	public String addWithoutTeam(Model model) {
+		
+		model.addAttribute("meeting", new Meeting());
+		prepareContentWithoutTeam(model);
+		GeneralAttributeCreator.create(model, STR_MODULE, STR_TITLE_ADD_MEETING);
+			
+		return RES_MEETING;
+	}
+
+	private void prepareContentWithoutTeam(Model model) {
+		
+		model.addAttribute("teams", teamService.findAll());
+		model.addAttribute("participants", new ArrayList<>()); //TODO No participants. Which to load? JQuery?
+		
+		model.addAttribute("formAction", URL_MEETINGADDPARTICIPANTS);
+		model.addAttribute("formCancel", URL_MEETINGLISTFULL);
+	}
+
+	@RequestMapping(path = URL_MEETINGSUBMIT, method = RequestMethod.POST)
+	public String submit(Model model, @Valid @ModelAttribute Meeting meeting, Errors errors) {
+		
+		if(errors.hasErrors()) {
+			handleValidationErrors(model, meeting);
+			return RES_MEETING; 
+		}
+		
+		Meeting newMeeting = meetingService.save(meeting);
+		return "redirect:" + URL_MEETINGLIST + newMeeting.getTeam().getIdTeam() + DELIMETER + newMeeting.getIdMeeting();
+	}
+	
 	private void handleValidationErrors(Model model, Meeting meeting) {
 		
 		if(meeting.getTeam() != null) {
@@ -116,29 +139,4 @@ public class MeetingDetail {
 		}
 	}
 
-	@RequestMapping(path = URL_MEETINGSUBMIT, method = RequestMethod.POST)
-	public String submit(Model model, @Valid @ModelAttribute Meeting meeting, Errors errors) {
-		
-		if(errors.hasErrors()) {
-			handleValidationErrors(model, meeting);
-			return RES_MEETING; 
-		}
-		
-		Meeting newMeeting = meetingService.save(meeting);
-		return "redirect:" + URL_MEETINGLIST + newMeeting.getTeam().getIdTeam() + DELIMETER + newMeeting.getIdMeeting();
-	}
-
-	private void prepareContentWithoutTeam(Model model) {
-		
-		model.addAttribute("teams", teamService.findAll());
-		model.addAttribute("participants", new ArrayList<>()); //TODO No participants. Which to load? JQuery?
-		
-		prepareUrls(model);
-	}
-
-	private void prepareUrls(Model model) {
-
-		model.addAttribute("formAction", URL_MEETINGADDPARTICIPANTS);
-		model.addAttribute("formAction", URL_MEETINGSUBMIT);
-	}
 }

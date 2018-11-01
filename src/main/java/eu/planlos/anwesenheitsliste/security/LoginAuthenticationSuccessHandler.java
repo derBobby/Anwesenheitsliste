@@ -14,6 +14,8 @@ import org.springframework.stereotype.Component;
 
 import eu.planlos.anwesenheitsliste.SampleDataCreater;
 
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_HOME;
+
 @Component
 public class LoginAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
@@ -23,11 +25,11 @@ public class LoginAuthenticationSuccessHandler implements AuthenticationSuccessH
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 			Authentication auth) throws IOException, ServletException {
 
-		logger.error("Erfolgreicher Loginversuch für :" + auth.getName() + " auf " + request.getRequestURI());
+		logger.error("Erfolgreicher Loginversuch für : \"" + auth.getName() + "\" auf " + request.getRequestURI());
 		
 		// set our response to OK status
 		response.setStatus(HttpServletResponse.SC_OK);
-//		response.sendRedirect("/dashboard");
+		response.sendRedirect(URL_HOME);
 	}
 
 }

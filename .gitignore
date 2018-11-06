@@ -24,4 +24,4 @@ nbdist/
 .nb-gradle/
 /mvnw
 /mvnw.cmd
-/Anwesenheitsliste.log
+/Anwesenheitsliste.log*

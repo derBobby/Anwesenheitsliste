@@ -8,14 +8,15 @@
     			<form action="#" th:action="${formAction}" th:object="${meeting}" method="post">
     				<input type="hidden" th:field="*{idMeeting}" />
 	            	<div class="card-header" th:text="${title}"></div>
-		            <div class="card-block p-3">
+	            	<div class="card-block p-3">
 		                <div class="form-group">
              				<label for="team">Gruppe</label> <!--TODO field no effect -->
-							<select th:field="*{team}" class="custom-select form-control"> <!-- disabled="disabled"  -->
-								<option selected style="display:none" value="">Gruppe wählen</option>
-								<option th:each="team : ${teams}" th:value="${team.idTeam}" th:text="${team.teamName}" class="custom-select form-control"></option>
+							<!-- Not applicapable with "th:selected" :   th:field="*{team}" -->
+							<select th:id="team" th:name="team" class="custom-select form-control">
+								<option th:if="*{team} == null" selected style="display:none" value="">Gruppe wählen</option>
+								<option th:each="team : ${teams}" th:selected="${teams.size() == 1}" th:value="${team.idTeam}" th:text="${team.teamName}" class="custom-select form-control"></option>
            					</select>
-        					<span th:errors="*{team}" class="text-warning"></span>
+           					<span th:errors="*{team}" class="text-warning"></span>
 		                </div>
 		                <div class="form-group">
             				<label for="meetingDate">Datum</label>
@@ -51,7 +52,7 @@
 		            <div class="card-footer">
 		                <div class="btn-group">
 		                	<input type="submit" th:value="${#lists.isEmpty(participants)} ? ${'Weiter'} : (*{idMeeting} ? ${'Termin ändern'} : ${'Termin hinzufügen'})" id="submit" class="btn btn-primary"  />
-		              		<a th:href="@{${formCancel} + *{team?.idTeam}}" class="btn btn-secondary">
+		              		<a th:href="@{*{team} ? ${formCancel} : ${formCancel}}" class="btn btn-secondary">
 		                        <i class="fa fa-times"></i> 
 		                    </a>
 		                </div>

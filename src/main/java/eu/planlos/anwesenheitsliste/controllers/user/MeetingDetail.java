@@ -90,7 +90,9 @@ public class MeetingDetail {
 		model.addAttribute("participants", participantService.findAllByTeamsIdTeam(idTeam));
 
 		model.addAttribute("formAction", URL_MEETINGSUBMIT);
-		model.addAttribute("formCancel", URL_MEETINGFORTEAM + idTeam);
+		model.addAttribute("formCancel", URL_MEETINGLIST + idTeam);
+		
+		GeneralAttributeCreator.create(model, STR_MODULE, STR_TITLE_ADD_MEETING);
 	}
 	
 	@RequestMapping(path = URL_MEETINGCHOOSETEAM, method = RequestMethod.GET)

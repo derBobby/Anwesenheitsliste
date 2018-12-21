@@ -2,7 +2,11 @@ package eu.planlos.anwesenheitsliste.model;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataRetrievalFailureException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
+
+import eu.planlos.anwesenheitsliste.model.exception.EmptyIdException;
 
 @Service
 public class UserService {
@@ -10,8 +14,21 @@ public class UserService {
 	@Autowired
 	private UserRepository userRepo;
 	
-	public User save(User user) {
-		return userRepo.save(user);
+	//TODO other classes?
+	public User save(User user) throws DuplicateKeyException {
+		
+		if(user.getIdUser() == null) {
+			String email = user.getEmail();
+			String loginName = user.getLoginName();
+		
+			Boolean exists = userRepo.existsByLoginNameOrEmail(loginName, email);
+			if(exists) {
+				throw new DuplicateKeyException("Bitte probiere es mit einem anderen Loginnamen oder einer anderer E-Mailadresse");
+			}
+		}
+		
+		User newUser = userRepo.save(user);
+		return newUser;
 	}
 	
 	public void delete(User user) {
@@ -34,19 +51,31 @@ public class UserService {
 		return userRepo.findByLoginName(loginName);
 	}
 
-	public void updateTeamForUsers(Team team, List<User> chosenUsers) {
+	/**
+	 * Updates relation between team and users. Users not active will be ignored.
+	 * @param team
+	 * @param chosenUsers
+	 * @throws EmptyIdException
+	 */
+	public void updateTeamForUsers(Team team, List<User> chosenUsers) throws EmptyIdException {
+		
+		for(User chosenUser : chosenUsers) {
+			if(chosenUser.getIdUser() == null) {
+				throw new EmptyIdException("Bitte probiere es mit einem anderen Loginnamen oder einer anderer E-Mailadresse");
+			}
+		}
 		
 		List<User> usersForTeam = userRepo.findAllByTeamsIdTeam(team.getIdTeam());
 		
 		for(User chosenUser : chosenUsers) {
-			if(! usersForTeam.contains(chosenUser)) {
+			if(chosenUser.getIsActive() && ! usersForTeam.contains(chosenUser)) {
 				chosenUser.addTeam(team);
 				userRepo.save(chosenUser);
 			}
 		}
 		
 		for(User userForTeam : usersForTeam) {
-			if(! chosenUsers.contains(userForTeam)) {
+			if(userForTeam.getIsActive() && ! chosenUsers.contains(userForTeam)) {
 				userForTeam.removeTeam(team);
 				userRepo.save(userForTeam);
 			}

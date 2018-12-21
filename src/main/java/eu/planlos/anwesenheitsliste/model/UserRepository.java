@@ -9,4 +9,5 @@ import org.springframework.stereotype.Repository;
 public interface UserRepository extends CrudRepository<User, Long> {
 	public List<User> findAllByTeamsIdTeam(Long idTeam);
 	public User findByLoginName(String loginName);
+	public Boolean existsByLoginNameOrEmail(String loginName, String email);
 }

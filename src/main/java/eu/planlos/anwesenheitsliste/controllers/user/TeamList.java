@@ -15,6 +15,7 @@ import eu.planlos.anwesenheitsliste.viewhelper.GeneralAttributeCreator;
 import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_TEAMLIST;
 import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_TEAM;
 import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_MEETINGLIST;
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_TEAMPHONELIST;
 
 import static eu.planlos.anwesenheitsliste.ApplicationPaths.RES_TEAMLIST;
 
@@ -58,6 +59,7 @@ public class TeamList {
 
 		model.addAttribute("functionEdit", URL_TEAM);
 		model.addAttribute("functionMeetings", URL_MEETINGLIST);
+		model.addAttribute("functionPhonelist", URL_TEAMPHONELIST);
 		model.addAttribute("functionAdd", URL_TEAM);
 		
 		GeneralAttributeCreator.create(model, STR_MODULE, STR_TITLE);

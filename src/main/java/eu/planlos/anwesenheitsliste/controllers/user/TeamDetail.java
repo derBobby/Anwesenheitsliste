@@ -15,6 +15,7 @@ import eu.planlos.anwesenheitsliste.model.ParticipantService;
 import eu.planlos.anwesenheitsliste.model.Team;
 import eu.planlos.anwesenheitsliste.model.TeamService;
 import eu.planlos.anwesenheitsliste.model.UserService;
+import eu.planlos.anwesenheitsliste.model.exception.EmptyIdException;
 import eu.planlos.anwesenheitsliste.viewhelper.GeneralAttributeCreator;
 
 import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_TEAM;
@@ -42,12 +43,11 @@ public class TeamDetail {
 	public String edit(Model model, @PathVariable Long idTeam) {
 
 		model.addAttribute(teamService.findById(idTeam));
-		model.addAttribute("participants", participantService.findAll());
-		
-		prepareContent(model);
 		
 		GeneralAttributeCreator.create(model, STR_MODULE, STR_TITLE_EDIT_TEAM);
-		
+
+		prepareContent(model);
+				
 		return RES_TEAM;
 	}
 	
@@ -55,11 +55,11 @@ public class TeamDetail {
 	public String add(Model model) {
 		
 		model.addAttribute(new Team());
-		model.addAttribute("participants", participantService.findAll());
-		prepareContent(model);
-		
+
 		GeneralAttributeCreator.create(model, STR_MODULE, STR_TITLE_ADD_TEAM);
-		
+
+		prepareContent(model);
+				
 		return RES_TEAM;
 	}
 
@@ -68,28 +68,40 @@ public class TeamDetail {
 	public String submit(Model model, @Valid @ModelAttribute Team team, Errors errors) {
 		
 		if(errors.hasErrors()) {
-			
-			prepareContent(model);
-			
-			if(team.getIdTeam() != null) {
-				GeneralAttributeCreator.create(model, STR_MODULE, STR_TITLE_EDIT_TEAM);
-			} else {
-				GeneralAttributeCreator.create(model, STR_MODULE, STR_TITLE_ADD_TEAM);
-			}
-			return RES_TEAM; 
+			return continueErrorHandling(model, team);
 		}
-
+		
 		Team savedTeam = teamService.save(team);
 		
-		userService.updateTeamForUsers(team, team.getUsers());
-		participantService.updateTeamForParticipants(team, team.getParticipants());
+		try {
+			userService.updateTeamForUsers(team, team.getUsers());
+			participantService.updateTeamForParticipants(team, team.getParticipants());
+		} catch (EmptyIdException e) {
+			//TODO Logger
+			model.addAttribute("customError", e.getMessage());
+			return continueErrorHandling(model, team);
+		}
 		
 		return "redirect:" + URL_TEAMLIST + savedTeam.getIdTeam();
+	}
+
+	private String continueErrorHandling(Model model, Team team) {
+			
+		prepareContent(model);
+		
+		if(team.getIdTeam() != null) {
+			GeneralAttributeCreator.create(model, STR_MODULE, STR_TITLE_EDIT_TEAM);
+		} else {
+			GeneralAttributeCreator.create(model, STR_MODULE, STR_TITLE_ADD_TEAM);
+		}
+		
+		return RES_TEAM;
 	}
 	
 	private void prepareContent(Model model) {
 		
 		model.addAttribute("users", userService.findAll());
+		model.addAttribute("participants", participantService.findAll());
 
 		model.addAttribute("formAction", URL_TEAM);
 		model.addAttribute("formCancel", URL_TEAMLIST);

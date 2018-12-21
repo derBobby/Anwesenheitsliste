@@ -8,9 +8,14 @@ public final class GeneralAttributeCreator {
 
 	public static void create(Model model, String module, String title) {
 
+//TODO
+//		Map<String, > sites		
+//		List<String> sites = new ArrayList<>();
+//		model.addAttribute("URL_USERLIST", URL_USERLIST);
+				
 		model.addAttribute("auth", SecurityContextHolder.getContext().getAuthentication()); 
 		model.addAttribute("session", RequestContextHolder.currentRequestAttributes().getSessionId());
 		model.addAttribute("module", module);
-		model.addAttribute("title", title);
+		model.addAttribute("title", title);				
 	}
 }

@@ -15,7 +15,7 @@ public class ApplicationPaths {
 	public static final String URL_USERLIST = URL_AREA_ADMIN + DELIMETER + "userlist" + DELIMETER;
 	
 	
-	public static final String RES_PERMISSIONS = "overview/permissionoverview";
+	public static final String RES_PERMISSIONSOVERVIEW = "overview/permissionoverview";
 
 	public static final String RES_USER = "detail/userdetail";
 	public static final String RES_USERLIST = "list/userlist";
@@ -39,7 +39,8 @@ public class ApplicationPaths {
 
 	public static final String URL_TEAM = URL_AREA_USER + DELIMETER + "teamdetail" + DELIMETER;
 	public static final String URL_TEAMLIST = URL_AREA_USER + DELIMETER + "teamlist" + DELIMETER;
-
+	public static final String URL_TEAMPHONELIST = URL_AREA_USER + DELIMETER + "teamphonelist" + DELIMETER;
+	
 	public static final String URL_LOGOUT = URL_AREA_USER + DELIMETER + "logout";
 	public static final String URL_LOGIN = "/login"; //TODO
 
@@ -52,6 +53,7 @@ public class ApplicationPaths {
 	
 	public static final String RES_TEAM = "detail/teamdetail";
 	public static final String RES_TEAMLIST = "list/teamlist";
+	public static final String RES_TEAMPHONELIST = "list/teamphonelist";
 	
 	public static final String RES_LOGIN = "session/login"; //TODO
 		

@@ -3,6 +3,7 @@ package eu.planlos.anwesenheitsliste.controllers.admin;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -55,18 +56,30 @@ public class UserDetail {
 		
 		if(errors.hasErrors()) {
 
-			prepareContent(model);
-			
-			if(user.getIdUser() != null) {
-				GeneralAttributeCreator.create(model, "Benutzerverwaltung", "Benutzer ändern");
-			} else {
-				GeneralAttributeCreator.create(model, "Benutzerverwaltung", "Benutzer hinzufügen");
-			}
-			return RES_USER; 
+			errorHandler(model, user);
+			return RES_USER;
 		}
 		
-		User savedUser = userService.save(user);
-		return "redirect:" + URL_USERLIST + savedUser.getIdUser();
+		try {
+			User savedUser = userService.save(user);
+			return "redirect:" + URL_USERLIST + savedUser.getIdUser();
+			
+		} catch (DuplicateKeyException e) {
+			errorHandler(model, user);
+			model.addAttribute("customError", e.getMessage());
+			return RES_USER;
+		}
+	}
+
+	private void errorHandler(Model model, User user) {
+		
+		prepareContent(model);
+		
+		if(user.getIdUser() != null) {
+			GeneralAttributeCreator.create(model, "Benutzerverwaltung", "Benutzer ändern");
+		} else {
+			GeneralAttributeCreator.create(model, "Benutzerverwaltung", "Benutzer hinzufügen");
+		}
 	}
 
 	private void prepareContent(Model model) {

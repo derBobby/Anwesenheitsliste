@@ -12,7 +12,7 @@
 						<div class="form-group">
 							<label th:for="teamName">Gruppenname</label>
 							<input th:field="*{teamName}" class="form-control" />
-							<span th:errors="*{teamName}" class="text-warning"></span>
+<!-- 							<span th:errors="*{teamName}" class="text-warning"></span> -->
                  		</div>
 						<div class="form-group">
 	          				<label>Mitarbeiter der Gruppe</label>
@@ -28,7 +28,8 @@
 						  		<label th:for="${#ids.prev('participant')}" class="custom-control-label" th:inline="text">[[${participant.firstName}]] [[${participant.lastName}]]</label>
 							</div>
 						</div>
-	            	</div>		
+						<span th:if="${customError}" th:text="${customError}" th:class="text-danger"></span>						
+	            	</div>
 		            <div class="card-footer">
 		                <div class="btn-group">
 		                	<input type="submit" th:value="*{idTeam} ? 'Gruppe ändern' : 'Gruppe hinzufügen'" id="submit" class="btn btn-primary"  />

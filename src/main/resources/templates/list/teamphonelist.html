@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head lang="de" th:replace="template :: header"></head>
+	<body>
+		<nav th:replace="template :: nav"></nav>
+	    <main class="container pt-5">
+	        <div class="card mb-3">
+	            <div class="card-header" th:text="${title}"></div>
+	            <div class="card-block p-0">
+       				<p class="m-3" th:if="${participants} and ${#lists.isEmpty(participants)}">Keine Teilnehmer vorhanden.</p>
+	                <div class="table-responsive" th:unless="${participants} and ${#lists.isEmpty(participants)}">
+	                    <table class="table table-bordered table-hover table-striped table-sm m-0 text-nowrap">
+	                        <thead class="">
+                          		<tr>
+	                                <th th:each="heading : ${headings}" th:text="${heading}"></th>
+                            	</tr>
+	                        </thead>
+							<tbody>
+								<tr th:each="participant : ${participants}" th:object="${participant}">
+									<td th:text="*{idParticipant}"></td>
+									<td th:text="*{firstName}"></td>
+									<td th:text="*{lastName}"></td>
+									<td th:text="*{phone}"></td>
+								</tr>
+							</tbody>
+	                    </table>
+	                </div>
+	            </div>
+	            <div class="card-footer">
+	                <div>
+	                    <span class="text-warning">Enthaelt noch inaktive Teilnehmer. Muss noch angepasst werden!</span>
+	                </div>
+	            </div>
+	        </div>
+	    </main>
+	    <footer th:replace="template :: footer"></footer>
+	</body>
+</html>

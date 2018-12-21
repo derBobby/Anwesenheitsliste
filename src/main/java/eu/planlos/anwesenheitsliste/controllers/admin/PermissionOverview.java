@@ -10,7 +10,7 @@ import eu.planlos.anwesenheitsliste.model.UserService;
 import eu.planlos.anwesenheitsliste.viewhelper.GeneralAttributeCreator;
 
 import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_PERMISSIONS;
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.RES_PERMISSIONS;
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.RES_PERMISSIONSOVERVIEW;
 
 @Controller
 public class PermissionOverview {
@@ -29,6 +29,6 @@ public class PermissionOverview {
 		
 		GeneralAttributeCreator.create(model, "Übersicht", "Übersicht der Berechtigungen");
 		
-		return RES_PERMISSIONS;
+		return RES_PERMISSIONSOVERVIEW;
 	}
 }

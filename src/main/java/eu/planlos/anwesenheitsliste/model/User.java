@@ -14,6 +14,7 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -40,13 +41,14 @@ public class User {
 	private String loginName;
 	
 	@Column(nullable = false, unique = true)
-	@NotBlank
+	@NotEmpty
 	@Email(message="muss eine gültige E-Mailadresse sein")
 	private String email;
 	
 	//TODO validation length unsecure
 	@Column(nullable = false)
 	@NotNull
+	@NotEmpty
 	private String password;
 	
 	@Column

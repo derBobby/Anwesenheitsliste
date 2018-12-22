@@ -17,7 +17,6 @@ import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_LOGOUT;
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-
 	@Autowired
 	private UserDetailsServiceImpl userDetailService;
 

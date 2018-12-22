@@ -12,6 +12,11 @@
 							<h1 class="mt-5">Anwesenheitserfassung PG</h1>
 							<p class="lead">Willkommen im Tool zur Erfassung der Anwesenheiten für Kreise der PG-Gemeinde.</p>
 							<p class="lead">Diese Webseite ist Privat und dient der Entwicklung des Tools.</p>
+			                <div th:if="${functionLogin != null}" class="btn-group">
+			              		<a th:href="@{${functionLogin}}" class="btn btn-primary">
+			              			<i class="fa fa-user"></i> Login 
+			                    </a>
+		               		</div>
 						</div>
 		            </div>
 		            <div class="card-footer">

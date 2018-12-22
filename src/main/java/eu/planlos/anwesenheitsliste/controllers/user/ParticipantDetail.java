@@ -3,6 +3,7 @@ package eu.planlos.anwesenheitsliste.controllers.user;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -18,7 +19,6 @@ import eu.planlos.anwesenheitsliste.viewhelper.GeneralAttributeCreator;
 
 import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_PARTICIPANT;
 import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_PARTICIPANTLIST;
-
 import static eu.planlos.anwesenheitsliste.ApplicationPaths.RES_PARTICIPANT;
 
 @Controller
@@ -37,12 +37,9 @@ public class ParticipantDetail {
 	@RequestMapping(path = URL_PARTICIPANT + "{idParticipant}", method = RequestMethod.GET)
 	public String edit(Model model, @PathVariable Long idParticipant) {
 
-		model.addAttribute(participantService.findById(idParticipant));
-		model.addAttribute("teams", teamService.findAll());
-		
-		prepareContent(model);
-		GeneralAttributeCreator.create(model, STR_MODULE, STR_TITLE_EDIT_USER);
-
+		Participant participant = participantService.findById(idParticipant);
+		model.addAttribute(participant);
+		prepareContent(model, participant);
 		
 		return RES_PARTICIPANT;
 	}
@@ -50,11 +47,9 @@ public class ParticipantDetail {
 	@RequestMapping(path = URL_PARTICIPANT, method = RequestMethod.GET)
 	public String add(Model model) {
 		
-		model.addAttribute(new Participant());
-		model.addAttribute("teams", teamService.findAll());
-		
-		prepareContent(model);
-		GeneralAttributeCreator.create(model, STR_MODULE, STR_TITLE_ADD_USER);
+		Participant participant = new Participant();
+		model.addAttribute(participant);
+		prepareContent(model, participant);
 		
 		return RES_PARTICIPANT;
 	}
@@ -63,24 +58,30 @@ public class ParticipantDetail {
 	public String submit(Model model, @Valid @ModelAttribute Participant participant, Errors errors) {
 		
 		if(errors.hasErrors()) {
-
-			prepareContent(model);
-			model.addAttribute("teams", teamService.findAll());
-
-			if(participant.getIdParticipant() != null) {
-				GeneralAttributeCreator.create(model, STR_MODULE, STR_TITLE_EDIT_USER);
-			} else {
-				 GeneralAttributeCreator.create(model, STR_MODULE, STR_TITLE_ADD_USER);
-			}
+			prepareContent(model, participant);
 			return RES_PARTICIPANT; 
 		}
 		
-		Participant savedParticipant = participantService.save(participant);
-		return "redirect:" + URL_PARTICIPANTLIST + savedParticipant.getIdParticipant();
+		try {
+			Participant savedParticipant = participantService.save(participant);
+			return "redirect:" + URL_PARTICIPANTLIST + savedParticipant.getIdParticipant();
+			
+		} catch (DuplicateKeyException e) {
+			prepareContent(model, participant);
+			model.addAttribute("customError", e.getMessage());
+			return RES_PARTICIPANT;
+		}
 	}
 
-	private void prepareContent(Model model) {
+	private void prepareContent(Model model, Participant participant) {
+
+		if(participant.getIdParticipant() != null) {
+			GeneralAttributeCreator.create(model, STR_MODULE, STR_TITLE_EDIT_USER);
+		} else {
+			 GeneralAttributeCreator.create(model, STR_MODULE, STR_TITLE_ADD_USER);
+		}
 		
+		model.addAttribute("teams", teamService.findAll());
 		model.addAttribute("formAction", URL_PARTICIPANT);
 		model.addAttribute("formCancel", URL_PARTICIPANTLIST);
 	}

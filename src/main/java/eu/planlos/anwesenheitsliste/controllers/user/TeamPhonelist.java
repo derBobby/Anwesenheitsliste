@@ -39,6 +39,7 @@ public class TeamPhonelist {
 		headings.add("#");
 		headings.add("Teilnehmer");
 		headings.add("Telefonnummer");
+		headings.add("Aktiv");
 
 		List<Participant> participants = participantService.findAllByTeamsIdTeam(idTeam);
 		

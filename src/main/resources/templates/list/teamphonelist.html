@@ -18,18 +18,20 @@
 							<tbody>
 								<tr th:each="participant : ${participants}" th:object="${participant}">
 									<td th:text="*{idParticipant}"></td>
-									<td th:text="*{firstName}"></td>
-									<td th:text="*{lastName}"></td>
+									<td th:text="*{firstName} + ' ' + *{lastName}"></td>
 									<td th:text="*{phone}"></td>
+									<td>
+										<div class="custom-control custom-checkbox">
+											<input type="checkbox" class="custom-control-input" th:checked="*{isActive}"></input>
+											<label class="custom-control-label" for=""></label>
+										</div>
+									</td>
 								</tr>
 							</tbody>
 	                    </table>
 	                </div>
 	            </div>
 	            <div class="card-footer">
-	                <div>
-	                    <span class="text-warning">Enthaelt noch inaktive Teilnehmer. Muss noch angepasst werden!</span>
-	                </div>
 	            </div>
 	        </div>
 	    </main>

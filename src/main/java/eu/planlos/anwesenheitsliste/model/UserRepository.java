@@ -10,4 +10,5 @@ public interface UserRepository extends CrudRepository<User, Long> {
 	public List<User> findAllByTeamsIdTeam(Long idTeam);
 	public User findByLoginName(String loginName);
 	public Boolean existsByLoginNameOrEmail(String loginName, String email);
+	public boolean existsByFirstNameAndLastName(String firstName, String lastName);
 }

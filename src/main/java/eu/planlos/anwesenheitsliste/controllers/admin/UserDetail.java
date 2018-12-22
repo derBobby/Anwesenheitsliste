@@ -19,12 +19,15 @@ import eu.planlos.anwesenheitsliste.viewhelper.GeneralAttributeCreator;
 
 import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_USER;
 import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_USERLIST;
-
 import static eu.planlos.anwesenheitsliste.ApplicationPaths.RES_USER;
 
 @Controller
 public class UserDetail {
 
+	public final String STR_MODULE = "Benutzerverwaltung";
+	public final String STR_TITLE_ADD_USER = "Benutzer hinzufügen";
+	public final String STR_TITLE_EDIT_USER = "Benutzer ändern";
+	
 	@Autowired
 	private UserService userService;
 
@@ -34,9 +37,9 @@ public class UserDetail {
 	@RequestMapping(path = URL_USER + "{idUser}", method = RequestMethod.GET)
 	public String edit(Model model, @PathVariable Long idUser) {
 
-		model.addAttribute(userService.findById(idUser));
-		prepareContent(model);
-		GeneralAttributeCreator.create(model, "Benutzerverwaltung", "Benutzer ändern");
+		User user = userService.findById(idUser);
+		model.addAttribute(user);
+		prepareContent(model, user);
 		
 		return RES_USER;
 	}
@@ -44,9 +47,9 @@ public class UserDetail {
 	@RequestMapping(path = URL_USER, method = RequestMethod.GET)
 	public String add(Model model) {
 		
-		model.addAttribute(new User());
-		prepareContent(model);
-		GeneralAttributeCreator.create(model, "Benutzerverwaltung", "Benutzer hinzufügen");
+		User user = new User();
+		model.addAttribute(user);
+		prepareContent(model, user);
 		
 		return RES_USER;
 	}
@@ -55,8 +58,7 @@ public class UserDetail {
 	public String submit(Model model, @Valid @ModelAttribute User user, Errors errors) {
 		
 		if(errors.hasErrors()) {
-
-			errorHandler(model, user);
+			prepareContent(model, user);
 			return RES_USER;
 		}
 		
@@ -65,24 +67,20 @@ public class UserDetail {
 			return "redirect:" + URL_USERLIST + savedUser.getIdUser();
 			
 		} catch (DuplicateKeyException e) {
-			errorHandler(model, user);
+			//TODO logger
+			prepareContent(model, user);
 			model.addAttribute("customError", e.getMessage());
 			return RES_USER;
 		}
 	}
 
-	private void errorHandler(Model model, User user) {
-		
-		prepareContent(model);
+	private void prepareContent(Model model, User user) {
 		
 		if(user.getIdUser() != null) {
-			GeneralAttributeCreator.create(model, "Benutzerverwaltung", "Benutzer ändern");
+			GeneralAttributeCreator.create(model, STR_MODULE, STR_TITLE_EDIT_USER);
 		} else {
-			GeneralAttributeCreator.create(model, "Benutzerverwaltung", "Benutzer hinzufügen");
+			GeneralAttributeCreator.create(model, STR_MODULE, STR_TITLE_ADD_USER);
 		}
-	}
-
-	private void prepareContent(Model model) {
 		
 		model.addAttribute("teams", teamService.findAll());
 		model.addAttribute("formAction", URL_USER);

@@ -36,6 +36,7 @@ public class Participant {
 	@Column
 	private String phone;
 	
+	//Must indeed not be unique, siblings!
 	@Column
 	private String email;
 	

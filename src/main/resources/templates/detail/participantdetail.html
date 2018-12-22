@@ -43,7 +43,8 @@
 						  		<label th:for="${#ids.prev('team')}" class="custom-control-label" th:inline="text">[[${team.teamName}]]</label>
 							</div>
 						</div>	
-					</div>
+						<span th:if="${customError}" th:text="${customError}" th:class="text-danger"></span>
+					</div>					
 		            <div class="card-footer">
 		                <div class="btn-group">
 		                	<input type="submit" th:value="*{idParticipant} ? 'Teilnehmer ändern' : 'Teilnehmer hinzufügen'" id="submit" class="btn btn-primary"  />

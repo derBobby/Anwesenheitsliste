@@ -2,7 +2,6 @@ package eu.planlos.anwesenheitsliste.model;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
@@ -18,17 +17,23 @@ public class UserService {
 	public User save(User user) throws DuplicateKeyException {
 		
 		if(user.getIdUser() == null) {
+			String firstName = user.getFirstName();
+			String lastName = user.getLastName();
 			String email = user.getEmail();
 			String loginName = user.getLoginName();
 		
-			Boolean exists = userRepo.existsByLoginNameOrEmail(loginName, email);
-			if(exists) {
-				throw new DuplicateKeyException("Bitte probiere es mit einem anderen Loginnamen oder einer anderer E-Mailadresse");
+			// Should cover all constraints of the Entity
+			if(userRepo.existsByLoginNameOrEmail(loginName, email)
+					|| userRepo.existsByFirstNameAndLastName(firstName, lastName)
+					) {
+				throw new DuplicateKeyException("Ein Benutzer mit dem Namen \"" + firstName + " " + lastName + "\""
+						+ "oder dem Benutzernamen \"" + loginName + "\""
+								+ "oder der E-Mailadresse \"" + email + "\" existiert bereits");
+
 			}
 		}
 		
-		User newUser = userRepo.save(user);
-		return newUser;
+		return userRepo.save(user);
 	}
 	
 	public void delete(User user) {
@@ -61,7 +66,7 @@ public class UserService {
 		
 		for(User chosenUser : chosenUsers) {
 			if(chosenUser.getIdUser() == null) {
-				throw new EmptyIdException("Bitte probiere es mit einem anderen Loginnamen oder einer anderer E-Mailadresse");
+				throw new EmptyIdException("Aktualisierung fehlgeschlagen. Daten Fehlerhaft.");
 			}
 		}
 		

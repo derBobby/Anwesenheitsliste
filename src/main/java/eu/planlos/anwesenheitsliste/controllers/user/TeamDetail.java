@@ -3,6 +3,7 @@ package eu.planlos.anwesenheitsliste.controllers.user;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -42,11 +43,9 @@ public class TeamDetail {
 	@RequestMapping(path = URL_TEAM + "{idTeam}", method = RequestMethod.GET)
 	public String edit(Model model, @PathVariable Long idTeam) {
 
-		model.addAttribute(teamService.findById(idTeam));
-		
-		GeneralAttributeCreator.create(model, STR_MODULE, STR_TITLE_EDIT_TEAM);
-
-		prepareContent(model);
+		Team team = teamService.findById(idTeam);
+		model.addAttribute(team);
+		prepareContent(model, team);
 				
 		return RES_TEAM;
 	}
@@ -54,11 +53,9 @@ public class TeamDetail {
 	@RequestMapping(path = URL_TEAM, method = RequestMethod.GET)
 	public String add(Model model) {
 		
-		model.addAttribute(new Team());
-
-		GeneralAttributeCreator.create(model, STR_MODULE, STR_TITLE_ADD_TEAM);
-
-		prepareContent(model);
+		Team team = new Team();
+		model.addAttribute(team);
+		prepareContent(model, team);
 				
 		return RES_TEAM;
 	}
@@ -68,26 +65,32 @@ public class TeamDetail {
 	public String submit(Model model, @Valid @ModelAttribute Team team, Errors errors) {
 		
 		if(errors.hasErrors()) {
-			return continueErrorHandling(model, team);
+			prepareContent(model, team);
+			return RES_TEAM;
 		}
 		
-		Team savedTeam = teamService.save(team);
-		
 		try {
+			Team savedTeam = teamService.save(team);
+
 			userService.updateTeamForUsers(team, team.getUsers());
 			participantService.updateTeamForParticipants(team, team.getParticipants());
+			return "redirect:" + URL_TEAMLIST + savedTeam.getIdTeam();
+
 		} catch (EmptyIdException e) {
 			//TODO Logger
 			model.addAttribute("customError", e.getMessage());
-			return continueErrorHandling(model, team);
+			prepareContent(model, team);
+			
+		} catch (DuplicateKeyException e) {
+			//TODO Logger
+			model.addAttribute("customError", e.getMessage());
+			prepareContent(model, team);
 		}
 		
-		return "redirect:" + URL_TEAMLIST + savedTeam.getIdTeam();
+		return RES_TEAM;
 	}
-
-	private String continueErrorHandling(Model model, Team team) {
-			
-		prepareContent(model);
+	
+	private void prepareContent(Model model, Team team) {
 		
 		if(team.getIdTeam() != null) {
 			GeneralAttributeCreator.create(model, STR_MODULE, STR_TITLE_EDIT_TEAM);
@@ -95,14 +98,8 @@ public class TeamDetail {
 			GeneralAttributeCreator.create(model, STR_MODULE, STR_TITLE_ADD_TEAM);
 		}
 		
-		return RES_TEAM;
-	}
-	
-	private void prepareContent(Model model) {
-		
 		model.addAttribute("users", userService.findAll());
 		model.addAttribute("participants", participantService.findAll());
-
 		model.addAttribute("formAction", URL_TEAM);
 		model.addAttribute("formCancel", URL_TEAMLIST);
 	}

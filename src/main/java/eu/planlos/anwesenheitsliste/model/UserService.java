@@ -62,7 +62,9 @@ public class UserService {
 	 * @param chosenUsers
 	 * @throws EmptyIdException
 	 */
-	public void updateTeamForUsers(Team team, List<User> chosenUsers) throws EmptyIdException {
+	public void updateTeamForUsers(Team team) throws EmptyIdException {
+		
+		List<User> chosenUsers = team.getUsers();
 		
 		for(User chosenUser : chosenUsers) {
 			if(chosenUser.getIdUser() == null) {

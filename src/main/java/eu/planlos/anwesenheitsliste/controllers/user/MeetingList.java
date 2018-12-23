@@ -50,7 +50,7 @@ public class MeetingList {
 	public String meetingListFull(Model model) {
 		
 
-		model.addAttribute("functionEdit", URL_MEETINGCHOOSETEAM);
+		model.addAttribute("functionEdit", URL_MEETINGFORTEAM);
 		model.addAttribute("functionAdd", URL_MEETINGCHOOSETEAM);
 		
 		prepareContent(model, null);

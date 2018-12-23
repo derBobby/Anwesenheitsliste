@@ -169,6 +169,41 @@ public class Participant {
 	}
 
 	/**
+	 * @return the team
+	 */
+	public List<Meeting> getMeetings() {
+		return meetings;
+	}
+
+	/**
+	 * @param team the team to set
+	 */
+	public void setMeetings(List<Meeting> meetings) {
+		this.meetings = meetings;
+	}
+
+	/**
+	 * @param team a team to add
+	 */
+	public void addMeeting(Meeting meeting) {
+		if(this.meetings == null) {
+			this.meetings = new ArrayList<>();
+		}
+		this.meetings.add(meeting);
+	}
+	
+	/**
+	 * @param team the team to remove
+	 */
+	public void removeMeeting(Meeting meeting) {
+		if(this.meetings != null) {
+			if(this.meetings.contains(meeting)) {
+				this.meetings.remove(meeting);
+			}
+		}
+	}
+
+	/**
 	 * @return the idParticipant
 	 */
 	public Long getIdParticipant() {

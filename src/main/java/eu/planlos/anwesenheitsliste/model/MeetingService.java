@@ -11,6 +11,7 @@ public class MeetingService {
 	@Autowired
 	private MeetingRepository meetingRepo;
 	
+	//No unique constraint so validation should not be necessary
 	public Meeting save(Meeting meeting) {
 		return meetingRepo.save(meeting);
 	}

@@ -31,6 +31,7 @@ import static eu.planlos.anwesenheitsliste.ApplicationPaths.DELIMETER;
 
 import static eu.planlos.anwesenheitsliste.ApplicationPaths.RES_MEETING;
 
+//TODO may be simplified
 @Controller
 public class MeetingDetail {
 
@@ -47,26 +48,46 @@ public class MeetingDetail {
 	@Autowired
 	private ParticipantService participantService;
 	
+	//For editing a given meeting for given team
 	@RequestMapping(path = URL_MEETINGFORTEAM + "{idTeam}/{idMeeting}", method = RequestMethod.GET)
 	public String edit(Model model, @PathVariable Long idTeam, @PathVariable Long idMeeting) {
 	
-		model.addAttribute(meetingService.findById(idMeeting));
-		prepareContentWithTeam(model, idTeam);
-		GeneralAttributeCreator.create(model, STR_MODULE, STR_TITLE_EDIT_MEETING);
+		Meeting meeting = meetingService.findById(idMeeting);
+		model.addAttribute(meeting);
+		prepareContent(model, meeting);
+		
+		prepareContentWithTeam(model, idTeam); //###############
 		
 		return RES_MEETING;
 	}
 
+	//For adding new meeting for given team
 	@RequestMapping(path = URL_MEETINGFORTEAM + "{idTeam}", method = RequestMethod.GET)
 	public String addForTeam(Model model, @PathVariable Long idTeam) {
 		
-		model.addAttribute("meeting", new Meeting());
-		prepareContentWithTeam(model, idTeam);
-		GeneralAttributeCreator.create(model, STR_MODULE, STR_TITLE_ADD_MEETING);
+		Meeting meeting = new Meeting();
+		model.addAttribute(meeting);
+		prepareContent(model, meeting);
 		
+		prepareContentWithTeam(model, idTeam); //###############
+
 		return RES_MEETING;
 	}
 	
+	//STEP 1 adding new meeting without a given team
+	@RequestMapping(path = URL_MEETINGCHOOSETEAM, method = RequestMethod.GET)
+	public String addWithoutTeam(Model model) {
+		
+		Meeting meeting = new Meeting();
+		model.addAttribute(meeting);
+		prepareContent(model, meeting);
+
+		prepareContentWithoutTeam(model); //###############
+		
+		return RES_MEETING;
+	}
+
+	//STEP 2 adding new meeting without a given team
 	@RequestMapping(path = URL_MEETINGADDPARTICIPANTS, method = RequestMethod.POST)
 	public String addWithoutTeam(Model model, @Valid @ModelAttribute Meeting meeting, Errors errors) {
 
@@ -75,9 +96,56 @@ public class MeetingDetail {
 			return RES_MEETING; 
 		}
 		
+		prepareContent(model, meeting);
 		prepareContentWithTeam(model, meeting.getTeam().getIdTeam());
 		
 		return RES_MEETING; 
+	}
+	
+	//For submitting the added/edited meeting
+	@RequestMapping(path = URL_MEETINGSUBMIT, method = RequestMethod.POST)
+	public String submit(Model model, @Valid @ModelAttribute Meeting meeting, Errors errors) {
+		
+		if(errors.hasErrors()) {
+			handleValidationErrors(model, meeting);
+			return RES_MEETING; 
+		}
+		
+		//HTML currently doesn't send disabled checkboxes so we need to correct these
+		//because inactive participants should not be modifiable at the moment 
+		meeting.addParticipants(participantService.getInactiveParticipantsForMeeting(meeting));
+		
+		meeting = meetingService.save(meeting);
+
+		return "redirect:" + URL_MEETINGLIST + meeting.getTeam().getIdTeam() + DELIMETER + meeting.getIdMeeting();
+	}
+	
+	private void handleValidationErrors(Model model, Meeting meeting) {
+		
+		prepareContent(model, meeting);
+
+		if(meeting.getTeam() != null) {
+			prepareContentWithTeam(model, meeting.getTeam().getIdTeam());
+		} else {
+			prepareContentWithoutTeam(model);
+		}
+	}
+
+	private void prepareContent(Model model, Meeting meeting) {
+		
+		if(meeting.getIdMeeting() != null) {
+			GeneralAttributeCreator.create(model, STR_MODULE, STR_TITLE_EDIT_MEETING);
+		} else {
+			GeneralAttributeCreator.create(model, STR_MODULE, STR_TITLE_ADD_MEETING);
+		}
+	}
+	
+	private void prepareContentWithoutTeam(Model model) {
+		
+		model.addAttribute("teams", teamService.findAll());
+		model.addAttribute("participants", new ArrayList<>()); //TODO No participants. Which to load? JQuery?
+		model.addAttribute("formAction", URL_MEETINGADDPARTICIPANTS);
+		model.addAttribute("formCancel", URL_MEETINGLISTFULL);
 	}
 	
 	private void prepareContentWithTeam(Model model, Long idTeam) {
@@ -88,57 +156,7 @@ public class MeetingDetail {
 		
 		model.addAttribute("teams", teams);
 		model.addAttribute("participants", participantService.findAllByTeamsIdTeam(idTeam));
-
 		model.addAttribute("formAction", URL_MEETINGSUBMIT);
 		model.addAttribute("formCancel", URL_MEETINGLIST + idTeam);
-		
-		GeneralAttributeCreator.create(model, STR_MODULE, STR_TITLE_ADD_MEETING);
 	}
-	
-	@RequestMapping(path = URL_MEETINGCHOOSETEAM, method = RequestMethod.GET)
-	public String addWithoutTeam(Model model) {
-		
-		model.addAttribute("meeting", new Meeting());
-		prepareContentWithoutTeam(model);
-		GeneralAttributeCreator.create(model, STR_MODULE, STR_TITLE_ADD_MEETING);
-			
-		return RES_MEETING;
-	}
-
-	private void prepareContentWithoutTeam(Model model) {
-		
-		model.addAttribute("teams", teamService.findAll());
-		model.addAttribute("participants", new ArrayList<>()); //TODO No participants. Which to load? JQuery?
-		
-		model.addAttribute("formAction", URL_MEETINGADDPARTICIPANTS);
-		model.addAttribute("formCancel", URL_MEETINGLISTFULL);
-	}
-
-	@RequestMapping(path = URL_MEETINGSUBMIT, method = RequestMethod.POST)
-	public String submit(Model model, @Valid @ModelAttribute Meeting meeting, Errors errors) {
-		
-		if(errors.hasErrors()) {
-			handleValidationErrors(model, meeting);
-			return RES_MEETING; 
-		}
-		
-		Meeting newMeeting = meetingService.save(meeting);
-		return "redirect:" + URL_MEETINGLIST + newMeeting.getTeam().getIdTeam() + DELIMETER + newMeeting.getIdMeeting();
-	}
-	
-	private void handleValidationErrors(Model model, Meeting meeting) {
-		
-		if(meeting.getTeam() != null) {
-			prepareContentWithTeam(model, meeting.getTeam().getIdTeam());
-		} else {
-			prepareContentWithoutTeam(model);
-		}
-
-		if(meeting.getIdMeeting() != null) {
-			GeneralAttributeCreator.create(model, STR_MODULE, STR_TITLE_EDIT_MEETING);
-		} else {
-			GeneralAttributeCreator.create(model, STR_MODULE, STR_TITLE_ADD_MEETING);
-		}
-	}
-
 }

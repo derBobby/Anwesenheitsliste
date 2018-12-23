@@ -72,8 +72,9 @@ public class TeamDetail {
 		try {
 			Team savedTeam = teamService.save(team);
 
-			userService.updateTeamForUsers(team, team.getUsers());
-			participantService.updateTeamForParticipants(team, team.getParticipants());
+			userService.updateTeamForUsers(team);
+			participantService.updateTeamForParticipants(team);
+			
 			return "redirect:" + URL_TEAMLIST + savedTeam.getIdTeam();
 
 		} catch (EmptyIdException e) {

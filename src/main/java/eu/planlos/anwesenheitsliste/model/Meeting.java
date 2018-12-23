@@ -1,5 +1,6 @@
 package eu.planlos.anwesenheitsliste.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -40,6 +41,7 @@ public class Meeting {
 	 */
 	public Meeting() {
 		super();
+		participants = new ArrayList<Participant>();
 	}
 
 	/**
@@ -111,6 +113,13 @@ public class Meeting {
 	 */
 	public void setParticipants(List<Participant> participants) {
 		this.participants = participants;
+	}
+	
+	/**
+	 * @param participants the participants to set
+	 */
+	public void addParticipants(List<Participant> participants) {
+		this.participants.addAll(participants);
 	}
 
 	/**

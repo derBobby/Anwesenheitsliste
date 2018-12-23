@@ -1,6 +1,9 @@
 package eu.planlos.anwesenheitsliste.model;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
@@ -13,7 +16,7 @@ public class ParticipantService {
 
 	@Autowired
 	private ParticipantRepository participantRepo;
-	
+		
 	public Participant save(Participant participant) throws DuplicateKeyException {
 		
 		if(participant.getIdParticipant() == null) {
@@ -45,8 +48,10 @@ public class ParticipantService {
 		return participantRepo.findAllByTeamsIdTeam(idTeam);
 	}
 	
-	public void updateTeamForParticipants(Team team, List<Participant> chosenParticipants) throws EmptyIdException {
+	public void updateTeamForParticipants(Team team) throws EmptyIdException {
 
+		List<Participant> chosenParticipants = team.getParticipants();
+		
 		for(Participant chosenParticipant : chosenParticipants) {
 			if(chosenParticipant.getIdParticipant() == null) {
 				throw new EmptyIdException("Aktualisierung fehlgeschlagen. Daten Fehlerhaft.");
@@ -68,5 +73,17 @@ public class ParticipantService {
 				participantRepo.save(participantForTeam);
 			}
 		}
+	}
+	
+
+	public List<Participant> getInactiveParticipantsForMeeting(@Valid Meeting meeting) {
+		
+		if(meeting.getIdMeeting() == null) {
+			return new ArrayList<Participant>();
+		}
+		
+		List<Participant> inactiveParticipants = participantRepo.findAllByMeetingsInAndIsActive(meeting, false);
+		
+		return inactiveParticipants;
 	}
 }

@@ -11,23 +11,23 @@
 	                <div class="table-responsive" th:unless="${teams} and ${#lists.isEmpty(teams)}">
 	                    <table class="table table-bordered table-hover table-striped table-sm m-0 text-nowrap">
 	                        <thead class="">
-                          		<tr>
+                          		<tr align="center">
 	                                <th th:each="heading : ${headings}" th:text="${heading}"></th>
                             	</tr>
 	                        </thead>
 							<tbody>
-								<tr th:each="team : ${teams}" th:object="${team}" th:classappend="*{idTeam} == ${markedTeamId} ? table-success">
+								<tr align="center" th:each="team : ${teams}" th:object="${team}" th:classappend="*{idTeam} == ${markedTeamId} ? table-success">
 									<td th:text="*{idTeam}"></td>
 									<td th:text="*{teamName}"></td>
 									<td>
 	                                    <a th:href="@{${functionEdit} + *{idTeam}}" class="btn btn-secondary">
-    	                                    <span class="fa fa-pencil"></span>
+    	                                    <span class="fas fa-pencil-alt"></span>
         	                            </a>
 	                                    <a th:href="@{${functionMeetings} + *{idTeam}}" class="btn btn-secondary">
-    	                                    <span class="fa fa-calendar"></span>
+    	                                    <span class="far fa-calendar-alt"></span>
         	                            </a>
 	                                    <a th:href="@{${functionPhonelist} + *{idTeam}}" class="btn btn-secondary">
-    	                                    <span class="fa fa-phone"></span>
+    	                                    <span class="fas fa-phone-square"></span>
         	                            </a>
                                   	</td>
 								</tr>
@@ -38,7 +38,7 @@
 	            <div class="card-footer">
 	                <div>
 	                    <a th:href="@{${functionAdd}}" class="btn btn-primary">
-	                        <span class="fa fa-plus-square-o"></span> Gruppe hinzufügen
+	                        <span class="far fa-plus-square"></span> Gruppe hinzufügen
 	                    </a>
 	                </div>
 	            </div>

@@ -11,7 +11,7 @@
 	                <div class="table-responsive" th:unless="${users} and ${#lists.isEmpty(users)}">
 	                    <table class="table table-bordered table-hover table-striped table-sm m-0 text-nowrap">
 	                        <thead class="">
-	                            <tr>
+	                            <tr align="center">
 	                                <th th:each="heading : ${headings}" th:text="${heading}"></th>
 	                            </tr>
 	                        </thead>
@@ -22,24 +22,24 @@
 									<td th:text="*{lastName}"></td>
 									<td th:text="*{loginName}"></td>
 									<td th:text="*{email}"></td>
-									<td>
+									<td align="center">
 										<div class="custom-control custom-checkbox">
-											<input type="checkbox" class="custom-control-input" th:checked="*{isActive}"></input>
-											<label class="custom-control-label" for=""></label>
+											<input type="checkbox" class="custom-control-input" th:checked="*{isActive}">
+											<label class="custom-control-label">&nbsp;</label>
 										</div>
 									</td>
-									<td>
+									<td align="center">
 										<div class="custom-control custom-checkbox">
 											<input type="checkbox" class="custom-control-input" th:checked="*{isAdmin}"></input>
-											<label class="custom-control-label" for=""></label>
+											<label class="custom-control-label">&nbsp;</label>
 										</div>
 									</td>
-									<td>
+									<td align="center">
 										<a th:href="@{${functionEdit} + *{idUser}}" class="btn btn-secondary">
-											<span class="fa fa-pencil"></span>
+											<span class="fas fa-pencil-alt"></span>
 										</a>
 										<a th:href="@{${functionResetPW} + *{idUser}}" class="btn btn-secondary">
-											<span class="fa fa-undo"></span>
+											<span class="fas fa-undo"></span>
 										</a>
 									</td>
 								</tr>
@@ -50,7 +50,7 @@
 	            <div class="card-footer">
 	                <div>
 	                    <a th:href="@{${functionAdd}}" class="btn btn-primary">
-	                        <span class="fa fa-plus-square-o"></span> Neuer Benutzer
+	                        <span class="far fa-plus-square"></span> Neuer Benutzer
 	                    </a>
 	                </div>
 	            </div>

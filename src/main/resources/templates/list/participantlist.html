@@ -11,12 +11,12 @@
 	                <div class="table-responsive" th:unless="${participants} and ${#lists.isEmpty(participants)}">
 	                    <table class="table table-bordered table-hover table-striped table-sm m-0 text-nowrap">
 	                        <thead class="">
-	                            <tr>
+	                            <tr align="center">
 	                                <th th:each="heading : ${headings}" th:text="${heading}"></th>
 	                            </tr>
 	                        </thead>
 							<tbody>
-								<tr th:each="participant : ${participants}" th:object="${participant}" th:classappend="*{idParticipant} == ${markedParticipantId} ? table-success">
+								<tr align="center" th:each="participant : ${participants}" th:object="${participant}" th:classappend="*{idParticipant} == ${markedParticipantId} ? table-success">
 									<td th:text="*{idParticipant}"></td>
 									<td th:text="*{firstName}"></td>
 									<td th:text="*{lastName}"></td>
@@ -30,7 +30,7 @@
 									</td>
 									<td>
 										<a th:href="@{${functionEdit} + *{idParticipant}}" class="btn btn-secondary">
-											<span class="fa fa-pencil"></span>
+											<span class="fas fa-pencil-alt"></span>
 										</a>
 									</td>
 								</tr>
@@ -41,7 +41,7 @@
 	            <div class="card-footer">
 	                <div>
 	                    <a th:href="@{${functionAdd}}" class="btn btn-primary">
-	                        <span class="fa fa-plus-square-o"></span> Neuer Teilnehmer
+	                        <span class="far fa-plus-square"></span> Neuer Teilnehmer
 	                    </a>
 	                </div>
 	            </div>

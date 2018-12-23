@@ -23,18 +23,11 @@
             				<div class="input-group date" id="datepicker">
     							<input th:field="*{meetingDate}" th:value="*{meetingDate}" type="date" class="form-control" />
     							<div class="input-group-append">
-									<span class="input-group-text"><i class="fa fa-calendar"></i> </span>
+									<span class="input-group-text"><i class="far fa-calendar-alt"></i> </span>
     							</div>
 							</div>
 							<span th:errors="*{meetingDate}" class="text-warning"></span>
- 							<script type="text/javascript">
- 								$('#datepicker').datepicker();
- 								$('#datepicker').on('changeDate', function() {
- 								    $('#meetingDate').val(
- 								        $('#datepicker').datepicker('getFormattedDate')
- 								    );
- 								});
- 							</script>
+
 		                </div>
 						<div class="form-group">
 							<label th:for="description">Beschreibung / Kommentar</label>
@@ -53,7 +46,7 @@
 		                <div class="btn-group">
 		                	<input type="submit" th:value="${#lists.isEmpty(participants)} ? ${'Weiter'} : (*{idMeeting} ? ${'Termin ändern'} : ${'Termin hinzufügen'})" id="submit" class="btn btn-primary"  />
 		              		<a th:href="@{*{team} ? ${formCancel} : ${formCancel}}" class="btn btn-secondary">
-		                        <i class="fa fa-times"></i> 
+		                        <i class="fas fa-times"></i> 
 		                    </a>
 		                </div>
 	                </div>

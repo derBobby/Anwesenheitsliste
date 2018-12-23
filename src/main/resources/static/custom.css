@@ -2,17 +2,34 @@
  * Bootstrap customization
  */
 
+
+
+/*
+ * Background of global page
+ */
 body {
   background-color: #000;
 }
 
+
+
+/*
+ * Alignment of text in tables vertically centered
+ */
 .table th,
 .table td {
   vertical-align: middle;
 }
 
-.checkbox input,
-.radio input {
-  horizontal-align: middle;
-  height: 100%;
-}
+/* .checkbox input, */
+/* .radio input { */
+/*   horizontal-align: middle; */
+/*   height: 100%; */
+/* } */
+
+
+/* td input[type="checkbox"] { */
+/*     float: right; */
+/*     margin: 0 auto; */
+/*     width: 100%; */
+/* } */

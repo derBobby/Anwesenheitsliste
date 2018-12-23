@@ -11,19 +11,19 @@
 	                <div class="table-responsive" th:unless="${meetings} and ${#lists.isEmpty(meetings)}">
 	                    <table class="table table-bordered table-hover table-striped table-sm m-0 text-nowrap">
 	                        <thead class="">
-	                            <tr>
+	                            <tr align="center">
 	                                <th th:each="heading : ${headings}" th:text="${heading}"></th>
 	                            </tr>
 	                        </thead>
 							<tbody>
-								<tr th:each="meeting : ${meetings}" th:object="${meeting}" th:classappend="*{idMeeting} == ${markedMeetingId} ? table-success">
+								<tr align="center" th:each="meeting : ${meetings}" th:object="${meeting}" th:classappend="*{idMeeting} == ${markedMeetingId} ? table-success">
 									<td th:text="*{idMeeting}"></td>
 									<td th:text="*{meetingDate}"></td> <!-- TODO *{#calendars.format(meetingDate,'dd MMM yyyy')} -->
 									<td th:if="${#lists.contains(headings, 'Gruppe')}" th:text="*{team.teamName}"></td>
 									<td th:text="*{description}"></td>
 									<td>
 										<a th:href="@{${functionEdit} + *{team.idTeam} + '/'+ *{idMeeting}}" class="btn btn-secondary">
-											<span class="fa fa-pencil"></span>
+											<span class="fas fa-pencil-alt"></span>
 										</a>
 									</td>
 								</tr>
@@ -34,7 +34,7 @@
 	            <div class="card-footer">
 	                <div>
 	                    <a th:href="@{ ${idTeam} ? ${functionAdd} + ${idTeam} : ${functionAdd} }" class="btn btn-primary">
-	                        <span class="fa fa-plus-square-o"></span> Neuer Termin
+	                        <span class="far fa-plus-square"></span> Neuer Termin
 	                    </a>
 	                </div>
 	            </div>

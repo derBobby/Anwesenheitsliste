@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head lang="de" th:replace="template :: header"></head>
+	<body>
+		<nav th:replace="template :: nav"></nav>
+	    <main class="container pt-5">
+	        <div class="card mb-3">
+	            <div class="card-header" th:text="${title}"></div>
+	            <div class="card-block p-0">
+	            
+        			<table class="table table-bordered table-hover table-striped table-sm m-0 text-nowrap">
+                        <thead class="">
+                            <tr>
+                            	<th>Beschreibung</th>
+                                <th>Icon</th>
+                            </tr>
+                        </thead>
+						<tbody>
+							<tr>
+								<td>Benutzer</td>
+								<td>
+									<span class="far fa-user"></span>
+								</td>
+							</tr>
+							<tr>
+								<td>Hinzufügen</td>
+								<td>
+									<span class="far fa-plus-square"></span>
+								</td>
+							</tr>
+							<tr>
+								<td>Zurück</td>
+								<td>
+									<span class="fas fa-undo"></span>
+								</td>
+							</tr>
+							<tr>
+								<td>Bearbeiten</td>
+								<td>
+									<span class="fas fa-pencil-alt"></span>
+								</td>
+							</tr>
+							<tr>
+								<td>Telefon</td>
+								<td>
+					    	         <span class="fas fa-phone-square"></span>
+								</td>
+							</tr>
+							<tr>
+								<td>Kalender</td>
+								<td>
+					    	         <span class="far fa-calendar-alt"></span>
+								</td>
+							</tr>
+						</tbody>
+                    </table>
+	            </div>
+	            <div class="card-footer">
+		            <p> </p>
+	            </div>
+	        </div>
+	    </main>
+	    <footer th:replace="template :: footer"></footer>
+	</body>
+</html>

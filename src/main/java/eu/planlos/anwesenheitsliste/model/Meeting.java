@@ -1,6 +1,7 @@
 package eu.planlos.anwesenheitsliste.model;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -10,8 +11,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 public class Meeting {
@@ -22,8 +24,8 @@ public class Meeting {
 
 	@Column(nullable = false)
 	@NotNull(message = "darf nicht leer sein")
-	@NotBlank
-	private String meetingDate;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private Date meetingDate;
 
 	@Column(nullable = false)
 	@NotNull
@@ -49,7 +51,7 @@ public class Meeting {
 	 * @param description
 	 * @param team
 	 */
-	public Meeting(String meetingDate, String description, Team team) {
+	public Meeting(Date meetingDate, String description, Team team) {
 		this.meetingDate = meetingDate;
 		this.description = description;
 		this.team = team;
@@ -62,14 +64,14 @@ public class Meeting {
 	/**
 	 * @return the meetingDate
 	 */
-	public String getMeetingDate() {
+	public Date getMeetingDate() {
 		return meetingDate;
 	}
 
 	/**
 	 * @param meetingDate the meetingDate to set
 	 */
-	public void setMeetingDate(String meetingDate) {
+	public void setMeetingDate(Date meetingDate) {
 		this.meetingDate = meetingDate;
 	}
 

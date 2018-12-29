@@ -18,7 +18,7 @@
 							<tbody>
 								<tr align="center" th:each="meeting : ${meetings}" th:object="${meeting}" th:classappend="*{idMeeting} == ${markedMeetingId} ? table-success">
 									<td th:text="*{idMeeting}"></td>
-									<td th:text="*{meetingDate}"></td> <!-- TODO *{#calendars.format(meetingDate,'dd MMM yyyy')} -->
+									<td th:text="*{#calendars.format(meetingDate,'dd.MM.yyyy')}"></td>
 									<td th:if="${#lists.contains(headings, 'Gruppe')}" th:text="*{team.teamName}"></td>
 									<td th:text="*{description}"></td>
 									<td>

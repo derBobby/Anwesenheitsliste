@@ -1,5 +1,7 @@
 package eu.planlos.anwesenheitsliste;
 
+import java.text.ParseException;
+import java.util.Calendar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,11 +38,8 @@ public class SampleDataCreater implements ApplicationRunner {
     }
     
     @Override
-    public void run(ApplicationArguments args) {
+    public void run(ApplicationArguments args) throws ParseException {
 
-    	
-    	
-    	
     	if(args.containsOption("initdb")) {
     		logger.debug("Startparameter \"initdb\" gefunden -> Initialisiere Datenbank");
     		initDB();
@@ -50,7 +49,7 @@ public class SampleDataCreater implements ApplicationRunner {
     	logger.debug("Startparameter \"initdb\" nicht gefunden -> Initialisiere Datenbank nicht");
     }
 
-	private void initDB() {
+	private void initDB() throws ParseException {
 		meetingsRepo.deleteAll();
 		participantRepo.deleteAll();
 		teamRepo.deleteAll();
@@ -65,12 +64,23 @@ public class SampleDataCreater implements ApplicationRunner {
 		Team team2 = teamRepo.save(new Team("Chilly Team"));
 		Team team3 = teamRepo.save(new Team("Morons"));
 		
+//		not needed yet
+//		SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+//		formatter.parse("27.01.2018")
+		
+		Calendar calendar = Calendar.getInstance();
+		
+		calendar.set(2018, 12, 26);
 		@SuppressWarnings("unused")
-		Meeting m1 = meetingsRepo.save(new Meeting("01.01.2018", "Just a Test", team1));
+		Meeting m1 = meetingsRepo.save(new Meeting(calendar.getTime(), "Just a Test", team1));
+		
+		calendar.set(2018, 12, 27);
 		@SuppressWarnings("unused")
-		Meeting m2 = meetingsRepo.save(new Meeting("02.01.2018", "Just a Test", team2));
+		Meeting m2 = meetingsRepo.save(new Meeting(calendar.getTime(), "Just a Test", team2));
+		
+		calendar.set(2018, 12, 28);
 		@SuppressWarnings("unused")
-		Meeting m3 = meetingsRepo.save(new Meeting("03.01.2018", "Just a Test", team3));
+		Meeting m3 = meetingsRepo.save(new Meeting(calendar.getTime(), "Just a Test", team3));
 
 		//securepw
 		User u1 = userRepo.save(new User("Adam", "Sample", "asam", "a@example.com", "$2a$10$iZjfi6dsjgj.qIBBnrMjHuhlb6LkBEO.SfeP0wUmz9lNp5mhiyfIG", false, false));

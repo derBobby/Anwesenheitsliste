@@ -1,6 +1,8 @@
 package eu.planlos.anwesenheitsliste.controllers.user;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -66,6 +68,7 @@ public class MeetingDetail {
 	public String addForTeam(Model model, @PathVariable Long idTeam) {
 		
 		Meeting meeting = new Meeting();
+		meeting.setMeetingDate(today());
 		model.addAttribute(meeting);
 		prepareContent(model, meeting);
 		
@@ -79,12 +82,17 @@ public class MeetingDetail {
 	public String addWithoutTeam(Model model) {
 		
 		Meeting meeting = new Meeting();
+		meeting.setMeetingDate(today());
 		model.addAttribute(meeting);
 		prepareContent(model, meeting);
 
 		prepareContentWithoutTeam(model); //###############
 		
 		return RES_MEETING;
+	}
+
+	private Date today() {
+		return Calendar.getInstance().getTime();
 	}
 
 	//STEP 2 adding new meeting without a given team

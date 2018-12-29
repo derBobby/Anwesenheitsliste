@@ -14,11 +14,15 @@ public class ApplicationPaths {
 	public static final String URL_USER = URL_AREA_ADMIN + DELIMETER + "userdetail" + DELIMETER;
 	public static final String URL_USERLIST = URL_AREA_ADMIN + DELIMETER + "userlist" + DELIMETER;
 	
+	public static final String URL_FA_TEST = URL_AREA_ADMIN + DELIMETER + "fontawesome";
+	
 	
 	public static final String RES_PERMISSIONSOVERVIEW = "overview/permissionoverview";
 
 	public static final String RES_USER = "detail/userdetail";
 	public static final String RES_USERLIST = "list/userlist";
+	
+	public static final String RES_FA_TEST = "test/fontawesome";
 	
 	/*
 	 * USER AREA

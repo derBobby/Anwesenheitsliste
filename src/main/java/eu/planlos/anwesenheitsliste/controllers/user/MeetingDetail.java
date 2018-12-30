@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import eu.planlos.anwesenheitsliste.model.Meeting;
 import eu.planlos.anwesenheitsliste.model.MeetingService;
+import eu.planlos.anwesenheitsliste.model.Participant;
 import eu.planlos.anwesenheitsliste.model.ParticipantService;
 import eu.planlos.anwesenheitsliste.model.Team;
 import eu.planlos.anwesenheitsliste.model.TeamService;
@@ -118,13 +119,25 @@ public class MeetingDetail {
 			handleValidationErrors(model, meeting);
 			return RES_MEETING; 
 		}
+	
+	//TODO Handling in Controller?
+	//TODO Transaction
+	// {
+		// Disabled checkboxes can be manipulated so that they could be set.
+		// Don't trust the frontend! :-P
+		// Save only editable Participants
+		List<Participant> trustedParticipants = meetingService.getOnlyEditableParticipantsForMeeting(meeting);
 		
-		//HTML currently doesn't send disabled checkboxes so we need to correct these
-		//because inactive participants should not be modifiable at the moment 
-		meeting.addParticipants(participantService.getInactiveParticipantsForMeeting(meeting));
+		// HTML currently doesn't send disabled checkboxes so we need to correct these
+		// because inactive participants should not be modifiable at the moment 
+		List <Participant> notTransmittedParticipants = participantService.getInactiveParticipantsForMeeting(meeting);
 		
-		meeting = meetingService.save(meeting);
+		meeting.setParticipants(trustedParticipants);
+		meeting.addParticipants(notTransmittedParticipants);
 
+		meeting = meetingService.save(meeting);
+	// }
+		
 		return "redirect:" + URL_MEETINGLIST + meeting.getTeam().getIdTeam() + DELIMETER + meeting.getIdMeeting();
 	}
 	

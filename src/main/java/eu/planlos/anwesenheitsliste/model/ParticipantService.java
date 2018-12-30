@@ -75,7 +75,6 @@ public class ParticipantService {
 		}
 	}
 	
-
 	public List<Participant> getInactiveParticipantsForMeeting(@Valid Meeting meeting) {
 		
 		if(meeting.getIdMeeting() == null) {

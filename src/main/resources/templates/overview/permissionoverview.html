@@ -14,16 +14,16 @@
 	                        <thead class="">
 	                            <tr>
 	                            	<th>Benutzer</th>
-	                                <th th:each="team : ${teams}" th:text="${team.teamName}"></th>
+	                                <th style="text-align: center" th:each="team : ${teams}" th:text="${team.teamName}"></th>
 	                            </tr>
 	                        </thead>
 							<tbody>
 								<tr th:each="user : ${users}" th:object="${user}">
 									<td th:text="*{firstName + ' ' + lastName}"></td>
- 									<td th:each="team : ${teams}">
+ 									<td style="text-align: center" th:each="team : ${teams}">
 										<div class="custom-control custom-checkbox">
 											<input type="checkbox" class="custom-control-input" th:checked="${user.teams.contains(team)}"></input>
-											<label class="custom-control-label" for=""></label>
+											<label class="custom-control-label">&nbsp;</label>
 										</div>
 									</td>
 								</tr>

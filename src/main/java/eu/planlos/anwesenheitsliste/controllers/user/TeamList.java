@@ -1,5 +1,11 @@
 package eu.planlos.anwesenheitsliste.controllers.user;
 
+import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.RES_TEAMLIST;
+import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.URL_MEETINGLIST;
+import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.URL_TEAM;
+import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.URL_TEAMLIST;
+import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.URL_TEAMPHONELIST;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,20 +16,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import eu.planlos.anwesenheitsliste.model.Team;
 import eu.planlos.anwesenheitsliste.model.TeamService;
-import eu.planlos.anwesenheitsliste.viewhelper.GeneralAttributeCreator;
-
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_TEAMLIST;
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_TEAM;
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_MEETINGLIST;
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_TEAMPHONELIST;
-
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.RES_TEAMLIST;
+import eu.planlos.anwesenheitsliste.viewhelper.BodyFiller;
 
 @Controller
 public class TeamList {
 
 	public final String STR_MODULE = "Gruppenverwaltung";
 	public final String STR_TITLE = "Liste der Gruppen";
+
+	@Autowired
+	private BodyFiller bf;
 	
 	@Autowired
     private TeamService teamService;
@@ -62,6 +64,6 @@ public class TeamList {
 		model.addAttribute("functionPhonelist", URL_TEAMPHONELIST);
 		model.addAttribute("functionAdd", URL_TEAM);
 		
-		GeneralAttributeCreator.create(model, STR_MODULE, STR_TITLE);
+		bf.fill(model, STR_MODULE, STR_TITLE);
 	}
 }

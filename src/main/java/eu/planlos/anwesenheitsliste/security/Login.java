@@ -1,19 +1,23 @@
 package eu.planlos.anwesenheitsliste.security;
 
+import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.RES_LOGIN;
+import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.URL_LOGIN;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import eu.planlos.anwesenheitsliste.uicontainer.LoginFormContainer;
-import eu.planlos.anwesenheitsliste.viewhelper.GeneralAttributeCreator;
-
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_LOGIN;
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.RES_LOGIN;
+import eu.planlos.anwesenheitsliste.viewhelper.BodyFiller;
 
 @Controller
 public class Login {
 	
 	public static String STR_MODULE = "Login";
 	public static String STR_TITLE = "Login";
+	
+	@Autowired
+	private BodyFiller bf;
 	
 	@GetMapping(path = URL_LOGIN)
 	public String loginpage(Model model) {
@@ -43,6 +47,6 @@ public class Login {
 
 		model.addAttribute("loginFormContainer", new LoginFormContainer());
 		model.addAttribute("formAction", URL_LOGIN);
-		GeneralAttributeCreator.create(model, STR_MODULE, STR_TITLE);
+		bf.fill(model, STR_MODULE, STR_TITLE);
 	}
 }

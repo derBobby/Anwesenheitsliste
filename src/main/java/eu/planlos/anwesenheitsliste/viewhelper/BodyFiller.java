@@ -1,21 +1,24 @@
 package eu.planlos.anwesenheitsliste.viewhelper;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.web.context.request.RequestContextHolder;
 
-public final class GeneralAttributeCreator {
+@Service
+public class BodyFiller {
 
-	public static void create(Model model, String module, String title) {
-
-//TODO
-//		Map<String, > sites		
-//		List<String> sites = new ArrayList<>();
-//		model.addAttribute("URL_USERLIST", URL_USERLIST);
+	@Autowired
+	private MenuFiller mc;
+	
+	public void fill(Model model, String module, String title) {
 				
 		model.addAttribute("auth", SecurityContextHolder.getContext().getAuthentication()); 
 		model.addAttribute("session", RequestContextHolder.currentRequestAttributes().getSessionId());
 		model.addAttribute("module", module);
-		model.addAttribute("title", title);				
+		model.addAttribute("title", title);		
+		
+		mc.fill(model);
 	}
 }

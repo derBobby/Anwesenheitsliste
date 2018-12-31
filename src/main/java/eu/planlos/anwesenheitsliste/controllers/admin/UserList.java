@@ -1,5 +1,9 @@
 package eu.planlos.anwesenheitsliste.controllers.admin;
 
+import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.RES_USERLIST;
+import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.URL_USER;
+import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.URL_USERLIST;
+
 import java.util.ArrayList;
 
 import java.util.List;
@@ -11,15 +15,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import eu.planlos.anwesenheitsliste.model.UserService;
-import eu.planlos.anwesenheitsliste.viewhelper.GeneralAttributeCreator;
-
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_USERLIST;
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_USER;
-
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.RES_USERLIST;
+import eu.planlos.anwesenheitsliste.viewhelper.BodyFiller;
 
 @Controller
 public class UserList {
+
+	@Autowired
+	private BodyFiller bf;
 
 	@Autowired
     UserService userService;
@@ -60,6 +62,6 @@ public class UserList {
 		model.addAttribute("functionResetPW", "TODO"); //TODO
 		model.addAttribute("functionAdd", URL_USER);
 		
-		GeneralAttributeCreator.create(model, "Benutzerverwaltung", "Liste der Benutzer");
+		bf.fill(model, "Benutzerverwaltung", "Liste der Benutzer");
 	}
 }

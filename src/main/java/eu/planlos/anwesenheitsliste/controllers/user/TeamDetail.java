@@ -1,5 +1,9 @@
 package eu.planlos.anwesenheitsliste.controllers.user;
 
+import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.RES_TEAM;
+import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.URL_TEAM;
+import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.URL_TEAMLIST;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,12 +21,7 @@ import eu.planlos.anwesenheitsliste.model.Team;
 import eu.planlos.anwesenheitsliste.model.TeamService;
 import eu.planlos.anwesenheitsliste.model.UserService;
 import eu.planlos.anwesenheitsliste.model.exception.EmptyIdException;
-import eu.planlos.anwesenheitsliste.viewhelper.GeneralAttributeCreator;
-
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_TEAM;
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_TEAMLIST;
-
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.RES_TEAM;
+import eu.planlos.anwesenheitsliste.viewhelper.BodyFiller;
 
 @Controller
 public class TeamDetail {
@@ -30,6 +29,9 @@ public class TeamDetail {
 	public final String STR_MODULE = "Gruppenverwaltung";
 	public final String STR_TITLE_ADD_TEAM = "Gruppe hinzufügen";
 	public final String STR_TITLE_EDIT_TEAM = "Gruppe ändern";
+
+	@Autowired
+	private BodyFiller bf;
 	
 	@Autowired
 	private TeamService teamService;
@@ -94,9 +96,9 @@ public class TeamDetail {
 	private void prepareContent(Model model, Team team) {
 		
 		if(team.getIdTeam() != null) {
-			GeneralAttributeCreator.create(model, STR_MODULE, STR_TITLE_EDIT_TEAM);
+			bf.fill(model, STR_MODULE, STR_TITLE_EDIT_TEAM);
 		} else {
-			GeneralAttributeCreator.create(model, STR_MODULE, STR_TITLE_ADD_TEAM);
+			bf.fill(model, STR_MODULE, STR_TITLE_ADD_TEAM);
 		}
 		
 		model.addAttribute("users", userService.findAll());

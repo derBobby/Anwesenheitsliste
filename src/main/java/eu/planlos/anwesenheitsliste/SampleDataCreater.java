@@ -87,7 +87,7 @@ public class SampleDataCreater implements ApplicationRunner {
 		User u2 = userRepo.save(new User("Bdam", "Sample", "bsam", "b@example.com", "$2a$10$iZjfi6dsjgj.qIBBnrMjHuhlb6LkBEO.SfeP0wUmz9lNp5mhiyfIG", false, true));
 		User u3 = userRepo.save(new User("Cdam", "Sample", "csam", "c@example.com", "$2a$10$iZjfi6dsjgj.qIBBnrMjHuhlb6LkBEO.SfeP0wUmz9lNp5mhiyfIG", true, false));
 		User u4 = userRepo.save(new User("Ddam", "Sample", "dsam", "d@example.com", "$2a$10$iZjfi6dsjgj.qIBBnrMjHuhlb6LkBEO.SfeP0wUmz9lNp5mhiyfIG", true, false));
-		User u5 = userRepo.save(new User("Bobson", "obby", "bobby", "uetz@example.com", "$2a$10$iZjfi6dsjgj.qIBBnrMjHuhlb6LkBEO.SfeP0wUmz9lNp5mhiyfIG", true, true));
+		User u5 = userRepo.save(new User("Bobson", "obby", "bobby", "uetz@example.com", "$2a$10$iZjfi6dsjgj.qIBBnrMjHuhlb6LkBEO.SfeP0wUmz9lNp5mhiyfIG", true, false));
 		User u6 = userRepo.save(new User("Pat", "rick", "ppp", "p@example.com", "$2a$10$G7MFj4PkPu9HpSaA7dqg1Om.bfMRFSIDya66vVHIlcldCkMMa5cpm", true, true));
 
 		u1.addTeam(team1);

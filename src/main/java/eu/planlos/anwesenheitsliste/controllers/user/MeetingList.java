@@ -1,5 +1,12 @@
 package eu.planlos.anwesenheitsliste.controllers.user;
 
+import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.DELIMETER;
+import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.RES_MEETINGLIST;
+import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.URL_MEETINGCHOOSETEAM;
+import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.URL_MEETINGFORTEAM;
+import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.URL_MEETINGLIST;
+import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.URL_MEETINGLISTFULL;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,22 +18,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import eu.planlos.anwesenheitsliste.model.Meeting;
 import eu.planlos.anwesenheitsliste.model.MeetingService;
-import eu.planlos.anwesenheitsliste.viewhelper.GeneralAttributeCreator;
-
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_MEETINGLIST;
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_MEETINGFORTEAM;
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_MEETINGCHOOSETEAM;
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_MEETINGLISTFULL;
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.DELIMETER;
-
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.RES_MEETINGLIST;
+import eu.planlos.anwesenheitsliste.viewhelper.BodyFiller;
 
 @Controller
 public class MeetingList {
 
 	public final String STR_MODULE = "Terminverwaltung";
 	public final String STR_TITLE = "Liste der Termine";
-	
+
+	@Autowired
+	private BodyFiller bf;
 	
 	@Autowired
 	private MeetingService meetingService;
@@ -75,7 +76,7 @@ public class MeetingList {
 		model.addAttribute("headings", getHeadingsForTeam(idTeam));
 		model.addAttribute("meetings", getMeetingsForTeam(idTeam));
 		
-		GeneralAttributeCreator.create(model, STR_MODULE, STR_TITLE);
+		bf.fill(model, STR_MODULE, STR_TITLE);
 	}
 	
 	private List<String> getHeadingsForTeam(Long idTeam) {

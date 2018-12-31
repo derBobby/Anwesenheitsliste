@@ -1,5 +1,10 @@
 package eu.planlos.anwesenheitsliste.controllers.anonymous;
 
+import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.RES_HOME;
+import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.URL_HOME;
+import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.URL_LOGIN;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -7,16 +12,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import eu.planlos.anwesenheitsliste.viewhelper.GeneralAttributeCreator;
-
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_HOME;
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.RES_HOME;
-
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_LOGIN;
+import eu.planlos.anwesenheitsliste.viewhelper.BodyFiller;
 
 @Controller
 public class Start {
 
+	@Autowired
+	private BodyFiller bf;
+	
     @RequestMapping(path = URL_HOME)
     public String home(Model model) {
 		
@@ -31,7 +34,8 @@ public class Start {
 	    	model.addAttribute("functionLogin", URL_LOGIN);
     	}
     	   	
-    	GeneralAttributeCreator.create(model, "Anwesenheitsliste", "Startseite");
+	    bf.fill(model, "Anwesenheitsliste", "Startseite");
+	    
     	return RES_HOME;
     }
 }

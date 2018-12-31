@@ -1,5 +1,14 @@
 package eu.planlos.anwesenheitsliste.controllers.user;
 
+import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.DELIMETER;
+import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.RES_MEETING;
+import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.URL_MEETINGADDPARTICIPANTS;
+import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.URL_MEETINGCHOOSETEAM;
+import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.URL_MEETINGFORTEAM;
+import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.URL_MEETINGLIST;
+import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.URL_MEETINGLISTFULL;
+import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.URL_MEETINGSUBMIT;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -22,17 +31,7 @@ import eu.planlos.anwesenheitsliste.model.Participant;
 import eu.planlos.anwesenheitsliste.model.ParticipantService;
 import eu.planlos.anwesenheitsliste.model.Team;
 import eu.planlos.anwesenheitsliste.model.TeamService;
-import eu.planlos.anwesenheitsliste.viewhelper.GeneralAttributeCreator;
-
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_MEETINGFORTEAM;
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_MEETINGCHOOSETEAM;
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_MEETINGADDPARTICIPANTS;
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_MEETINGSUBMIT;
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_MEETINGLIST;
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_MEETINGLISTFULL;
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.DELIMETER;
-
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.RES_MEETING;
+import eu.planlos.anwesenheitsliste.viewhelper.BodyFiller;
 
 //TODO may be simplified
 @Controller
@@ -41,6 +40,9 @@ public class MeetingDetail {
 	public final String STR_MODULE = "Terminverwaltung";
 	public final String STR_TITLE_ADD_MEETING = "Termin hinzufügen";
 	public final String STR_TITLE_EDIT_MEETING = "Termin ändern";
+
+	@Autowired
+	private BodyFiller bf;
 	
 	@Autowired
 	private MeetingService meetingService;
@@ -155,9 +157,9 @@ public class MeetingDetail {
 	private void prepareContent(Model model, Meeting meeting) {
 		
 		if(meeting.getIdMeeting() != null) {
-			GeneralAttributeCreator.create(model, STR_MODULE, STR_TITLE_EDIT_MEETING);
+			bf.fill(model, STR_MODULE, STR_TITLE_EDIT_MEETING);
 		} else {
-			GeneralAttributeCreator.create(model, STR_MODULE, STR_TITLE_ADD_MEETING);
+			bf.fill(model, STR_MODULE, STR_TITLE_ADD_MEETING);
 		}
 	}
 	

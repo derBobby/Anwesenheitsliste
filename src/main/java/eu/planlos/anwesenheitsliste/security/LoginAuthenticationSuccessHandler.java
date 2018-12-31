@@ -1,5 +1,7 @@
 package eu.planlos.anwesenheitsliste.security;
 
+import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.URL_HOME;
+
 import java.io.IOException;
 
 import javax.servlet.ServletException;
@@ -13,8 +15,6 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.stereotype.Component;
 
 import eu.planlos.anwesenheitsliste.SampleDataCreater;
-
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_HOME;
 
 @Component
 public class LoginAuthenticationSuccessHandler implements AuthenticationSuccessHandler {

@@ -1,5 +1,9 @@
 package eu.planlos.anwesenheitsliste.controllers.user;
 
+import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.RES_PARTICIPANT;
+import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.URL_PARTICIPANT;
+import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.URL_PARTICIPANTLIST;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,11 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import eu.planlos.anwesenheitsliste.model.Participant;
 import eu.planlos.anwesenheitsliste.model.ParticipantService;
 import eu.planlos.anwesenheitsliste.model.TeamService;
-import eu.planlos.anwesenheitsliste.viewhelper.GeneralAttributeCreator;
-
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_PARTICIPANT;
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_PARTICIPANTLIST;
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.RES_PARTICIPANT;
+import eu.planlos.anwesenheitsliste.viewhelper.BodyFiller;
 
 @Controller
 public class ParticipantDetail {
@@ -27,6 +27,9 @@ public class ParticipantDetail {
 	public final String STR_MODULE = "Teilnehmerverwaltung";
 	public final String STR_TITLE_ADD_USER = "Teilnehmer hinzufügen";
 	public final String STR_TITLE_EDIT_USER = "Teilnehmer ändern";
+
+	@Autowired
+	private BodyFiller bf;
 	
 	@Autowired
 	private ParticipantService participantService;
@@ -76,9 +79,9 @@ public class ParticipantDetail {
 	private void prepareContent(Model model, Participant participant) {
 
 		if(participant.getIdParticipant() != null) {
-			GeneralAttributeCreator.create(model, STR_MODULE, STR_TITLE_EDIT_USER);
+			bf.fill(model, STR_MODULE, STR_TITLE_EDIT_USER);
 		} else {
-			 GeneralAttributeCreator.create(model, STR_MODULE, STR_TITLE_ADD_USER);
+			bf.fill(model, STR_MODULE, STR_TITLE_ADD_USER);
 		}
 		
 		model.addAttribute("teams", teamService.findAll());

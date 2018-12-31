@@ -1,5 +1,9 @@
 package eu.planlos.anwesenheitsliste.controllers.admin;
 
+import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.RES_USER;
+import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.URL_USER;
+import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.URL_USERLIST;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,11 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import eu.planlos.anwesenheitsliste.model.TeamService;
 import eu.planlos.anwesenheitsliste.model.User;
 import eu.planlos.anwesenheitsliste.model.UserService;
-import eu.planlos.anwesenheitsliste.viewhelper.GeneralAttributeCreator;
-
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_USER;
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_USERLIST;
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.RES_USER;
+import eu.planlos.anwesenheitsliste.viewhelper.BodyFiller;
 
 @Controller
 public class UserDetail {
@@ -27,6 +27,9 @@ public class UserDetail {
 	public final String STR_MODULE = "Benutzerverwaltung";
 	public final String STR_TITLE_ADD_USER = "Benutzer hinzufügen";
 	public final String STR_TITLE_EDIT_USER = "Benutzer ändern";
+
+	@Autowired
+	private BodyFiller bf;
 	
 	@Autowired
 	private UserService userService;
@@ -77,9 +80,9 @@ public class UserDetail {
 	private void prepareContent(Model model, User user) {
 		
 		if(user.getIdUser() != null) {
-			GeneralAttributeCreator.create(model, STR_MODULE, STR_TITLE_EDIT_USER);
+			bf.fill(model, STR_MODULE, STR_TITLE_EDIT_USER);
 		} else {
-			GeneralAttributeCreator.create(model, STR_MODULE, STR_TITLE_ADD_USER);
+			bf.fill(model, STR_MODULE, STR_TITLE_ADD_USER);
 		}
 		
 		model.addAttribute("teams", teamService.findAll());

@@ -1,17 +1,17 @@
 package eu.planlos.anwesenheitsliste.security;
 
+import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.URL_AREA_ACTUATOR;
+import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.URL_AREA_ADMIN;
+import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.URL_AREA_USER;
+import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.URL_LOGIN;
+import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.URL_LOGOUT;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_AREA_ADMIN;
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_AREA_USER;
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_AREA_ACTUATOR;
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_LOGIN;
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_LOGOUT;
 
 //@EnableGlobalMethodSecurity(securedEnabled = true)
 @EnableWebSecurity
@@ -43,7 +43,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 					.antMatchers(URL_AREA_ADMIN + "/**")
 //						.hasRole("ADMIN") 				//hasAuthority() or authenticated()
-						 .hasAnyAuthority("ADMIN", "USER") //or authenticated()
+						 .hasAnyAuthority("ADMIN") //or authenticated()
 
 						 .antMatchers(URL_AREA_ACTUATOR + "/**")
 						.hasRole("ADMIN")

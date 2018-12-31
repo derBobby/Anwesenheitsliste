@@ -66,14 +66,15 @@ public class UserService {
 		
 		List<User> chosenUsers = team.getUsers();
 		
+		// Error if false user is passed
 		for(User chosenUser : chosenUsers) {
 			if(chosenUser.getIdUser() == null) {
 				throw new EmptyIdException("Aktualisierung fehlgeschlagen. Daten Fehlerhaft.");
 			}
 		}
 		
+		// For all active users who were added but are not yet linked to the team
 		List<User> usersForTeam = userRepo.findAllByTeamsIdTeam(team.getIdTeam());
-		
 		for(User chosenUser : chosenUsers) {
 			if(chosenUser.getIsActive() && ! usersForTeam.contains(chosenUser)) {
 				chosenUser.addTeam(team);
@@ -81,6 +82,7 @@ public class UserService {
 			}
 		}
 		
+		// For all active users in DB check if are chosen but should not be
 		for(User userForTeam : usersForTeam) {
 			if(userForTeam.getIsActive() && ! chosenUsers.contains(userForTeam)) {
 				userForTeam.removeTeam(team);

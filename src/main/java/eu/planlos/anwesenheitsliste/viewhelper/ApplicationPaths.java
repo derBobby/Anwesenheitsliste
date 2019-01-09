@@ -56,8 +56,10 @@ public class ApplicationPaths {
 	public static final String URL_TEAMPHONELIST = URL_AREA_USER + DELIMETER + "teamphonelist" + DELIMETER;
 	
 	public static final String URL_LOGOUT = URL_AREA_USER + DELIMETER + "logout";
-	public static final String URL_LOGIN = "/login"; //TODO
-
+	public static final String URL_LOGIN = "/login_handler";
+	public static final String URL_LOGIN_FORM = "/login_form";
+	public static final String URL_LOGIN_FORM_ERROR = URL_LOGIN_FORM + "?error=true";
+	
 	// Ressource paths
 	public static final String RES_MEETING = "detail/meetingdetail";
 	public static final String RES_MEETINGLIST = "list/meetinglist";
@@ -68,7 +70,7 @@ public class ApplicationPaths {
 	public static final String RES_TEAM = "detail/teamdetail";
 	public static final String RES_TEAMLIST = "list/teamlist";
 	public static final String RES_TEAMPHONELIST = "list/teamphonelist";
-	
+
 	public static final String RES_LOGIN = "session/login"; //TODO
 	
 	
@@ -83,13 +85,14 @@ public class ApplicationPaths {
 	public static final String URL_HOME = URL_AREA_ANONYMOUS;
 	public static final String URL_ABOUT = URL_AREA_ANONYMOUS + "about";
 	public static final String URL_PRIVACY = URL_AREA_ANONYMOUS + "datenschutz";
+	public static final String URL_403 = URL_AREA_ANONYMOUS + "403";
 
 	// Ressource paths
 	public static final String RES_HOME = "home";
 	public static final String RES_ABOUT = "about";
 	public static final String RES_PRIVACY = "datenschutz";
 	
-	
+	public static final String RES_403 = "403"; //TODO
 	
 	/*
 	 * ACTUATOR AREA

@@ -31,9 +31,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		}
 		
 		if(user.getIsAdmin()) {
-			authoritiesList.add(new SimpleGrantedAuthority("ADMIN"));
+			authoritiesList.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
 		}
-		authoritiesList.add(new SimpleGrantedAuthority("USER"));
+		authoritiesList.add(new SimpleGrantedAuthority("ROLE_USER"));
 		
 		User springSecurityUser = new User(user.getLoginName(), user.getPassword(), authoritiesList);
 		

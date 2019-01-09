@@ -27,9 +27,11 @@ public class LoginAccessDeniedHandler implements AccessDeniedHandler {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		
 		if(auth != null) {
-			logger.error("Fehlgeschlagener Loginversuch für :" + auth.getName() + " auf " + request.getRequestURI());
+			logger.error("Fehlgeschlagener Zugriff von :" + auth.getName() + " auf " + request.getRequestURI());
+		} else {
+			logger.error("Fehlgeschlagener Zugriff mit leerer Variable auth auf " + request.getRequestURI());
 		}
 
-		response.sendRedirect(request.getContextPath() + "/accessdenied");
+		response.sendError(HttpServletResponse.SC_FORBIDDEN);
 	}
 }

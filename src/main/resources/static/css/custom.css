@@ -2,7 +2,17 @@
  * Bootstrap customization
  */
 
-
+/*
+ * Custom style for the template
+ */
+body {
+	padding-top: 54px;
+}
+@media (min-width: 992px) {
+	body {
+	 	padding-top: 56px;
+	}
+}
 
 /*
  * Background of global page

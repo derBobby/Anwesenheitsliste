@@ -1,12 +1,17 @@
 package eu.planlos.anwesenheitsliste.security;
 
 import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.RES_LOGIN;
+import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.URL_LOGIN_FORM;
+
 import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.URL_LOGIN;
 
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import eu.planlos.anwesenheitsliste.uicontainer.LoginFormContainer;
 import eu.planlos.anwesenheitsliste.viewhelper.BodyFiller;
 
@@ -19,34 +24,22 @@ public class Login {
 	@Autowired
 	private BodyFiller bf;
 	
-	@GetMapping(path = URL_LOGIN)
-	public String loginpage(Model model) {
-		
-		prepareContent(model);
+	@GetMapping(path = URL_LOGIN_FORM)
+	public String loginpage(Model model, HttpServletRequest request, @RequestParam(defaultValue = "false") Boolean error) {
+
+		prepareContent(model, error);
 		return RES_LOGIN;
 	}
 	
-//	@PostMapping(path = "/login")
-//	public String submit(Model model, @Valid @ModelAttribute LoginFormContainer loginFormContainer, Errors errors) {
-//		
-//		if(errors.hasErrors()) {
-//			return "session/loginpage"; 
-//		}
-//		
-//		return "redirect:/";
-//	}
-//		
-//	@PostMapping(path = "/loginsuccess")
-//	public String loginsuccess(Model model) {
-//		
-//		prepareContent(model);
-//		return "session/loginsuccess";
-//	}
-	
-	private void prepareContent(Model model) {
+	private void prepareContent(Model model, Boolean error) {
 
+		if(error) {
+			model.addAttribute("error", "Login fehlgeschlagen!");
+		}
+		
 		model.addAttribute("loginFormContainer", new LoginFormContainer());
 		model.addAttribute("formAction", URL_LOGIN);
+		
 		bf.fill(model, STR_MODULE, STR_TITLE);
 	}
 }

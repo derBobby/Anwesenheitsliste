@@ -5,12 +5,18 @@
 		<nav th:replace="template :: nav"></nav>
 	    <main class="container pt-5">
 	   	        <div class="card mb-3">
-		            <div class="card-header" th:text="${title}"></div>
+		            <div class="card-header" th:text="403"></div>
 		            <div class="card-block p-0">
 						<!-- Page Content -->
 						<div class="col-lg-12 text-center mb-5">
-							<h1 class="mt-5">Anwesenheitserfassung PG</h1>
-							<p class="lead">Login erfolgreich!</p>
+							<h1 class="mt-5">403</h1>
+							<p class="lead">Für die angeforderte Seite fehlt dir die Berechtigung.</p>
+							<p class="lead">Bleibt nur schmollen! :'(</p>
+			                <div th:if="${functionLogin != null}" class="btn-group">
+			              		<a th:href="@{${functionLogin}}" class="btn btn-primary">
+			              			<i class="far fa-user"></i> Login 
+			                    </a>
+		               		</div>
 						</div>
 		            </div>
 		            <div class="card-footer">

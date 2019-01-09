@@ -2,7 +2,7 @@ package eu.planlos.anwesenheitsliste.controllers.anonymous;
 
 import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.RES_HOME;
 import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.URL_HOME;
-import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.URL_LOGIN;
+import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.URL_LOGIN_FORM;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -31,7 +31,7 @@ public class Start {
     	Boolean isAnonymous = authentication instanceof AnonymousAuthenticationToken;
     	
 	    if(isNull || isNotAuthenticated || isAnonymous) {
-	    	model.addAttribute("functionLogin", URL_LOGIN);
+	    	model.addAttribute("functionLogin", URL_LOGIN_FORM);
     	}
     	   	
 	    bf.fill(model, "Anwesenheitsliste", "Startseite");

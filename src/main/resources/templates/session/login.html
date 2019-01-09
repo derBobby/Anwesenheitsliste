@@ -8,7 +8,7 @@
     			<form action="#" th:action="@{${formAction}}" th:object="${loginFormContainer}" method="post">
 	            	<div class="card-header" th:text="${title}"></div>
 		            <div class="card-block p-3">
-		            
+		            	<div th:if="${error} != null" class="alert alert-danger" role="alert">Login fehlgeschlagen!</div>
 						<div class="form-group">
 							<label th:for="loginName">Benutzername</label>
 							<input th:field="*{username}" class="form-control" />

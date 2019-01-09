@@ -3,7 +3,10 @@ package eu.planlos.anwesenheitsliste.security;
 import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.URL_AREA_ACTUATOR;
 import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.URL_AREA_ADMIN;
 import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.URL_AREA_USER;
+import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.URL_LOGIN_FORM;
+import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.URL_LOGIN_FORM_ERROR;
 import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.URL_LOGIN;
+import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.URL_HOME;
 import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.URL_LOGOUT;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,50 +32,60 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		        
-		http.csrf().disable() //TODO csrf
+		http.csrf().disable()
 			.authorizeRequests()
+			
 				.antMatchers("/")
 					.permitAll()
 					
-				.antMatchers("/resources/**", "/static/**", "/css/**", "/js/**", "/images/**") //TODO
+			// Ressources like CSS and JS
+				.antMatchers("/webjars/**", "/sbadmin/**", "/css/**") //TODO
 					.permitAll()
 
-					.antMatchers(URL_AREA_USER + "/**")
-//						.hasAnyRole("ADMIN", "USER")
-						 .hasAnyAuthority("ADMIN", "USER") //or authenticated()
+			// User area
+				.antMatchers(URL_AREA_USER + "/**")
+					 .hasAnyAuthority("ROLE_ADMIN", "ROLE_USER") //or authenticated()
 
-					.antMatchers(URL_AREA_ADMIN + "/**")
-//						.hasRole("ADMIN") 				//hasAuthority() or authenticated()
-						 .hasAnyAuthority("ADMIN") //or authenticated()
+			// Admin area
+				.antMatchers(URL_AREA_ADMIN + "/**")
+					 .hasAnyAuthority("ROLE_ADMIN") //or authenticated()
 
-						 .antMatchers(URL_AREA_ACTUATOR + "/**")
-						.hasRole("ADMIN")
-
+			// Technical like actuator
+				.antMatchers(URL_AREA_ACTUATOR + "/**")
+					 .hasAnyAuthority("ROLE_ADMIN") //or authenticated()
+						 
+			// Login procedure
 				.and().formLogin()
-				.successHandler(successHandler)
-					.loginPage(URL_LOGIN)
-//					.loginProcessingUrl(URL_LOGIN)
+				
+				//Overrides the default created login form site
+					.loginPage(URL_LOGIN_FORM)
 					
+				//Names URL on which Spring should listen itself
+					.loginProcessingUrl(URL_LOGIN)
+					
+				//Controller
+					.successHandler(successHandler)
+					
+				//NOT USED - would redirect to given page, but is handled by 
+					//.defaultSuccessUrl(defaultSuccessUrl, alwaysUse)
+					
+				//Which site to load after login error
+					.failureUrl(URL_LOGIN_FORM_ERROR)
+										
+			// Logout procedure
 				.and().logout()
 					.logoutUrl(URL_LOGOUT)
-					.logoutSuccessUrl(URL_LOGIN)
+					.logoutSuccessUrl(URL_HOME)
 					.invalidateHttpSession(true)
 					.clearAuthentication(true)
 					
+			// Exception handling
 				.and().exceptionHandling()
-					.accessDeniedHandler(deniedHandler)
 				
-				.and().exceptionHandling()
-					.accessDeniedPage(URL_LOGIN);
-		
-//					.loginProcessingUrl("/login")
-//					.failureUrl("/loginpage")
-//					.usernameParameter("loginName")
-//					.passwordParameter("password")
-//					.defaultSuccessUrl("/loginsuccess")
-		
-
-
+					//Use either own handler or
+					.accessDeniedHandler(deniedHandler); //TODO CONTINUE HERE
+					//... use this default handler
+					//.accessDeniedPage(URL_403);
 	}
 	
 	@Override

@@ -1,4 +1,4 @@
-package eu.planlos.anwesenheitsliste.security;
+package eu.planlos.anwesenheitsliste.controllers.anonymous;
 
 import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.RES_LOGIN;
 import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.URL_LOGIN_FORM;

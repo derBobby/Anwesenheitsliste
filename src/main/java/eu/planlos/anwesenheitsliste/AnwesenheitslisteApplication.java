@@ -8,6 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 		"org.springframework.security.web.access"})
 public class AnwesenheitslisteApplication {
 
+	//TODO implement /error site
 	public static void main(String[] args) {
 		SpringApplication.run(AnwesenheitslisteApplication.class, args);
 	}

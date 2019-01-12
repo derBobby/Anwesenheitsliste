@@ -1,22 +1,22 @@
 package eu.planlos.anwesenheitsliste.controllers.admin;
 
-import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.RES_PERMISSIONSOVERVIEW;
-import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.URL_PERMISSIONSOVERVIEW;
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.RES_PERMISSIONSOVERVIEW;
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_PERMISSIONSOVERVIEW;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import eu.planlos.anwesenheitsliste.model.TeamService;
-import eu.planlos.anwesenheitsliste.model.UserService;
-import eu.planlos.anwesenheitsliste.viewhelper.BodyFiller;
+import eu.planlos.anwesenheitsliste.service.BodyFillerService;
+import eu.planlos.anwesenheitsliste.service.TeamService;
+import eu.planlos.anwesenheitsliste.service.UserService;
 
 @Controller
 public class PermissionOverview {
 
 	@Autowired
-	private BodyFiller bf;
+	private BodyFillerService bf;
 
 	@Autowired
 	private UserService userService;

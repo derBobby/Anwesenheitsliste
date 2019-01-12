@@ -1,4 +1,4 @@
-package eu.planlos.anwesenheitsliste.uicontainer;
+package eu.planlos.anwesenheitsliste.model;
 
 import javax.validation.constraints.NotNull;
 

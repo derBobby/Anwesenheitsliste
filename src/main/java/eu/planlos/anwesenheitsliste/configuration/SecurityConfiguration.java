@@ -1,14 +1,14 @@
-package eu.planlos.anwesenheitsliste.security;
+package eu.planlos.anwesenheitsliste.configuration;
 
-import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.URL_AREA_ADMIN;
-import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.URL_AREA_ACTUATOR;
-import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.URL_AREA_USER;
-import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.URL_LOGIN_FORM;
-import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.URL_LOGIN_FORM_ERROR;
-import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.URL_LOGIN;
-import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.URL_HOME;
-import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.URL_LOGOUT;
-import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.URL_403;
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_403;
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_AREA_ACTUATOR;
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_AREA_ADMIN;
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_AREA_USER;
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_HOME;
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_LOGIN;
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_LOGIN_FORM;
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_LOGIN_FORM_ERROR;
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_LOGOUT;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -16,6 +16,9 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import eu.planlos.anwesenheitsliste.security.LoginAuthenticationSuccessHandler;
+import eu.planlos.anwesenheitsliste.service.UserDetailsServiceImpl;
 
 //@EnableGlobalMethodSecurity(securedEnabled = true)
 @EnableWebSecurity

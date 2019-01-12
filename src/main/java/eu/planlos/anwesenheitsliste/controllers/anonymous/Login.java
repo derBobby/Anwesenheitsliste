@@ -1,9 +1,8 @@
 package eu.planlos.anwesenheitsliste.controllers.anonymous;
 
-import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.RES_LOGIN;
-import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.URL_LOGIN_FORM;
-
-import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.URL_LOGIN;
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.RES_LOGIN;
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_LOGIN;
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_LOGIN_FORM;
 
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +11,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import eu.planlos.anwesenheitsliste.uicontainer.LoginFormContainer;
-import eu.planlos.anwesenheitsliste.viewhelper.BodyFiller;
+import eu.planlos.anwesenheitsliste.model.LoginFormContainer;
+import eu.planlos.anwesenheitsliste.service.BodyFillerService;
 
 @Controller
 public class Login {
@@ -22,7 +21,7 @@ public class Login {
 	public static String STR_TITLE = "Login";
 	
 	@Autowired
-	private BodyFiller bf;
+	private BodyFillerService bf;
 	
 	@GetMapping(path = URL_LOGIN_FORM)
 	public String loginpage(Model model, HttpServletRequest request, @RequestParam(defaultValue = "false") Boolean error) {

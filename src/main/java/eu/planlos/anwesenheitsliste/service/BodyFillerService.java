@@ -1,4 +1,4 @@
-package eu.planlos.anwesenheitsliste.viewhelper;
+package eu.planlos.anwesenheitsliste.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -7,10 +7,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.context.request.RequestContextHolder;
 
 @Service
-public class BodyFiller {
+public class BodyFillerService {
 
 	@Autowired
-	private MenuFiller mc;
+	private MenuFillerService mc;
 	
 	public void fill(Model model, String module, String title) {
 				

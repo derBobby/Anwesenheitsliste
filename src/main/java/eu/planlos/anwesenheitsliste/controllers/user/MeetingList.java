@@ -1,11 +1,11 @@
 package eu.planlos.anwesenheitsliste.controllers.user;
 
-import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.DELIMETER;
-import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.RES_MEETINGLIST;
-import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.URL_MEETINGCHOOSETEAM;
-import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.URL_MEETINGFORTEAM;
-import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.URL_MEETINGLIST;
-import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.URL_MEETINGLISTFULL;
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.DELIMETER;
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.RES_MEETINGLIST;
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_MEETINGCHOOSETEAM;
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_MEETINGFORTEAM;
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_MEETINGLIST;
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_MEETINGLISTFULL;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import eu.planlos.anwesenheitsliste.model.Meeting;
-import eu.planlos.anwesenheitsliste.model.MeetingService;
-import eu.planlos.anwesenheitsliste.viewhelper.BodyFiller;
+import eu.planlos.anwesenheitsliste.service.BodyFillerService;
+import eu.planlos.anwesenheitsliste.service.MeetingService;
 
 @Controller
 public class MeetingList {
@@ -27,7 +27,7 @@ public class MeetingList {
 	public final String STR_TITLE = "Liste der Termine";
 
 	@Autowired
-	private BodyFiller bf;
+	private BodyFillerService bf;
 	
 	@Autowired
 	private MeetingService meetingService;

@@ -1,10 +1,13 @@
-package eu.planlos.anwesenheitsliste.model;
+package eu.planlos.anwesenheitsliste.service;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
+
+import eu.planlos.anwesenheitsliste.model.Team;
+import eu.planlos.anwesenheitsliste.model.TeamRepository;
 
 @Service
 public class TeamService {

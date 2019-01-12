@@ -1,8 +1,8 @@
 package eu.planlos.anwesenheitsliste.controllers.user;
 
-import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.RES_PARTICIPANT;
-import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.URL_PARTICIPANT;
-import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.URL_PARTICIPANTLIST;
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.RES_PARTICIPANT;
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_PARTICIPANT;
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_PARTICIPANTLIST;
 
 import javax.validation.Valid;
 
@@ -17,9 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import eu.planlos.anwesenheitsliste.model.Participant;
-import eu.planlos.anwesenheitsliste.model.ParticipantService;
-import eu.planlos.anwesenheitsliste.model.TeamService;
-import eu.planlos.anwesenheitsliste.viewhelper.BodyFiller;
+import eu.planlos.anwesenheitsliste.service.BodyFillerService;
+import eu.planlos.anwesenheitsliste.service.ParticipantService;
+import eu.planlos.anwesenheitsliste.service.TeamService;
 
 @Controller
 public class ParticipantDetail {
@@ -29,7 +29,7 @@ public class ParticipantDetail {
 	public final String STR_TITLE_EDIT_USER = "Teilnehmer ändern";
 
 	@Autowired
-	private BodyFiller bf;
+	private BodyFillerService bf;
 	
 	@Autowired
 	private ParticipantService participantService;

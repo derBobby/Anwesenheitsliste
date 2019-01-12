@@ -1,8 +1,8 @@
 package eu.planlos.anwesenheitsliste.controllers.admin;
 
-import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.RES_USERLIST;
-import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.URL_USER;
-import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.URL_USERLIST;
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.RES_USERLIST;
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_USER;
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_USERLIST;
 
 import java.util.ArrayList;
 
@@ -14,14 +14,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import eu.planlos.anwesenheitsliste.model.UserService;
-import eu.planlos.anwesenheitsliste.viewhelper.BodyFiller;
+import eu.planlos.anwesenheitsliste.service.BodyFillerService;
+import eu.planlos.anwesenheitsliste.service.UserService;
 
 @Controller
 public class UserList {
 
 	@Autowired
-	private BodyFiller bf;
+	private BodyFillerService bf;
 
 	@Autowired
     UserService userService;

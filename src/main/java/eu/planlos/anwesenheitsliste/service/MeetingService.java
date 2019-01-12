@@ -1,10 +1,15 @@
-package eu.planlos.anwesenheitsliste.model;
+package eu.planlos.anwesenheitsliste.service;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import eu.planlos.anwesenheitsliste.model.Meeting;
+import eu.planlos.anwesenheitsliste.model.MeetingRepository;
+import eu.planlos.anwesenheitsliste.model.Participant;
+import eu.planlos.anwesenheitsliste.model.Team;
 
 @Service
 public class MeetingService {

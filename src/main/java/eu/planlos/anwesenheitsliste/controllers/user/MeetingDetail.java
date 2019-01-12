@@ -1,13 +1,13 @@
 package eu.planlos.anwesenheitsliste.controllers.user;
 
-import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.DELIMETER;
-import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.RES_MEETING;
-import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.URL_MEETINGADDPARTICIPANTS;
-import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.URL_MEETINGCHOOSETEAM;
-import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.URL_MEETINGFORTEAM;
-import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.URL_MEETINGLIST;
-import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.URL_MEETINGLISTFULL;
-import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.URL_MEETINGSUBMIT;
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.DELIMETER;
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.RES_MEETING;
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_MEETINGADDPARTICIPANTS;
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_MEETINGCHOOSETEAM;
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_MEETINGFORTEAM;
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_MEETINGLIST;
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_MEETINGLISTFULL;
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_MEETINGSUBMIT;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -26,12 +26,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import eu.planlos.anwesenheitsliste.model.Meeting;
-import eu.planlos.anwesenheitsliste.model.MeetingService;
 import eu.planlos.anwesenheitsliste.model.Participant;
-import eu.planlos.anwesenheitsliste.model.ParticipantService;
 import eu.planlos.anwesenheitsliste.model.Team;
-import eu.planlos.anwesenheitsliste.model.TeamService;
-import eu.planlos.anwesenheitsliste.viewhelper.BodyFiller;
+import eu.planlos.anwesenheitsliste.service.BodyFillerService;
+import eu.planlos.anwesenheitsliste.service.MeetingService;
+import eu.planlos.anwesenheitsliste.service.ParticipantService;
+import eu.planlos.anwesenheitsliste.service.TeamService;
 
 //TODO may be simplified
 @Controller
@@ -42,7 +42,7 @@ public class MeetingDetail {
 	public final String STR_TITLE_EDIT_MEETING = "Termin ändern";
 
 	@Autowired
-	private BodyFiller bf;
+	private BodyFillerService bf;
 	
 	@Autowired
 	private MeetingService meetingService;

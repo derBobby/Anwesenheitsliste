@@ -1,7 +1,7 @@
 package eu.planlos.anwesenheitsliste.controllers.user;
 
-import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.RES_TEAMPHONELIST;
-import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.URL_TEAMPHONELIST;
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.RES_TEAMPHONELIST;
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_TEAMPHONELIST;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import eu.planlos.anwesenheitsliste.model.Participant;
-import eu.planlos.anwesenheitsliste.model.ParticipantService;
-import eu.planlos.anwesenheitsliste.viewhelper.BodyFiller;
+import eu.planlos.anwesenheitsliste.service.BodyFillerService;
+import eu.planlos.anwesenheitsliste.service.ParticipantService;
 
 @Controller
 public class TeamPhonelist {
@@ -23,7 +23,7 @@ public class TeamPhonelist {
 	public final String STR_TITLE = "Telefonliste";
 
 	@Autowired
-	private BodyFiller bf;
+	private BodyFillerService bf;
 	
 	@Autowired
     private ParticipantService participantService;

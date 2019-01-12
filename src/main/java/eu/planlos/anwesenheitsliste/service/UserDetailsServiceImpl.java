@@ -1,4 +1,4 @@
-package eu.planlos.anwesenheitsliste.security;
+package eu.planlos.anwesenheitsliste.service;
 
 import java.util.ArrayList;
 import java.util.List;

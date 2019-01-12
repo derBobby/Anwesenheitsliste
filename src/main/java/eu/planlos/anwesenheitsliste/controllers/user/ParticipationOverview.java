@@ -1,16 +1,16 @@
 package eu.planlos.anwesenheitsliste.controllers.user;
 
-import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.RES_PARTICIPATIONOVERVIEW;
-import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.URL_PARTICIPATIONOVERVIEW;
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.RES_PARTICIPATIONOVERVIEW;
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_PARTICIPATIONOVERVIEW;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import eu.planlos.anwesenheitsliste.model.ParticipantService;
-import eu.planlos.anwesenheitsliste.model.TeamService;
-import eu.planlos.anwesenheitsliste.viewhelper.BodyFiller;
+import eu.planlos.anwesenheitsliste.service.BodyFillerService;
+import eu.planlos.anwesenheitsliste.service.ParticipantService;
+import eu.planlos.anwesenheitsliste.service.TeamService;
 
 @Controller
 public class ParticipationOverview {
@@ -19,7 +19,7 @@ public class ParticipationOverview {
 	public final String STR_TITLE = "Übersicht der Gruppenteilnahmen";
 
 	@Autowired
-	private BodyFiller bf;
+	private BodyFillerService bf;
 	
 	@Autowired
 	private ParticipantService participantService;

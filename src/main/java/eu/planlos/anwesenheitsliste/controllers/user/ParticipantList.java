@@ -1,8 +1,8 @@
 package eu.planlos.anwesenheitsliste.controllers.user;
 
-import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.RES_PARTICIPANTLIST;
-import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.URL_PARTICIPANT;
-import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.URL_PARTICIPANTLIST;
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.RES_PARTICIPANTLIST;
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_PARTICIPANT;
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_PARTICIPANTLIST;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import eu.planlos.anwesenheitsliste.model.Participant;
-import eu.planlos.anwesenheitsliste.model.ParticipantService;
-import eu.planlos.anwesenheitsliste.viewhelper.BodyFiller;
+import eu.planlos.anwesenheitsliste.service.BodyFillerService;
+import eu.planlos.anwesenheitsliste.service.ParticipantService;
 
 @Controller
 public class ParticipantList {
@@ -24,7 +24,7 @@ public class ParticipantList {
 	public final String STR_TITLE = "Liste der Teilnehmer";
 
 	@Autowired
-	private BodyFiller bf;
+	private BodyFillerService bf;
 	
 	@Autowired
 	private ParticipantService participantService;

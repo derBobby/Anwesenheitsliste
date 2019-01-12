@@ -1,4 +1,4 @@
-package eu.planlos.anwesenheitsliste.viewhelper;
+package eu.planlos.anwesenheitsliste;
 
 public class ApplicationPaths {
 

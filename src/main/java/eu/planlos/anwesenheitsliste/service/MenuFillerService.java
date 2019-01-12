@@ -1,4 +1,6 @@
-package eu.planlos.anwesenheitsliste.viewhelper;
+package eu.planlos.anwesenheitsliste.service;
+
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.EnvironmentAware;
@@ -6,10 +8,8 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
-import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.*;
-
 @Service
-public class MenuFiller implements EnvironmentAware {
+public class MenuFillerService implements EnvironmentAware {
 
 	@Autowired
 	private Environment environment;

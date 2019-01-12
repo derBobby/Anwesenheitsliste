@@ -1,8 +1,8 @@
 package eu.planlos.anwesenheitsliste.controllers.user;
 
-import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.RES_TEAM;
-import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.URL_TEAM;
-import static eu.planlos.anwesenheitsliste.viewhelper.ApplicationPaths.URL_TEAMLIST;
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.RES_TEAM;
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_TEAM;
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_TEAMLIST;
 
 import javax.validation.Valid;
 
@@ -16,12 +16,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import eu.planlos.anwesenheitsliste.model.ParticipantService;
 import eu.planlos.anwesenheitsliste.model.Team;
-import eu.planlos.anwesenheitsliste.model.TeamService;
-import eu.planlos.anwesenheitsliste.model.UserService;
 import eu.planlos.anwesenheitsliste.model.exception.EmptyIdException;
-import eu.planlos.anwesenheitsliste.viewhelper.BodyFiller;
+import eu.planlos.anwesenheitsliste.service.BodyFillerService;
+import eu.planlos.anwesenheitsliste.service.ParticipantService;
+import eu.planlos.anwesenheitsliste.service.TeamService;
+import eu.planlos.anwesenheitsliste.service.UserService;
 
 @Controller
 public class TeamDetail {
@@ -31,7 +31,7 @@ public class TeamDetail {
 	public final String STR_TITLE_EDIT_TEAM = "Gruppe ändern";
 
 	@Autowired
-	private BodyFiller bf;
+	private BodyFillerService bf;
 	
 	@Autowired
 	private TeamService teamService;

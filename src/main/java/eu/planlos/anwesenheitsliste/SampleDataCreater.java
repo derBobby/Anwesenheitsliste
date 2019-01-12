@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import eu.planlos.anwesenheitsliste.model.Meeting;
@@ -20,8 +21,9 @@ import eu.planlos.anwesenheitsliste.model.User;
 import eu.planlos.anwesenheitsliste.model.UserRepository;
 
 @Component
+@Profile(value = "CREATESAMPLEDATA")
 public class SampleDataCreater implements ApplicationRunner {
-
+	
 	private static final Logger logger = LoggerFactory.getLogger(SampleDataCreater.class);	
 
     private MeetingRepository meetingsRepo;
@@ -40,16 +42,20 @@ public class SampleDataCreater implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws ParseException {
 
-    	if(args.containsOption("initdb")) {
-    		logger.debug("Startparameter \"initdb\" gefunden -> Initialisiere Datenbank");
-    		initDB();
-    		return;
-    	}
+//    	if(args.containsOption("")) {
+//    		logger.debug("Startparameter \"initdb\" gefunden -> Initialisiere Datenbank");
+//    		initDB();
+//    		return;
+//    	}
+//    	logger.debug("Startparameter \"initdb\" nicht gefunden -> Initialisiere Datenbank nicht");
     	
-    	logger.debug("Startparameter \"initdb\" nicht gefunden -> Initialisiere Datenbank nicht");
+		logger.debug("Profil \"CREATEDB\" gefunden -> Initialisiere Datenbank");
+    	initDB();
+    	logger.debug("Profil \"CREATEDB\" gefunden -> Initialisiere Datenbank -> FERTIG!");
     }
 
 	private void initDB() throws ParseException {
+		
 		meetingsRepo.deleteAll();
 		participantRepo.deleteAll();
 		teamRepo.deleteAll();

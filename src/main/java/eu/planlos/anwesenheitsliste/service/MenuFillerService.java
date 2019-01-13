@@ -22,8 +22,8 @@ public class MenuFillerService implements EnvironmentAware {
 		model.addAttribute("URL_MEETINGLISTFULL", URL_MEETINGLISTFULL);	
 		model.addAttribute("URL_PARTICIPANTLIST", URL_PARTICIPANTLIST);	
 		model.addAttribute("URL_TEAMLIST", URL_TEAMLIST);	
-		model.addAttribute(URL_LOGOUT);	
-		model.addAttribute(URL_LOGIN);	
+		model.addAttribute("URL_LOGOUT", URL_LOGOUT);	
+		model.addAttribute("URL_LOGIN", URL_LOGIN);	
 		model.addAttribute("URL_HOME", URL_HOME);	
 		model.addAttribute("URL_ABOUT", URL_ABOUT);	
 		model.addAttribute("URL_PRIVACY", URL_PRIVACY);

@@ -70,10 +70,10 @@
 						<span>Account</span>
 					</a>
 					<div id="accountDropdown" class="dropdown-menu" aria-labelledby="accountDropdown">
-						<a class="dropdown-item" href="#">Aktivitäten</a>
+						<a class="dropdown-item disabled" href="#">Aktivitäten</a>
 						<div class="dropdown-divider"></div>
 						<h6 class="dropdown-header">Account</h6>
-						<a class="dropdown-item" href="#">Einstellungen</a>
+						<a class="dropdown-item disabled" href="#">Einstellungen</a>
 						<a class="dropdown-item" th:href="@{${URL_LOGOUT}}">Logout</a>
 					</div>
 				<!-- END account -->
@@ -98,28 +98,28 @@
 			<div class="container text-center text-muted">
 				derBobby © 2019
 			</div>
-			<div class="container text-center text-muted">
-				<label th:inline="text">SESSION: [[${session}]]</label>
+			<div th:if="${mysession} != null" class="container text-center text-muted">
+				<p th:inline="text">SESSION: [[${session}]]</p>
 			</div>
 			
-			<div class="container text-center text-muted">
-				<label th:inline="text">NAME: [[${auth.name}]]</label>
+			<div th:if="${auth} != null" class="container text-center text-muted">
+				<p th:inline="text">NAME: [[${auth.name}]]</p>
 			</div>
 
-			<div class="container text-center text-muted">
-				<label th:inline="text">PRINCIPAL: [[${auth.principal}]]</label>
+			<div th:if="${auth} != null" class="container text-center text-muted">
+				<p th:inline="text">PRINCIPAL: [[${auth.principal}]]</p>
 			</div>
 
-			<div class="container text-center text-muted">
-				<label th:inline="text">CREDENTIALS: [[${auth.credentials}]]</label>
+			<div th:if="${auth} != null" class="container text-center text-muted">
+				<p th:inline="text">CREDENTIALS: [[${auth.credentials}]]</p>
 			</div>
 			
-			<div class="container text-center text-muted">
-				<label th:inline="text">AUTHORITIES: [[${auth.Authorities}]]</label>
+			<div th:if="${auth} != null" class="container text-center text-muted">
+				<p th:inline="text">AUTHORITIES: [[${auth.Authorities}]]</p>
 			</div>
 
-			<div class="container text-center text-muted">
-				<label th:inline="text">DETAILS: [[${auth.details}]]</label>
+			<div th:if="${auth} != null" class="container text-center text-muted">
+				<p th:inline="text">DETAILS: [[${auth.details}]]</p>
 			</div>
 		</footer> 
 		

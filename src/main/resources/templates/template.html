@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://thymeleaf.org">
+<html xmlns:th="http://thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org">
 
 	<head lang="de" th:fragment="header">
 	
@@ -14,12 +15,12 @@
 		<link rel="stylesheet" media="screen" th:href="@{/webjars/bootstrap/css/bootstrap.css}" />				
 		<link rel="stylesheet" media="screen" th:href="@{/webjars/font-awesome/css/all.css}" />
 		<link rel="stylesheet" media="screen" th:href="@{/css/custom.css}" />
-		<link rel="stylesheet" media="screen" th:href="@{/sbadmin/css/sb-admin.css}" />
+<!-- 		<link rel="stylesheet" media="screen" th:href="@{/sbadmin/css/sb-admin.css}" /> -->
 		
 		<script th:src="@{/webjars/jquery/jquery.js}"></script>
 		<script th:src="@{/webjars/bootstrap/js/bootstrap.js}"></script>
 		<script th:src="@{/webjars/bootstrap/js/bootstrap.bundle.js}"></script>
-		<script th:src="@{/sbadmin/js/sb-admin.js}"></script>
+<!-- 		<script th:src="@{/sbadmin/js/sb-admin.js}"></script> -->
 		
 	</head>
 	
@@ -28,66 +29,95 @@
 		<!-- Navigation -->		
 		<nav th:fragment="nav" class="navbar navbar-expand-lg sticky-top navbar-dark bg-dark">
 		
-			<a class="navbar-brand" href="/" "PG Anwesenheit">PG</a>
+			<a class="navbar-brand" href="/" th:text="'PG Anwesenheit - ' + ${module}"></a>
 	
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#anwNavbar" aria-controls="anwNavbar" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
 			</button>
 			
+			<!-- collapsible part -->
 			<div class="collapse navbar-collapse" id="anwNavbar">
-				<div class="navbar-nav">
-
-				<!-- START user -->
-					<a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" data-target="#userDropdown" aria-controls="userDropdown" aria-haspopup="true" aria-expanded="false">
-						<i class="fas fa-child"></i>
-						<span>Erfassung</span>
-					</a>
-					<div id="userDropdown" class="dropdown-menu" aria-labelledby="userDropdown">
-						<a class="dropdown-item" th:href="@{${URL_TEAMLIST}}"><i class="fas fa-users"></i> Gruppen</a>
+			
+				<!-- alignment to the right -->
+				<div class="navbar-nav ml-auto">
+	
+					<!-- START user -->
+					<div class="nav-item dropdown">
+						<div sec:authorize="hasAnyRole('ROLE_USER', 'ROLE_ADMIN')" th:remove="tag">
+							<a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" data-target="#userDropdown" aria-controls="userDropdown" aria-haspopup="true" aria-expanded="false">
+								<i class="fas fa-child"></i>
+								<span>Erfassung</span>
+							</a>
+							<div id="userDropdown" class="dropdown-menu" aria-labelledby="userDropdown">
+								<a class="dropdown-item" th:href="@{${URL_TEAMLIST}}"><i class="fas fa-users"></i> Gruppen</a>
+							</div>
+						</div>
 					</div>
 				<!-- END user -->
 
 				<!-- START admin -->
-					<a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" data-target="#adminDropdown" aria-controls="adminDropdown" aria-haspopup="true" aria-expanded="false">
-						<i class="fas fa-user-tie"></i>
-						<span>Administration</span>
-					</a>
-					<div id="adminDropdown" class="dropdown-menu" aria-labelledby="adminDropdown">
-						<h6 class="dropdown-header">Administration</h6>
-						<a class="dropdown-item" th:href="@{${URL_PARTICIPANTLIST}}"><i class="fas fa-child"></i> Teilnehmer</a>
-						<a class="dropdown-item" th:href="@{${URL_USERLIST}}"><i class="fas fa-user"></i> Benutzer</a>
-						<a class="dropdown-item" th:href="@{${URL_MEETINGLISTFULL}}"><i class="far fa-calendar-alt"></i> Alle Termine</a>
-						<div class="dropdown-divider"></div>
-						<h6 class="dropdown-header">Übersichten</h6>
-						<a class="dropdown-item" th:href="@{${URL_PERMISSIONSOVERVIEW}}"><i class="far fa-eye"></i> Berechtigungen</a>
-						<a class="dropdown-item" th:href="@{${URL_PARTICIPATIONOVERVIEW}}"><i class="far fa-eye"></i> Teilnahmen</a>
+					<div class="nav-item dropdown">
+						<div sec:authorize="hasAnyRole('ROLE_ADMIN')" th:remove="tag">				
+							<a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" data-target="#adminDropdown" aria-controls="adminDropdown" aria-haspopup="true" aria-expanded="false">
+								<i class="fas fa-user-tie"></i>
+								<span>Administration</span>
+							</a>
+							<div id="adminDropdown" class="dropdown-menu" aria-labelledby="adminDropdown">
+								<h6 class="dropdown-header">Administration</h6>
+								<a class="dropdown-item" th:href="@{${URL_PARTICIPANTLIST}}"><i class="fas fa-child"></i> Teilnehmer</a>
+								<a class="dropdown-item" th:href="@{${URL_USERLIST}}"><i class="fas fa-user"></i> Benutzer</a>
+								<a class="dropdown-item" th:href="@{${URL_MEETINGLISTFULL}}"><i class="far fa-calendar-alt"></i> Alle Termine</a>
+								<div class="dropdown-divider"></div>
+								<h6 class="dropdown-header">Übersichten</h6>
+								<a class="dropdown-item" th:href="@{${URL_PERMISSIONSOVERVIEW}}"><i class="far fa-eye"></i> Berechtigungen</a>
+								<a class="dropdown-item" th:href="@{${URL_PARTICIPATIONOVERVIEW}}"><i class="far fa-eye"></i> Teilnahmen</a>
+								<div th:if="${isDevProfile}" th:remove="tag" class="container text-center text-muted">
+									<h6 class="dropdown-header">Debugging</h6>
+									<a class="dropdown-item" th:href="@{${URL_FA_TEST}}"><i class="fas fa-vial"></i> Font Awesome Test</a>
+									<a class="dropdown-item" th:href="@{${URL_BS_TEST}}"><i class="fas fa-vial"></i> Bootstrap Test</a>
+								</div>
+							</div>
+						</div>
 					</div>
 				<!-- END admin -->
 
 				<!-- START account -->
-					<a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" data-target="#accountDropdown" aria-controls="accountDropdown" aria-haspopup="true" aria-expanded="false">
-						<i class="fas fa-user-circle fa-fw"></i>
-						<span>Account</span>
-					</a>
-					<div id="accountDropdown" class="dropdown-menu" aria-labelledby="accountDropdown">
-						<a class="dropdown-item disabled" href="#"><i class="fas fa-list-ul"></i> Aktivitäten</a>
-						<div class="dropdown-divider"></div>
-						<h6 class="dropdown-header">Account</h6>
-						<a class="dropdown-item disabled" href="#"><i class="fas fa-user-circle fa-fw"></i> Einstellungen</a>
-						<a class="dropdown-item" th:href="@{${URL_LOGOUT}}"><i class="fas fa-sign-out-alt"></i> Logout</a>
+					<div class="nav-item dropdown">
+						<div sec:authorize="isAuthenticated()" th:remove="tag">
+							<a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" data-target="#accountDropdown" aria-controls="accountDropdown" aria-haspopup="true" aria-expanded="false">
+								<i class="fas fa-user-circle fa-fw"></i>
+								<span>Account</span>
+							</a>
+							<div id="accountDropdown" class="dropdown-menu navbar-right" aria-labelledby="accountDropdown">
+								<a class="dropdown-item disabled" href="#"><i class="fas fa-list-ul"></i> Aktivitäten</a>
+								<div class="dropdown-divider"></div>
+								<h6 class="dropdown-header">Account</h6>
+								<a class="dropdown-item disabled" href="#"><i class="fas fa-user-circle fa-fw"></i> Einstellungen</a>
+								<a class="dropdown-item" th:href="@{${URL_LOGOUT}}"><i class="fas fa-sign-out-alt"></i> Logout</a>
+							</div>
+						</div>
 					</div>
 				<!-- END account -->
 				
 				<!-- START public-->
-					<a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown"  data-target="#infoDropdown" aria-controls="infoDropdown" aria-haspopup="true" aria-expanded="false">
-						<i class="fas fa-info-circle"></i>
-						<span>Info</span>
-					</a>
-					<div id="infoDropdown" class="dropdown-menu" aria-labelledby="infoDropdown">
-						<a class="dropdown-item" th:href="@{${URL_ABOUT}}"><i class="fas fa-globe"></i> About</a>
-						<a class="dropdown-item" th:href="@{${URL_PRIVACY}}"><i class="fas fa-mask"></i> Privacy</a>
+					<div class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown"  data-target="#infoDropdown" aria-controls="infoDropdown" aria-haspopup="true" aria-expanded="false">
+							<i class="fas fa-info-circle"></i>
+							<span>Info</span>
+						</a>
+						<div id="infoDropdown" class="dropdown-menu" aria-labelledby="infoDropdown">
+							<a class="dropdown-item" th:href="@{${URL_IMPRESSUM}}"><i class="fas fa-globe"></i> Impressum</a>
+							<a class="dropdown-item" th:href="@{${URL_DATENSCHUTZ}}"><i class="fas fa-mask"></i> Datenschutz</a>
+						</div>
 					</div>
 				<!-- END public-->
+								
+				<!-- START login  -->
+					
+					<div sec:authorize="isAnonymous()" th:remove="tag">
+						<a th:href="@{${URL_LOGIN_FORM}}" class="nav-link"><i class="fas fa-sign-in-alt"></i> Login</a>
+					</div>
+				<!-- END login -->
 
 				</div>
 			</div>
@@ -97,30 +127,15 @@
 		<footer th:fragment="footer">
 			<div class="container text-center text-muted">
 				<p>derBobby © 2019</p>
-				<p><a th:href="@{${URL_ABOUT}}">About</a> | <a th:href="@{${URL_PRIVACY}}">Privacy</a></p>
+				<p><a th:href="@{${URL_IMPRESSUM}}">Impressum</a> | <a th:href="@{${URL_DATENSCHUTZ}}">Datenschutz</a></p>
 			</div>
-			<div th:if="${mysession} != null" class="container text-center text-muted">
-				<p th:inline="text">SESSION: [[${session}]]</p>
-			</div>
-			
-			<div th:if="${auth} != null" class="container text-center text-muted">
-				<p th:inline="text">NAME: [[${auth.name}]]</p>
-			</div>
-
-			<div th:if="${auth} != null" class="container text-center text-muted">
-				<p th:inline="text">PRINCIPAL: [[${auth.principal}]]</p>
-			</div>
-
-			<div th:if="${auth} != null" class="container text-center text-muted">
-				<p th:inline="text">CREDENTIALS: [[${auth.credentials}]]</p>
-			</div>
-			
-			<div th:if="${auth} != null" class="container text-center text-muted">
-				<p th:inline="text">AUTHORITIES: [[${auth.Authorities}]]</p>
-			</div>
-
-			<div th:if="${auth} != null" class="container text-center text-muted">
-				<p th:inline="text">DETAILS: [[${auth.details}]]</p>
+			<div th:if="${isDevProfile}" class="container text-center text-muted">
+				<p th:text="'SESSION: ' + ${#session.getId()}"></p>
+				<p th:text="'NAME: ' + ${#authentication.name}"></p>
+				<p th:text="'PRINCIPAL: ' + ${#authentication.principal}"></p>
+				<p th:text="'CREDENTIALS: ' + ${#authentication.credentials}"></p>			
+				<p th:text="'AUTHORITIES: ' + ${#authentication.Authorities}"></p>
+				<p th:text="'DETAILS: ' + ${#authentication.details}"></p>
 			</div>
 		</footer> 
 		

@@ -17,6 +17,8 @@ body {
 }
 */
 
+
+
 /*
  * Background of global page
  */
@@ -33,16 +35,23 @@ body {
 .table td {
   vertical-align: middle;
 }
-
 /* .checkbox input, */
 /* .radio input { */
 /*   horizontal-align: middle; */
 /*   height: 100%; */
 /* } */
-
-
 /* td input[type="checkbox"] { */
 /*     float: right; */
 /*     margin: 0 auto; */
 /*     width: 100%; */
 /* } */
+
+
+
+/*
+ * navbar dropdowns aligning to the left
+ */
+.ml-auto .dropdown-menu {
+    left: auto !important;
+    right: 0px;
+}

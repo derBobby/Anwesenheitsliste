@@ -85,15 +85,14 @@ public class ApplicationPaths {
 	public static final String URL_AREA_ANONYMOUS = "/";
 	
 	public static final String URL_HOME = URL_AREA_ANONYMOUS;
-	public static final String URL_ABOUT = URL_AREA_ANONYMOUS + "about";
+	public static final String URL_IMPRESSUM = URL_AREA_ANONYMOUS + "impressum";
 	public static final String URL_PRIVACY = URL_AREA_ANONYMOUS + "datenschutz";
 	public static final String URL_403 = URL_AREA_ANONYMOUS + "403";
 
 	// Ressource paths
 	public static final String RES_HOME = "home";
-	public static final String RES_ABOUT = "about";
+	public static final String RES_IMPRESSUM = "impressum";
 	public static final String RES_PRIVACY = "datenschutz";
-	
 	public static final String RES_403 = "403"; //TODO
 	
 	/*

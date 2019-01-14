@@ -15,7 +15,7 @@ import eu.planlos.anwesenheitsliste.model.LoginFormContainer;
 import eu.planlos.anwesenheitsliste.service.BodyFillerService;
 
 @Controller
-public class Login {
+public class LoginController {
 	
 	public static String STR_MODULE = "Login";
 	public static String STR_TITLE = "Login";

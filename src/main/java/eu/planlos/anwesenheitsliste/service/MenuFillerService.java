@@ -5,6 +5,9 @@ import static eu.planlos.anwesenheitsliste.ApplicationPaths.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.Environment;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
@@ -23,14 +26,30 @@ public class MenuFillerService implements EnvironmentAware {
 		model.addAttribute("URL_PARTICIPANTLIST", URL_PARTICIPANTLIST);	
 		model.addAttribute("URL_TEAMLIST", URL_TEAMLIST);	
 		model.addAttribute("URL_LOGOUT", URL_LOGOUT);	
-		model.addAttribute("URL_LOGIN", URL_LOGIN);	
 		model.addAttribute("URL_HOME", URL_HOME);	
-		model.addAttribute("URL_ABOUT", URL_ABOUT);	
-		model.addAttribute("URL_PRIVACY", URL_PRIVACY);
+		model.addAttribute("URL_IMPRESSUM", URL_IMPRESSUM);	
+		model.addAttribute("URL_DATENSCHUTZ", URL_PRIVACY);
 		
+		/*
+		 * Login URL only if not logged in
+		 */
+    	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    	Boolean isNull = (authentication == null);
+    	//TODO check if possible: when Anonymous Authentication is enabled
+    	Boolean isNotAuthenticated = ! authentication.isAuthenticated();
+    	Boolean isAnonymous = authentication instanceof AnonymousAuthenticationToken;
+	    if(isNull || isNotAuthenticated || isAnonymous) {
+	    	model.addAttribute("URL_LOGIN_FORM", URL_LOGIN_FORM);
+    	}
+	    
+	    
+	    /*
+	     * URLs for DEV profile
+	     */
         for (final String profileName : environment.getActiveProfiles()) {
             if(profileName.equals("DEV")) {
             	model.addAttribute("URL_FA_TEST", URL_FA_TEST);
+            	model.addAttribute("URL_BS_TEST", URL_BS_TEST);
             	break;
             }
         }

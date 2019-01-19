@@ -10,7 +10,6 @@ public class ApplicationPaths {
 	/*
 	 * ADMIN AREA
 	 */
-	
 	// Web paths
 	public static final String URL_AREA_ADMIN = "/admin";
 	
@@ -20,9 +19,6 @@ public class ApplicationPaths {
 	public static final String URL_USER = URL_AREA_ADMIN + DELIMETER + "userdetail" + DELIMETER;
 	public static final String URL_USERLIST = URL_AREA_ADMIN + DELIMETER + "userlist" + DELIMETER;
 	
-	public static final String URL_FA_TEST = URL_AREA_ADMIN + DELIMETER + "fontawesome";
-	public static final String URL_BS_TEST = URL_AREA_ADMIN + DELIMETER + "bootstrap";
-	
 	// Ressource paths
 	public static final String RES_PERMISSIONSOVERVIEW = "overview/permissionoverview";
 	public static final String RES_PARTICIPATIONOVERVIEW = "overview/participationoverview";
@@ -30,8 +26,22 @@ public class ApplicationPaths {
 	public static final String RES_USER = "detail/userdetail";
 	public static final String RES_USERLIST = "list/userlist";
 	
-	public static final String RES_FA_TEST = "test/fontawesome";
-	public static final String RES_BS_TEST = "test/bootstrap";
+
+	
+	/*
+	 * DEV AREA
+	 */
+	// Web paths
+	public static final String URL_AREA_DEV = "/dev";
+	
+	public static final String URL_FA_TEST = URL_AREA_DEV + DELIMETER + "fontawesome";
+	public static final String URL_BS_TEST = URL_AREA_DEV + DELIMETER + "bootstrap";
+	public static final String URL_403_TEST = URL_AREA_DEV + DELIMETER + "always403";
+
+	// Ressource paths
+	public static final String RES_FA_TEST = "dev/fontawesome";
+	public static final String RES_BS_TEST = "dev/bootstrap";
+	public static final String RES_403_TEST = "dev/always403";
 	
 	
 	
@@ -86,14 +96,16 @@ public class ApplicationPaths {
 	
 	public static final String URL_HOME = URL_AREA_ANONYMOUS;
 	public static final String URL_IMPRESSUM = URL_AREA_ANONYMOUS + "impressum";
-	public static final String URL_PRIVACY = URL_AREA_ANONYMOUS + "datenschutz";
+	public static final String URL_DATENSCHUTZ = URL_AREA_ANONYMOUS + "datenschutz";
 	public static final String URL_403 = URL_AREA_ANONYMOUS + "403";
 
 	// Ressource paths
 	public static final String RES_HOME = "home";
 	public static final String RES_IMPRESSUM = "impressum";
-	public static final String RES_PRIVACY = "datenschutz";
+	public static final String RES_DATENSCHUTZ = "datenschutz";
 	public static final String RES_403 = "403"; //TODO
+	
+	
 	
 	/*
 	 * ACTUATOR AREA

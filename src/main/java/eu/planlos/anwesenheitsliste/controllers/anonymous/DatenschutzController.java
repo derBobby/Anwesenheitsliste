@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import eu.planlos.anwesenheitsliste.service.BodyFillerService;
 
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_PRIVACY;
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.RES_PRIVACY;
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_DATENSCHUTZ;
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.RES_DATENSCHUTZ;
 
 @Controller
 public class DatenschutzController {
@@ -16,12 +16,12 @@ public class DatenschutzController {
 	@Autowired
 	private BodyFillerService bf;
 
-	@GetMapping(path = URL_PRIVACY)
+	@GetMapping(path = URL_DATENSCHUTZ)
 	public String datenschutz(Model model) {
 		
 		bf.fill(model, "Öffentlich", "Datenschutz");
 		
-		return RES_PRIVACY;
+		return RES_DATENSCHUTZ;
 	}
 	
 }

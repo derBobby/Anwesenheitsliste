@@ -28,7 +28,7 @@ public class MenuFillerService implements EnvironmentAware {
 		model.addAttribute("URL_LOGOUT", URL_LOGOUT);	
 		model.addAttribute("URL_HOME", URL_HOME);	
 		model.addAttribute("URL_IMPRESSUM", URL_IMPRESSUM);	
-		model.addAttribute("URL_DATENSCHUTZ", URL_PRIVACY);
+		model.addAttribute("URL_DATENSCHUTZ", URL_DATENSCHUTZ);
 		
 		/*
 		 * Login URL only if not logged in
@@ -49,6 +49,7 @@ public class MenuFillerService implements EnvironmentAware {
         for (final String profileName : environment.getActiveProfiles()) {
             if(profileName.equals("DEV")) {
             	model.addAttribute("URL_FA_TEST", URL_FA_TEST);
+            	model.addAttribute("URL_403_TEST", URL_403_TEST);
             	model.addAttribute("URL_BS_TEST", URL_BS_TEST);
             	break;
             }

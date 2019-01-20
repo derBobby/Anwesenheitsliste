@@ -1,7 +1,9 @@
 package eu.planlos.anwesenheitsliste.controllers.user;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -10,8 +12,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import eu.planlos.anwesenheitsliste.model.Participant;
+import eu.planlos.anwesenheitsliste.model.Team;
 import eu.planlos.anwesenheitsliste.service.BodyFillerService;
 import eu.planlos.anwesenheitsliste.service.ParticipantService;
+import eu.planlos.anwesenheitsliste.service.SecurityService;
+import eu.planlos.anwesenheitsliste.service.TeamService;
 
 import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_PARTICIPANTLISTFULL;
 import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_PARTICIPANT;
@@ -30,30 +35,63 @@ public class ParticipantList {
 
 	@Autowired
 	private ParticipantService participantService;
+	
+	@Autowired
+	private TeamService teamService;
+	
+	@Autowired
+	private SecurityService securityService;
 
+	// User
 	@RequestMapping(path = URL_PARTICIPANTLIST + "{markedParticipantId}")
 	public String markedParticipantList(Model model, @PathVariable Long markedParticipantId) {
-
-		prepareContent(model, markedParticipantId);
+	
+		prepareContent(model, participantsForUser(), markedParticipantId);
 		return RES_PARTICIPANTLIST;
 	}
 
+	// User
 	@RequestMapping(path = URL_PARTICIPANTLIST)
 	public String participantList(Model model) {
 
-		prepareContent(model, null);
+		prepareContent(model, participantsForUser(), null);
 		return RES_PARTICIPANTLIST;
 	}
 
-	// TODO start this change
+	//TODO is there a better way to do this?
+	private List<Participant> participantsForUser() {
+		
+		String loginName = securityService.getLoginName();
+		List<Team> teams = teamService.findAllByUsersLoginName(loginName);
+		
+		Set<Participant> participants = new HashSet<>();
+		//List<Participant> participants = new ArrayList<>();
+		
+		for(Team team : teams) {
+//			for(Participant participant : team.getParticipants()) {
+//				if(! participants.contains(participant)) {
+//					participants.add(participant);
+//				}
+//			}
+			participants.addAll(team.getParticipants());
+		}
+				
+		return new ArrayList<Participant>(participants);
+
+
+	}
+
+	// Admin
 	@RequestMapping(path = URL_PARTICIPANTLISTFULL)
 	public String participantListFull(Model model) {
 
-		prepareContent(model, null);
+		List<Participant> participants = participantService.findAll();
+
+		prepareContent(model, participants, null);
 		return RES_PARTICIPANTLIST;
 	}
 
-	private void prepareContent(Model model, Long markedParticipantId) {
+	private void prepareContent(Model model, List<Participant> participants, Long markedParticipantId) {
 
 		List<String> headings = new ArrayList<>();
 		headings.add("#");
@@ -63,10 +101,8 @@ public class ParticipantList {
 		headings.add("E-Mail");
 		headings.add("Aktiv");
 		headings.add("Funktionen");
-
-		List<Participant> participants = participantService.findAll();
-
 		model.addAttribute("headings", headings);
+
 		model.addAttribute("participants", participants);
 		model.addAttribute("markedParticipantId", markedParticipantId);
 

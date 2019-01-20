@@ -17,6 +17,11 @@ public class SecurityService {
 		return teamRepo.existsByIdTeamAndUsersLoginName(idTeam, getLoginName());
 	}
 	
+	public boolean isUserStaffForParticipant(long idParticipant) {
+		
+		return teamRepo.existsByParticipantsIdParticipantAndUsersLoginName(idParticipant, getLoginName());
+	}
+	
 	public String getLoginName() {
 		return SecurityContextHolder.getContext().getAuthentication().getName();
 	}

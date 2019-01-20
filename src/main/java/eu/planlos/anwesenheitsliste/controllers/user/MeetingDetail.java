@@ -80,6 +80,7 @@ public class MeetingDetail {
 		return RES_MEETING;
 	}
 	
+	//TODO load only permitted!!!
 	// STEP 1 adding new meeting without a given team
 	@RequestMapping(path = URL_MEETINGCHOOSETEAM, method = RequestMethod.GET)
 	public String addWithoutTeam(Model model) {

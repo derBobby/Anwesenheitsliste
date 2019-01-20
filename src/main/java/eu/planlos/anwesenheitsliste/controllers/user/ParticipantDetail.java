@@ -1,6 +1,7 @@
 package eu.planlos.anwesenheitsliste.controllers.user;
 
 import static eu.planlos.anwesenheitsliste.ApplicationPaths.RES_PARTICIPANT;
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_403;
 import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_PARTICIPANT;
 import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_PARTICIPANTLIST;
 
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import eu.planlos.anwesenheitsliste.model.Participant;
 import eu.planlos.anwesenheitsliste.service.BodyFillerService;
 import eu.planlos.anwesenheitsliste.service.ParticipantService;
+import eu.planlos.anwesenheitsliste.service.SecurityService;
 import eu.planlos.anwesenheitsliste.service.TeamService;
 
 @Controller
@@ -37,16 +39,25 @@ public class ParticipantDetail {
 	@Autowired
 	private TeamService teamService;
 	
+	@Autowired
+	private SecurityService securityService;
+	
+	// User
 	@RequestMapping(path = URL_PARTICIPANT + "{idParticipant}", method = RequestMethod.GET)
 	public String edit(Model model, @PathVariable Long idParticipant) {
 
+		if(!hasPermissionForParticipant(idParticipant)) {
+			return "redirect:" + URL_403;
+		}
+		
 		Participant participant = participantService.findById(idParticipant);
 		model.addAttribute(participant);
 		prepareContent(model, participant);
 		
 		return RES_PARTICIPANT;
 	}
-	
+
+	// User
 	@RequestMapping(path = URL_PARTICIPANT, method = RequestMethod.GET)
 	public String add(Model model) {
 		
@@ -57,8 +68,13 @@ public class ParticipantDetail {
 		return RES_PARTICIPANT;
 	}
 
+	// User
 	@RequestMapping(path = URL_PARTICIPANT, method = RequestMethod.POST)
 	public String submit(Model model, @Valid @ModelAttribute Participant participant, Errors errors) {
+
+		if(participant.getIdParticipant() != null && !hasPermissionForParticipant(participant.getIdParticipant())) {
+			return "redirect:" + URL_403;
+		}
 		
 		if(errors.hasErrors()) {
 			prepareContent(model, participant);
@@ -87,5 +103,9 @@ public class ParticipantDetail {
 		model.addAttribute("teams", teamService.findAll());
 		model.addAttribute("formAction", URL_PARTICIPANT);
 		model.addAttribute("formCancel", URL_PARTICIPANTLIST);
+	}
+	
+	private boolean hasPermissionForParticipant(Long idParticipant) {
+		return securityService.isUserStaffForParticipant(idParticipant);
 	}
 }

@@ -24,14 +24,15 @@ public class MenuFillerService implements EnvironmentAware {
 		/*
 		 * User Menu
 		 */
-		model.addAttribute("URL_TEAMLIST", URL_TEAMLIST); //TODO still showing all teams, not only mine
 		model.addAttribute("URL_MEETINGCHOOSETEAM", URL_MEETINGCHOOSETEAM);
+		model.addAttribute("URL_PARTICIPANTLIST", URL_PARTICIPANTLIST);	
+		model.addAttribute("URL_TEAMLIST", URL_TEAMLIST);
 		
 		
 		/*
 		 * Admin Menu
 		 */
-		model.addAttribute("URL_PARTICIPANTLIST", URL_PARTICIPANTLIST);	
+		model.addAttribute("URL_PARTICIPANTLISTFULL", URL_PARTICIPANTLISTFULL);	
 		model.addAttribute("URL_USERLIST", URL_USERLIST);	
 		model.addAttribute("URL_MEETINGLISTFULL", URL_MEETINGLISTFULL);	
 

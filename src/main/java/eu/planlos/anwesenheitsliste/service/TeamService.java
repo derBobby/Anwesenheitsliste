@@ -40,4 +40,8 @@ public class TeamService {
 	public Team findById(Long idTeam) {
 		return teamRepo.findById(idTeam).get();
 	}
+
+	public List<Team> findAllByUsersLoginName(String loginName) {
+		return teamRepo.findAllByUsersLoginName(loginName);
+	}
 }

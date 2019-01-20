@@ -6,6 +6,7 @@ import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_MEETINGCHOOSETEA
 import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_MEETINGFORTEAM;
 import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_MEETINGLIST;
 import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_MEETINGLISTFULL;
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_403;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import eu.planlos.anwesenheitsliste.model.Meeting;
 import eu.planlos.anwesenheitsliste.service.BodyFillerService;
 import eu.planlos.anwesenheitsliste.service.MeetingService;
+import eu.planlos.anwesenheitsliste.service.SecurityService;
 
 @Controller
 public class MeetingList {
@@ -28,25 +30,39 @@ public class MeetingList {
 
 	@Autowired
 	private BodyFillerService bf;
-	
+
 	@Autowired
 	private MeetingService meetingService;
 	
+	@Autowired
+	private SecurityService securityService;
+	
+	// User
 	@RequestMapping(path = URL_MEETINGLIST + "{idTeam}")
 	public String meetingListForTeam(Model model, @PathVariable Long idTeam) {
-			
+		
+		if(!hasPermissionForTeam(idTeam)) {
+			return "redirect:" + URL_403;
+		}
+		
 		prepareContentForTeam(model, idTeam);
 		return RES_MEETINGLIST;
 	}
-	
+
+	// User
 	@RequestMapping(path = URL_MEETINGLIST + "{idTeam}" + DELIMETER + "{idMeeting}")
 	public String meetingListForTeamMarked(Model model, @PathVariable Long idTeam, @PathVariable Long idMeeting) {
+
+		if(!hasPermissionForTeam(idTeam)) {
+			return "redirect:" + URL_403;
+		}
 		
 		model.addAttribute("markedMeetingId", idMeeting);
 		prepareContentForTeam(model, idTeam);
 		return RES_MEETINGLIST;
 	}
 	
+	// Admin
 	@RequestMapping(path = URL_MEETINGLISTFULL)
 	public String meetingListFull(Model model) {
 		
@@ -59,7 +75,9 @@ public class MeetingList {
 		return RES_MEETINGLIST;
 	}
 	
-	// CONTENT PREPARATION
+	/*
+	 * CONTENT PREPARATION
+	 */
 	
 	private void prepareContentForTeam(Model model, Long idTeam) {
 		
@@ -100,5 +118,9 @@ public class MeetingList {
 			return meetingService.findAll();
 		}
 		return meetingService.findAllByTeam(idTeam);
+	}
+	
+	private boolean hasPermissionForTeam(long idTeam) {
+		return securityService.isUserMemberOfTeam(idTeam);
 	}
 }

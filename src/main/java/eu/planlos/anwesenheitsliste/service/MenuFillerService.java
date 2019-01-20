@@ -19,16 +19,42 @@ public class MenuFillerService implements EnvironmentAware {
 	
 	public void fill(Model model) {
 
-		model.addAttribute("URL_PERMISSIONSOVERVIEW", URL_PERMISSIONSOVERVIEW);	
-		model.addAttribute("URL_PARTICIPATIONOVERVIEW", URL_PARTICIPATIONOVERVIEW);	
+		model.addAttribute("URL_HOME", URL_HOME);	
+		
+		/*
+		 * User Menu
+		 */
+		model.addAttribute("URL_TEAMLIST", URL_TEAMLIST); //TODO still showing all teams, not only mine
+		model.addAttribute("URL_MEETINGCHOOSETEAM", URL_MEETINGCHOOSETEAM);
+		
+		
+		/*
+		 * Admin Menu
+		 */
+		model.addAttribute("URL_PARTICIPANTLIST", URL_PARTICIPANTLIST);	
 		model.addAttribute("URL_USERLIST", URL_USERLIST);	
 		model.addAttribute("URL_MEETINGLISTFULL", URL_MEETINGLISTFULL);	
-		model.addAttribute("URL_PARTICIPANTLIST", URL_PARTICIPANTLIST);	
-		model.addAttribute("URL_TEAMLIST", URL_TEAMLIST);	
+
+		model.addAttribute("URL_PERMISSIONSOVERVIEW", URL_PERMISSIONSOVERVIEW);	
+		model.addAttribute("URL_PARTICIPATIONOVERVIEW", URL_PARTICIPATIONOVERVIEW);	
+		
+		// URLs for DEV profile
+		for (final String profileName : environment.getActiveProfiles()) {
+			if(profileName.equals("DEV")) {
+				model.addAttribute("URL_FA_TEST", URL_FA_TEST);
+				model.addAttribute("URL_403_TEST", URL_403_TEST);
+				model.addAttribute("URL_BS_TEST", URL_BS_TEST);
+				break;
+		}	}
+
+		
+		/*
+		 * Account Menu
+		 */
+		//TODO Activities missing
+		//TODO Config missing
 		model.addAttribute("URL_LOGOUT", URL_LOGOUT);	
-		model.addAttribute("URL_HOME", URL_HOME);	
-		model.addAttribute("URL_IMPRESSUM", URL_IMPRESSUM);	
-		model.addAttribute("URL_DATENSCHUTZ", URL_DATENSCHUTZ);
+		
 		
 		/*
 		 * Login URL only if not logged in
@@ -43,17 +69,12 @@ public class MenuFillerService implements EnvironmentAware {
     	}
 	    
 	    
-	    /*
-	     * URLs for DEV profile
-	     */
-        for (final String profileName : environment.getActiveProfiles()) {
-            if(profileName.equals("DEV")) {
-            	model.addAttribute("URL_FA_TEST", URL_FA_TEST);
-            	model.addAttribute("URL_403_TEST", URL_403_TEST);
-            	model.addAttribute("URL_BS_TEST", URL_BS_TEST);
-            	break;
-            }
-        }
+		/*
+		 * Info Menu
+		 */
+		model.addAttribute("URL_IMPRESSUM", URL_IMPRESSUM);	
+		model.addAttribute("URL_DATENSCHUTZ", URL_DATENSCHUTZ);
+		
 	}
 
 	@Override

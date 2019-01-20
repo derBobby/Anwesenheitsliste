@@ -1,6 +1,7 @@
 package eu.planlos.anwesenheitsliste.controllers.user;
 
 import static eu.planlos.anwesenheitsliste.ApplicationPaths.RES_TEAMPHONELIST;
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_403;
 import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_TEAMPHONELIST;
 
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import eu.planlos.anwesenheitsliste.model.Participant;
 import eu.planlos.anwesenheitsliste.service.BodyFillerService;
 import eu.planlos.anwesenheitsliste.service.ParticipantService;
+import eu.planlos.anwesenheitsliste.service.SecurityService;
 
 @Controller
 public class TeamPhonelist {
@@ -27,9 +29,16 @@ public class TeamPhonelist {
 	
 	@Autowired
     private ParticipantService participantService;
+	
+	@Autowired
+    private SecurityService securityService;
 
 	@RequestMapping(value = URL_TEAMPHONELIST + "{idTeam}")
 	public String markedTeamList(Model model, @PathVariable Long idTeam) {
+				
+		if(!securityService.isUserMemberOfTeam(idTeam)) {
+			return "redirect:" + URL_403;
+		}
 		
 		prepareContent(model, idTeam);
 		return RES_TEAMPHONELIST;

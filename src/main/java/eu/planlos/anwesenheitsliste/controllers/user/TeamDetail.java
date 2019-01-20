@@ -2,7 +2,7 @@ package eu.planlos.anwesenheitsliste.controllers.user;
 
 import static eu.planlos.anwesenheitsliste.ApplicationPaths.RES_TEAM;
 import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_TEAM;
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_TEAMLIST;
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_TEAMLISTFULL;
 
 import javax.validation.Valid;
 
@@ -77,7 +77,7 @@ public class TeamDetail {
 			userService.updateTeamForUsers(team);
 			participantService.updateTeamForParticipants(team);
 			
-			return "redirect:" + URL_TEAMLIST + savedTeam.getIdTeam();
+			return "redirect:" + URL_TEAMLISTFULL + savedTeam.getIdTeam();
 
 		} catch (EmptyIdException e) {
 			//TODO Logger
@@ -104,6 +104,6 @@ public class TeamDetail {
 		model.addAttribute("users", userService.findAll());
 		model.addAttribute("participants", participantService.findAll());
 		model.addAttribute("formAction", URL_TEAM);
-		model.addAttribute("formCancel", URL_TEAMLIST);
+		model.addAttribute("formCancel", URL_TEAMLISTFULL);
 	}
 }

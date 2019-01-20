@@ -1,9 +1,5 @@
 package eu.planlos.anwesenheitsliste.controllers.user;
 
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.RES_PARTICIPANTLIST;
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_PARTICIPANT;
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_PARTICIPANTLIST;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +13,12 @@ import eu.planlos.anwesenheitsliste.model.Participant;
 import eu.planlos.anwesenheitsliste.service.BodyFillerService;
 import eu.planlos.anwesenheitsliste.service.ParticipantService;
 
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_PARTICIPANTLISTFULL;
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_PARTICIPANT;
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_PARTICIPANTLIST;
+
+import static eu.planlos.anwesenheitsliste.ApplicationPaths.RES_PARTICIPANTLIST;
+
 @Controller
 public class ParticipantList {
 
@@ -25,27 +27,35 @@ public class ParticipantList {
 
 	@Autowired
 	private BodyFillerService bf;
-	
+
 	@Autowired
 	private ParticipantService participantService;
-	
+
 	@RequestMapping(path = URL_PARTICIPANTLIST + "{markedParticipantId}")
 	public String markedParticipantList(Model model, @PathVariable Long markedParticipantId) {
-		
+
 		prepareContent(model, markedParticipantId);
-		return RES_PARTICIPANTLIST;		
+		return RES_PARTICIPANTLIST;
 	}
-	
+
 	@RequestMapping(path = URL_PARTICIPANTLIST)
 	public String participantList(Model model) {
-		
+
 		prepareContent(model, null);
-		return RES_PARTICIPANTLIST;		
+		return RES_PARTICIPANTLIST;
+	}
+
+	// TODO start this change
+	@RequestMapping(path = URL_PARTICIPANTLISTFULL)
+	public String participantListFull(Model model) {
+
+		prepareContent(model, null);
+		return RES_PARTICIPANTLIST;
 	}
 
 	private void prepareContent(Model model, Long markedParticipantId) {
-		
-		List<String> headings = new ArrayList<>();	
+
+		List<String> headings = new ArrayList<>();
 		headings.add("#");
 		headings.add("Vorname");
 		headings.add("Nachname");
@@ -55,14 +65,14 @@ public class ParticipantList {
 		headings.add("Funktionen");
 
 		List<Participant> participants = participantService.findAll();
-		
+
 		model.addAttribute("headings", headings);
 		model.addAttribute("participants", participants);
 		model.addAttribute("markedParticipantId", markedParticipantId);
-			
+
 		model.addAttribute("functionEdit", URL_PARTICIPANT);
 		model.addAttribute("functionAdd", URL_PARTICIPANT);
-		
+
 		bf.fill(model, STR_MODULE, STR_TITLE);
 	}
 }

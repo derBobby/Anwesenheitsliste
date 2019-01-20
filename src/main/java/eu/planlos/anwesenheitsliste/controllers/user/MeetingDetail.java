@@ -53,7 +53,7 @@ public class MeetingDetail {
 	@Autowired
 	private ParticipantService participantService;
 	
-	//For editing a given meeting for given team
+	// For editing a given meeting for given team
 	@RequestMapping(path = URL_MEETINGFORTEAM + "{idTeam}/{idMeeting}", method = RequestMethod.GET)
 	public String edit(Model model, @PathVariable Long idTeam, @PathVariable Long idMeeting) {
 	
@@ -66,7 +66,7 @@ public class MeetingDetail {
 		return RES_MEETING;
 	}
 
-	//For adding new meeting for given team
+	// For adding new meeting for given team
 	@RequestMapping(path = URL_MEETINGFORTEAM + "{idTeam}", method = RequestMethod.GET)
 	public String addForTeam(Model model, @PathVariable Long idTeam) {
 		
@@ -80,7 +80,7 @@ public class MeetingDetail {
 		return RES_MEETING;
 	}
 	
-	//STEP 1 adding new meeting without a given team
+	// STEP 1 adding new meeting without a given team
 	@RequestMapping(path = URL_MEETINGCHOOSETEAM, method = RequestMethod.GET)
 	public String addWithoutTeam(Model model) {
 		
@@ -98,7 +98,7 @@ public class MeetingDetail {
 		return Calendar.getInstance().getTime();
 	}
 
-	//STEP 2 adding new meeting without a given team
+	// STEP 2 adding new meeting without a given team
 	@RequestMapping(path = URL_MEETINGADDPARTICIPANTS, method = RequestMethod.POST)
 	public String addWithoutTeam(Model model, @Valid @ModelAttribute Meeting meeting, Errors errors) {
 
@@ -113,7 +113,7 @@ public class MeetingDetail {
 		return RES_MEETING; 
 	}
 	
-	//For submitting the added/edited meeting
+	// For submitting the added/edited meeting
 	@RequestMapping(path = URL_MEETINGSUBMIT, method = RequestMethod.POST)
 	public String submit(Model model, @Valid @ModelAttribute Meeting meeting, Errors errors) {
 		
@@ -122,8 +122,8 @@ public class MeetingDetail {
 			return RES_MEETING; 
 		}
 	
-	//TODO Handling in Controller?
-	//TODO Transaction
+	// TODO Handling in Controller?
+	// TODO Transaction
 	// {
 		// Disabled checkboxes can be manipulated so that they could be set.
 		// Don't trust the frontend! :-P

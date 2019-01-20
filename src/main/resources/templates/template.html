@@ -67,13 +67,14 @@
 							</a>
 							<div id="adminDropdown" class="dropdown-menu" aria-labelledby="adminDropdown">
 								<h6 class="dropdown-header">Administration</h6>
-								<a class="dropdown-item" th:href="@{${URL_PARTICIPANTLISTFULL}}"><i class="fas fa-child"></i> Teilnehmer</a>
-								<a class="dropdown-item" th:href="@{${URL_USERLIST}}"><i class="fas fa-user"></i> Benutzer</a>
+								<a class="dropdown-item" th:href="@{${URL_TEAMLISTFULL}}"><i class="fas fa-users"></i> Alle Gruppen</a>
+								<a class="dropdown-item" th:href="@{${URL_PARTICIPANTLISTFULL}}"><i class="fas fa-child"></i> Alle Teilnehmer</a>
 								<a class="dropdown-item" th:href="@{${URL_MEETINGLISTFULL}}"><i class="far fa-calendar-alt"></i> Alle Termine</a>
+								<a class="dropdown-item" th:href="@{${URL_USERLIST}}"><i class="fas fa-user"></i> Benutzer</a>
 								<div class="dropdown-divider"></div>
 								<h6 class="dropdown-header">Übersichten</h6>
-								<a class="dropdown-item" th:href="@{${URL_PERMISSIONSOVERVIEW}}"><i class="far fa-eye"></i> Berechtigungen</a>
-								<a class="dropdown-item" th:href="@{${URL_PARTICIPATIONOVERVIEW}}"><i class="far fa-eye"></i> Teilnahmen</a>
+								<a class="dropdown-item" th:href="@{${URL_PERMISSIONSOVERVIEW}}"><i class="far fa-eye"></i> Übersicht Berechtigungen</a>
+								<a class="dropdown-item" th:href="@{${URL_PARTICIPATIONOVERVIEW}}"><i class="far fa-eye"></i> Übersicht Teilnahmen</a>
 								<div th:if="${isDevProfile}" th:remove="tag" class="container text-center text-muted">
 									<h6 class="dropdown-header">Debugging</h6>
 									<a class="dropdown-item" th:href="@{${URL_FA_TEST}}"><i class="fas fa-vial"></i> Font Awesome Test</a>

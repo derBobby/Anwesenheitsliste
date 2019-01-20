@@ -42,6 +42,7 @@ public class TeamDetail {
 	@Autowired
 	private UserService userService;
 	
+	//TODO check if authorized	
 	@RequestMapping(path = URL_TEAM + "{idTeam}", method = RequestMethod.GET)
 	public String edit(Model model, @PathVariable Long idTeam) {
 

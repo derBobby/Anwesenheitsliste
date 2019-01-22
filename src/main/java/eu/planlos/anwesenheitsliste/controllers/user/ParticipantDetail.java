@@ -1,9 +1,9 @@
 package eu.planlos.anwesenheitsliste.controllers.user;
 
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.RES_PARTICIPANT;
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_403;
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_PARTICIPANT;
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_PARTICIPANTLIST;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.RES_PARTICIPANT;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_403;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_PARTICIPANT;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_PARTICIPANTLIST;
 
 import javax.validation.Valid;
 
@@ -46,7 +46,9 @@ public class ParticipantDetail {
 	@RequestMapping(path = URL_PARTICIPANT + "{idParticipant}", method = RequestMethod.GET)
 	public String edit(Model model, @PathVariable Long idParticipant) {
 
-		if(!hasPermissionForParticipant(idParticipant)) {
+		boolean admin = securityService.isAdmin();
+		boolean hasPermission = hasPermissionForParticipant(idParticipant); 
+		if(! admin && ! hasPermission) {
 			return "redirect:" + URL_403;
 		}
 		
@@ -72,7 +74,8 @@ public class ParticipantDetail {
 	@RequestMapping(path = URL_PARTICIPANT, method = RequestMethod.POST)
 	public String submit(Model model, @Valid @ModelAttribute Participant participant, Errors errors) {
 
-		if(participant.getIdParticipant() != null && !hasPermissionForParticipant(participant.getIdParticipant())) {
+		//TODO correct??
+		if(! securityService.isAdmin() && participant.getIdParticipant() != null && !hasPermissionForParticipant(participant.getIdParticipant())) {
 			return "redirect:" + URL_403;
 		}
 		
@@ -83,6 +86,7 @@ public class ParticipantDetail {
 		
 		try {
 			Participant savedParticipant = participantService.save(participant);
+			//TODO where should admin be routed to?
 			return "redirect:" + URL_PARTICIPANTLIST + savedParticipant.getIdParticipant();
 			
 		} catch (DuplicateKeyException e) {
@@ -100,6 +104,7 @@ public class ParticipantDetail {
 			bf.fill(model, STR_MODULE, STR_TITLE_ADD_USER);
 		}
 		
+		//TODO only own teams
 		model.addAttribute("teams", teamService.findAll());
 		model.addAttribute("formAction", URL_PARTICIPANT);
 		model.addAttribute("formCancel", URL_PARTICIPANTLIST);

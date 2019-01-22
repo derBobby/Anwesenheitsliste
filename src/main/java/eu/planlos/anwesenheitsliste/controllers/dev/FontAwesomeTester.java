@@ -1,7 +1,7 @@
 package eu.planlos.anwesenheitsliste.controllers.dev;
 
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.RES_FA_TEST;
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_FA_TEST;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.RES_FA_TEST;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_FA_TEST;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

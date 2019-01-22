@@ -1,8 +1,8 @@
 package eu.planlos.anwesenheitsliste.controllers.admin;
 
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.RES_USERLIST;
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_USER;
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_USERLIST;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.RES_USERLIST;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_USER;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_USERLIST;
 
 import java.util.ArrayList;
 

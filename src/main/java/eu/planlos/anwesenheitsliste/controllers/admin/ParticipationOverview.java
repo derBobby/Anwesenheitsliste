@@ -1,7 +1,7 @@
-package eu.planlos.anwesenheitsliste.controllers.user;
+package eu.planlos.anwesenheitsliste.controllers.admin;
 
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.RES_PARTICIPATIONOVERVIEW;
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_PARTICIPATIONOVERVIEW;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.RES_PARTICIPATIONOVERVIEW;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_PARTICIPATIONOVERVIEW;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

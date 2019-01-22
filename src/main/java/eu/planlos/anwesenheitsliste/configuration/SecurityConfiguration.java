@@ -1,18 +1,18 @@
 package eu.planlos.anwesenheitsliste.configuration;
 
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_403;
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_AREA_ACTUATOR;
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_AREA_ADMIN;
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_AREA_DEV;
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_403_TEST;
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_AREA_USER;
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_HOME;
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_LOGIN;
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_LOGIN_FORM;
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_LOGIN_FORM_ERROR;
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_LOGOUT;
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_DATENSCHUTZ;
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_IMPRESSUM;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_403;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_AREA_ACTUATOR;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_AREA_ADMIN;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_AREA_DEV;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_403_TEST;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_AREA_USER;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_HOME;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_LOGIN;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_LOGIN_FORM;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_LOGIN_FORM_ERROR;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_LOGOUT;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_DATENSCHUTZ;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_IMPRESSUM;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -22,6 +22,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import eu.planlos.anwesenheitsliste.ApplicationRole;
 import eu.planlos.anwesenheitsliste.security.LoginAuthenticationSuccessHandler;
 import eu.planlos.anwesenheitsliste.service.UserDetailsServiceImpl;
 
@@ -65,21 +66,21 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 					
 				// User area
 				.antMatchers(URL_AREA_USER + "/**")
-					 .hasAnyAuthority("ROLE_ADMIN", "ROLE_USER")
+					 .hasAnyAuthority(ApplicationRole.ROLE_ADMIN, ApplicationRole.ROLE_USER)
 
 				// Admin area
 				.antMatchers(URL_AREA_ADMIN + "/**")
-					 .hasAnyAuthority("ROLE_ADMIN")
+					 .hasAnyAuthority(ApplicationRole.ROLE_ADMIN)
 
 				// DEV area
 				.antMatchers(URL_403_TEST)
 					.hasAnyAuthority("ROLE_NONEXISTENT")
 				.antMatchers(URL_AREA_DEV + "/**")
-					.hasAnyAuthority("ROLE_ADMIN")
+					.hasAnyAuthority(ApplicationRole.ROLE_ADMIN)
 									 
 				// Technical like actuator
 				.antMatchers(URL_AREA_ACTUATOR + "/**")
-					 .hasAnyAuthority("ROLE_ADMIN")
+					 .hasAnyAuthority(ApplicationRole.ROLE_ADMIN)
 
 				/*
 				 * DENY REMAINING

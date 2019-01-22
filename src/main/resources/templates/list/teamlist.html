@@ -36,10 +36,13 @@
 	                </div>
 	            </div>
 	            <div class="card-footer">
-	                <div>
+	                <div th:if="${functionAdd} != null">
 	                    <a th:href="@{${functionAdd}}" class="btn btn-primary">
 	                        <span class="far fa-plus-square"></span> Gruppe hinzufügen
 	                    </a>
+	                </div>
+            		<div th:unless="${functionAdd} != null">
+	                	&nbsp;
 	                </div>
 	            </div>
 	        </div>

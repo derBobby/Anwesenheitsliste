@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import eu.planlos.anwesenheitsliste.service.BodyFillerService;
 
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_IMPRESSUM;
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.RES_IMPRESSUM;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_IMPRESSUM;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.RES_IMPRESSUM;
 
 @Controller
 public class ImpressumController {

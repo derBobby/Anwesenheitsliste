@@ -1,11 +1,11 @@
 package eu.planlos.anwesenheitsliste.controllers.user;
 
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.RES_TEAMLIST;
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_MEETINGLIST;
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_TEAM;
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_TEAMLIST;
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_TEAMLISTFULL;
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_TEAMPHONELIST;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.RES_TEAMLIST;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_MEETINGLIST;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_TEAM;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_TEAMLIST;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_TEAMLISTFULL;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_TEAMPHONELIST;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +40,7 @@ public class TeamList {
 	public String markedTeamList(Model model, @PathVariable Long markedTeamId) {
 		
 		String loginName = securityService.getLoginName();
-		List<Team> teams = teamService.findAllByUsersLoginName(loginName);
+		List<Team> teams = teamService.findTeamsForUser(loginName);
 
 		prepareContent(model, teams, markedTeamId);
 		return RES_TEAMLIST;
@@ -51,7 +51,7 @@ public class TeamList {
 	public String teamList(Model model) {
 
 		String loginName = securityService.getLoginName();
-		List<Team> teams = teamService.findAllByUsersLoginName(loginName);
+		List<Team> teams = teamService.findTeamsForUser(loginName);
 		
 		prepareContent(model, teams, null);
 		return RES_TEAMLIST;
@@ -62,6 +62,9 @@ public class TeamList {
 	public String teamListFull(Model model) {
 		
 		List<Team> teams = teamService.findAll();
+		
+		//Admin function add
+		model.addAttribute("functionAdd", URL_TEAM);
 		
 		prepareContent(model, teams, null);
 		return RES_TEAMLIST;
@@ -77,13 +80,10 @@ public class TeamList {
 		
 		model.addAttribute("teams", teams);
 		model.addAttribute("markedTeamId", markedTeamId);
-		model.addAttribute("newButtonText", "Neue Gruppe");
-		model.addAttribute("newButtonUrl", "teamadd");
 
 		model.addAttribute("functionEdit", URL_TEAM);
 		model.addAttribute("functionMeetings", URL_MEETINGLIST);
 		model.addAttribute("functionPhonelist", URL_TEAMPHONELIST);
-		model.addAttribute("functionAdd", URL_TEAM);
 		
 		bf.fill(model, STR_MODULE, STR_TITLE);
 	}

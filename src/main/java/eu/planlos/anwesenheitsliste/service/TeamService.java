@@ -41,7 +41,7 @@ public class TeamService {
 		return teamRepo.findById(idTeam).get();
 	}
 
-	public List<Team> findAllByUsersLoginName(String loginName) {
+	public List<Team> findTeamsForUser(String loginName) {
 		return teamRepo.findAllByUsersLoginName(loginName);
 	}
 }

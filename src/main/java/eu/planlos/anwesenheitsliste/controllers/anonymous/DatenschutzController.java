@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import eu.planlos.anwesenheitsliste.service.BodyFillerService;
 
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_DATENSCHUTZ;
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.RES_DATENSCHUTZ;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_DATENSCHUTZ;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.RES_DATENSCHUTZ;
 
 @Controller
 public class DatenschutzController {

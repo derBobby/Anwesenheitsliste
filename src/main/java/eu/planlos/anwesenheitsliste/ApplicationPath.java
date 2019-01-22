@@ -1,6 +1,6 @@
 package eu.planlos.anwesenheitsliste;
 
-public class ApplicationPaths {
+public class ApplicationPath {
 
 	// Global Start delimeter
 	public static final String DELIMETER = "/";

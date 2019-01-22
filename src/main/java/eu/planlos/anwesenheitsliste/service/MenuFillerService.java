@@ -1,6 +1,6 @@
 package eu.planlos.anwesenheitsliste.service;
 
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.*;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.EnvironmentAware;

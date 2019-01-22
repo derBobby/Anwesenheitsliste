@@ -1,8 +1,9 @@
 package eu.planlos.anwesenheitsliste.controllers.user;
 
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.RES_TEAM;
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_TEAM;
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_TEAMLISTFULL;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.RES_TEAM;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_403;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_TEAM;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_TEAMLISTFULL;
 
 import javax.validation.Valid;
 
@@ -20,6 +21,7 @@ import eu.planlos.anwesenheitsliste.model.Team;
 import eu.planlos.anwesenheitsliste.model.exception.EmptyIdException;
 import eu.planlos.anwesenheitsliste.service.BodyFillerService;
 import eu.planlos.anwesenheitsliste.service.ParticipantService;
+import eu.planlos.anwesenheitsliste.service.SecurityService;
 import eu.planlos.anwesenheitsliste.service.TeamService;
 import eu.planlos.anwesenheitsliste.service.UserService;
 
@@ -42,10 +44,16 @@ public class TeamDetail {
 	@Autowired
 	private UserService userService;
 	
-	//TODO check if authorized	
+	@Autowired
+	private SecurityService securityService;
+	
 	@RequestMapping(path = URL_TEAM + "{idTeam}", method = RequestMethod.GET)
 	public String edit(Model model, @PathVariable Long idTeam) {
 
+		if(!securityService.isUserAuthorizedForTeam(idTeam)) {
+			return "redirect:" + URL_403;
+		}
+		
 		Team team = teamService.findById(idTeam);
 		model.addAttribute(team);
 		prepareContent(model, team);
@@ -55,6 +63,10 @@ public class TeamDetail {
 	
 	@RequestMapping(path = URL_TEAM, method = RequestMethod.GET)
 	public String add(Model model) {
+
+		if(!securityService.isAdmin()) {
+			return "redirect:" + URL_403;
+		}
 		
 		Team team = new Team();
 		model.addAttribute(team);
@@ -66,6 +78,11 @@ public class TeamDetail {
 	//TODO Transactional
 	@RequestMapping(path = URL_TEAM, method = RequestMethod.POST)
 	public String submit(Model model, @Valid @ModelAttribute Team team, Errors errors) {
+
+		//TODO correct??
+		if(!securityService.isAdmin() && ( team.getIdTeam() == null || !securityService.isUserAuthorizedForTeam(team.getIdTeam()) ) ) {
+			return "redirect:" + URL_403;
+		}
 		
 		if(errors.hasErrors()) {
 			prepareContent(model, team);

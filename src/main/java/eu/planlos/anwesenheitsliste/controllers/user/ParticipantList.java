@@ -18,11 +18,11 @@ import eu.planlos.anwesenheitsliste.service.ParticipantService;
 import eu.planlos.anwesenheitsliste.service.SecurityService;
 import eu.planlos.anwesenheitsliste.service.TeamService;
 
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_PARTICIPANTLISTFULL;
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_PARTICIPANT;
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_PARTICIPANTLIST;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_PARTICIPANTLISTFULL;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_PARTICIPANT;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_PARTICIPANTLIST;
 
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.RES_PARTICIPANTLIST;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.RES_PARTICIPANTLIST;
 
 @Controller
 public class ParticipantList {
@@ -62,7 +62,7 @@ public class ParticipantList {
 	private List<Participant> participantsForUser() {
 		
 		String loginName = securityService.getLoginName();
-		List<Team> teams = teamService.findAllByUsersLoginName(loginName);
+		List<Team> teams = teamService.findTeamsForUser(loginName);
 		
 		Set<Participant> participants = new HashSet<>();
 		//List<Participant> participants = new ArrayList<>();
@@ -77,8 +77,6 @@ public class ParticipantList {
 		}
 				
 		return new ArrayList<Participant>(participants);
-
-
 	}
 
 	// Admin

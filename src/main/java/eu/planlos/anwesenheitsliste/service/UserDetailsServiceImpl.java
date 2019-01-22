@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import eu.planlos.anwesenheitsliste.ApplicationRole;
 import eu.planlos.anwesenheitsliste.model.UserRepository;
 
 @Service
@@ -31,9 +32,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		}
 		
 		if(user.getIsAdmin()) {
-			authoritiesList.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+			authoritiesList.add(new SimpleGrantedAuthority(ApplicationRole.ROLE_ADMIN));
 		}
-		authoritiesList.add(new SimpleGrantedAuthority("ROLE_USER"));
+		authoritiesList.add(new SimpleGrantedAuthority(ApplicationRole.ROLE_USER));
 		
 		User springSecurityUser = new User(user.getLoginName(), user.getPassword(), authoritiesList);
 		

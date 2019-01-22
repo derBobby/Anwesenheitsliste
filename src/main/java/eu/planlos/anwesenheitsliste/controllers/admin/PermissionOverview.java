@@ -1,7 +1,7 @@
 package eu.planlos.anwesenheitsliste.controllers.admin;
 
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.RES_PERMISSIONSOVERVIEW;
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_PERMISSIONSOVERVIEW;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.RES_PERMISSIONSOVERVIEW;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_PERMISSIONSOVERVIEW;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

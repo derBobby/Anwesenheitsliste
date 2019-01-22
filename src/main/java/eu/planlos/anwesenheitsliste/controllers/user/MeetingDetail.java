@@ -1,13 +1,14 @@
 package eu.planlos.anwesenheitsliste.controllers.user;
 
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.DELIMETER;
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.RES_MEETING;
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_MEETINGADDPARTICIPANTS;
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_MEETINGCHOOSETEAM;
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_MEETINGFORTEAM;
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_MEETINGLIST;
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_MEETINGLISTFULL;
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_MEETINGSUBMIT;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.DELIMETER;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.RES_MEETING;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_403;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_MEETINGADDPARTICIPANTS;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_MEETINGCHOOSETEAM;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_MEETINGFORTEAM;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_MEETINGLIST;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_MEETINGLISTFULL;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_MEETINGSUBMIT;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -31,6 +32,7 @@ import eu.planlos.anwesenheitsliste.model.Team;
 import eu.planlos.anwesenheitsliste.service.BodyFillerService;
 import eu.planlos.anwesenheitsliste.service.MeetingService;
 import eu.planlos.anwesenheitsliste.service.ParticipantService;
+import eu.planlos.anwesenheitsliste.service.SecurityService;
 import eu.planlos.anwesenheitsliste.service.TeamService;
 
 //TODO may be simplified
@@ -51,12 +53,19 @@ public class MeetingDetail {
 	private TeamService teamService;
 	
 	@Autowired
+	private SecurityService securityService;
+	
+	@Autowired
 	private ParticipantService participantService;
 	
 	// For editing a given meeting for given team
 	@RequestMapping(path = URL_MEETINGFORTEAM + "{idTeam}/{idMeeting}", method = RequestMethod.GET)
 	public String edit(Model model, @PathVariable Long idTeam, @PathVariable Long idMeeting) {
 	
+		if(!securityService.isUserAuthorizedForTeam(idTeam)) {
+			return "redirect:" + URL_403;
+		}
+		
 		Meeting meeting = meetingService.findById(idMeeting);
 		model.addAttribute(meeting);
 		prepareContent(model, meeting);
@@ -69,6 +78,10 @@ public class MeetingDetail {
 	// For adding new meeting for given team
 	@RequestMapping(path = URL_MEETINGFORTEAM + "{idTeam}", method = RequestMethod.GET)
 	public String addForTeam(Model model, @PathVariable Long idTeam) {
+
+		if(!securityService.isUserAuthorizedForTeam(idTeam)) {
+			return "redirect:" + URL_403;
+		}
 		
 		Meeting meeting = new Meeting();
 		meeting.setMeetingDate(today());
@@ -166,6 +179,7 @@ public class MeetingDetail {
 	
 	private void prepareContentWithoutTeam(Model model) {
 		
+		//TODO only own teams
 		model.addAttribute("teams", teamService.findAll());
 		model.addAttribute("participants", new ArrayList<>()); //TODO No participants. Which to load? JQuery?
 		model.addAttribute("formAction", URL_MEETINGADDPARTICIPANTS);

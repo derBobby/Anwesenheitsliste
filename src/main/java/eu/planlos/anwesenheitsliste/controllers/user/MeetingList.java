@@ -1,12 +1,12 @@
 package eu.planlos.anwesenheitsliste.controllers.user;
 
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.DELIMETER;
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.RES_MEETINGLIST;
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_MEETINGCHOOSETEAM;
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_MEETINGFORTEAM;
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_MEETINGLIST;
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_MEETINGLISTFULL;
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_403;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.DELIMETER;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.RES_MEETINGLIST;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_MEETINGCHOOSETEAM;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_MEETINGFORTEAM;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_MEETINGLIST;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_MEETINGLISTFULL;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_403;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -121,6 +121,6 @@ public class MeetingList {
 	}
 	
 	private boolean hasPermissionForTeam(long idTeam) {
-		return securityService.isUserMemberOfTeam(idTeam);
+		return securityService.isUserAuthorizedForTeam(idTeam);
 	}
 }

@@ -1,7 +1,7 @@
 package eu.planlos.anwesenheitsliste.controllers.anonymous;
 
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.RES_403;
-import static eu.planlos.anwesenheitsliste.ApplicationPaths.URL_403;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.RES_403;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_403;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

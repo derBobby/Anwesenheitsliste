@@ -41,7 +41,7 @@ public class MeetingList {
 	@RequestMapping(path = URL_MEETINGLIST + "{idTeam}")
 	public String meetingListForTeam(Model model, @PathVariable Long idTeam) {
 		
-		if(!hasPermissionForTeam(idTeam)) {
+		if(!securityService.isAdmin() && !hasPermissionForTeam(idTeam)) {
 			return "redirect:" + URL_403;
 		}
 		
@@ -53,7 +53,7 @@ public class MeetingList {
 	@RequestMapping(path = URL_MEETINGLIST + "{idTeam}" + DELIMETER + "{idMeeting}")
 	public String meetingListForTeamMarked(Model model, @PathVariable Long idTeam, @PathVariable Long idMeeting) {
 
-		if(!hasPermissionForTeam(idTeam)) {
+		if(!securityService.isAdmin() && !hasPermissionForTeam(idTeam)) {
 			return "redirect:" + URL_403;
 		}
 		
@@ -66,7 +66,6 @@ public class MeetingList {
 	@RequestMapping(path = URL_MEETINGLISTFULL)
 	public String meetingListFull(Model model) {
 		
-
 		model.addAttribute("functionEdit", URL_MEETINGFORTEAM);
 		model.addAttribute("functionAdd", URL_MEETINGCHOOSETEAM);
 		

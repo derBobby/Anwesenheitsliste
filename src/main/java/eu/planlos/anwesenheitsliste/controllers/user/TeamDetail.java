@@ -50,7 +50,7 @@ public class TeamDetail {
 	@RequestMapping(path = URL_TEAM + "{idTeam}", method = RequestMethod.GET)
 	public String edit(Model model, @PathVariable Long idTeam) {
 
-		if(!securityService.isUserAuthorizedForTeam(idTeam)) {
+		if(!securityService.isAdmin() && !securityService.isUserAuthorizedForTeam(idTeam)) {
 			return "redirect:" + URL_403;
 		}
 		
@@ -79,7 +79,7 @@ public class TeamDetail {
 	@RequestMapping(path = URL_TEAM, method = RequestMethod.POST)
 	public String submit(Model model, @Valid @ModelAttribute Team team, Errors errors) {
 
-		//TODO correct??
+		//Admin is always allowed, others if it is edit and is authorized
 		if(!securityService.isAdmin() && ( team.getIdTeam() == null || !securityService.isUserAuthorizedForTeam(team.getIdTeam()) ) ) {
 			return "redirect:" + URL_403;
 		}
@@ -95,6 +95,7 @@ public class TeamDetail {
 			userService.updateTeamForUsers(team);
 			participantService.updateTeamForParticipants(team);
 			
+			//TODO normal user routed to admin page
 			return "redirect:" + URL_TEAMLISTFULL + savedTeam.getIdTeam();
 
 		} catch (EmptyIdException e) {

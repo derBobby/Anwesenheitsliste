@@ -14,9 +14,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import eu.planlos.anwesenheitsliste.model.Participant;
+import eu.planlos.anwesenheitsliste.model.Team;
 import eu.planlos.anwesenheitsliste.service.BodyFillerService;
 import eu.planlos.anwesenheitsliste.service.ParticipantService;
 import eu.planlos.anwesenheitsliste.service.SecurityService;
+import eu.planlos.anwesenheitsliste.service.TeamService;
 
 @Controller
 public class TeamPhonelist {
@@ -26,9 +28,12 @@ public class TeamPhonelist {
 
 	@Autowired
 	private BodyFillerService bf;
-	
+
 	@Autowired
     private ParticipantService participantService;
+	
+	@Autowired
+    private TeamService teamService;
 	
 	@Autowired
     private SecurityService securityService;
@@ -36,7 +41,7 @@ public class TeamPhonelist {
 	@RequestMapping(value = URL_TEAMPHONELIST + "{idTeam}")
 	public String markedTeamList(Model model, @PathVariable Long idTeam) {
 				
-		if(!securityService.isUserAuthorizedForTeam(idTeam)) {
+		if(!securityService.isAdmin() && !securityService.isUserAuthorizedForTeam(idTeam)) {
 			return "redirect:" + URL_403;
 		}
 		
@@ -51,12 +56,13 @@ public class TeamPhonelist {
 		headings.add("Teilnehmer");
 		headings.add("Telefonnummer");
 		headings.add("Aktiv");
+		model.addAttribute("headings", headings);
 
 		List<Participant> participants = participantService.findAllByTeamsIdTeam(idTeam);
-		
-		model.addAttribute("headings", headings);
 		model.addAttribute("participants", participants);
-	
-		bf.fill(model, STR_MODULE, STR_TITLE);
+
+		Team team = teamService.findById(idTeam);
+		
+		bf.fill(model, STR_MODULE, STR_TITLE + " für " + team.getTeamName());
 	}
 }

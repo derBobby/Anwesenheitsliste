@@ -62,7 +62,7 @@ public class MeetingDetail {
 	@RequestMapping(path = URL_MEETINGFORTEAM + "{idTeam}/{idMeeting}", method = RequestMethod.GET)
 	public String edit(Model model, @PathVariable Long idTeam, @PathVariable Long idMeeting) {
 	
-		if(!securityService.isUserAuthorizedForTeam(idTeam)) {
+		if(!securityService.isAdmin() && !securityService.isUserAuthorizedForTeam(idTeam)) {
 			return "redirect:" + URL_403;
 		}
 		
@@ -79,7 +79,7 @@ public class MeetingDetail {
 	@RequestMapping(path = URL_MEETINGFORTEAM + "{idTeam}", method = RequestMethod.GET)
 	public String addForTeam(Model model, @PathVariable Long idTeam) {
 
-		if(!securityService.isUserAuthorizedForTeam(idTeam)) {
+		if(!securityService.isAdmin() && !securityService.isUserAuthorizedForTeam(idTeam)) {
 			return "redirect:" + URL_403;
 		}
 		
@@ -103,7 +103,7 @@ public class MeetingDetail {
 		model.addAttribute(meeting);
 		prepareContent(model, meeting);
 
-		prepareContentWithoutTeam(model); //###############
+		prepareContentWithoutTeam(model);
 		
 		return RES_MEETING;
 	}
@@ -131,11 +131,17 @@ public class MeetingDetail {
 	@RequestMapping(path = URL_MEETINGSUBMIT, method = RequestMethod.POST)
 	public String submit(Model model, @Valid @ModelAttribute Meeting meeting, Errors errors) {
 		
+		if(! securityService.isAdmin() && ( meeting.getIdMeeting() != null && !securityService.isUserAuthorizedForTeam(meeting.getTeam().getIdTeam())) ) {
+			return "redirect:" + URL_403;
+		}
+		
 		if(errors.hasErrors()) {
 			handleValidationErrors(model, meeting);
 			return RES_MEETING; 
 		}
 	
+		//TODO check post data: authorized?
+		
 	// TODO Handling in Controller?
 	// TODO Transaction
 	// {

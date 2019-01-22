@@ -69,6 +69,19 @@ public class TeamList {
 		prepareContent(model, teams, null);
 		return RES_TEAMLIST;
 	}
+	
+	// Admin
+	@RequestMapping(value = URL_TEAMLISTFULL + "{markedTeamId}")
+	public String markedteamListFull(Model model, @PathVariable Long markedTeamId) {
+		
+		List<Team> teams = teamService.findAll();
+		
+		//Admin function add
+		model.addAttribute("functionAdd", URL_TEAM);
+		
+		prepareContent(model, teams, markedTeamId);
+		return RES_TEAMLIST;
+	}
 
 	private void prepareContent(Model model, List<Team> teams, Long markedTeamId) {
 		

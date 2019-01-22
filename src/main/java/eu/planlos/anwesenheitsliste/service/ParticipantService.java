@@ -24,7 +24,7 @@ public class ParticipantService {
 	public Participant save(Participant participant) throws DuplicateKeyException {
 		
 		if(participant.getIdParticipant() == null) {
-			String firstName= participant.getFirstName();
+			String firstName = participant.getFirstName();
 			String lastName = participant.getLastName();
 
 			// Should cover all constraints of the Entity

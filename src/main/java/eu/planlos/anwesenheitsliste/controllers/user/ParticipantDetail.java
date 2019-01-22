@@ -46,9 +46,7 @@ public class ParticipantDetail {
 	@RequestMapping(path = URL_PARTICIPANT + "{idParticipant}", method = RequestMethod.GET)
 	public String edit(Model model, @PathVariable Long idParticipant) {
 
-		boolean admin = securityService.isAdmin();
-		boolean hasPermission = hasPermissionForParticipant(idParticipant); 
-		if(! admin && ! hasPermission) {
+		if(!securityService.isAdmin() && !hasPermissionForParticipant(idParticipant)) {
 			return "redirect:" + URL_403;
 		}
 		
@@ -74,8 +72,8 @@ public class ParticipantDetail {
 	@RequestMapping(path = URL_PARTICIPANT, method = RequestMethod.POST)
 	public String submit(Model model, @Valid @ModelAttribute Participant participant, Errors errors) {
 
-		//TODO correct??
-		if(! securityService.isAdmin() && participant.getIdParticipant() != null && !hasPermissionForParticipant(participant.getIdParticipant())) {
+		// Admin is always allowed, others if adding new or edited with permission
+		if(! securityService.isAdmin() && ( participant.getIdParticipant() != null && !hasPermissionForParticipant(participant.getIdParticipant())) ) {
 			return "redirect:" + URL_403;
 		}
 		

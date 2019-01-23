@@ -2,7 +2,7 @@ package eu.planlos.anwesenheitsliste.controllers.user;
 
 import static eu.planlos.anwesenheitsliste.ApplicationPath.DELIMETER;
 import static eu.planlos.anwesenheitsliste.ApplicationPath.RES_MEETING;
-import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_403;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_ERROR_403;
 import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_MEETINGADDPARTICIPANTS;
 import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_MEETINGCHOOSETEAM;
 import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_MEETINGFORTEAM;
@@ -63,7 +63,7 @@ public class MeetingDetail {
 	public String edit(Model model, @PathVariable Long idTeam, @PathVariable Long idMeeting) {
 	
 		if(!securityService.isAdmin() && !securityService.isUserAuthorizedForTeam(idTeam)) {
-			return "redirect:" + URL_403;
+			return "redirect:" + URL_ERROR_403;
 		}
 		
 		Meeting meeting = meetingService.findById(idMeeting);
@@ -80,7 +80,7 @@ public class MeetingDetail {
 	public String addForTeam(Model model, @PathVariable Long idTeam) {
 
 		if(!securityService.isAdmin() && !securityService.isUserAuthorizedForTeam(idTeam)) {
-			return "redirect:" + URL_403;
+			return "redirect:" + URL_ERROR_403;
 		}
 		
 		Meeting meeting = new Meeting();
@@ -132,7 +132,7 @@ public class MeetingDetail {
 	public String submit(Model model, @Valid @ModelAttribute Meeting meeting, Errors errors) {
 		
 		if(! securityService.isAdmin() && ( meeting.getIdMeeting() != null && !securityService.isUserAuthorizedForTeam(meeting.getTeam().getIdTeam())) ) {
-			return "redirect:" + URL_403;
+			return "redirect:" + URL_ERROR_403;
 		}
 		
 		if(errors.hasErrors()) {

@@ -1,7 +1,7 @@
 package eu.planlos.anwesenheitsliste.controllers.user;
 
 import static eu.planlos.anwesenheitsliste.ApplicationPath.RES_TEAMPHONELIST;
-import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_403;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_ERROR_403;
 import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_TEAMPHONELIST;
 
 import java.util.ArrayList;
@@ -42,7 +42,7 @@ public class TeamPhonelist {
 	public String markedTeamList(Model model, @PathVariable Long idTeam) {
 				
 		if(!securityService.isAdmin() && !securityService.isUserAuthorizedForTeam(idTeam)) {
-			return "redirect:" + URL_403;
+			return "redirect:" + URL_ERROR_403;
 		}
 		
 		prepareContent(model, idTeam);

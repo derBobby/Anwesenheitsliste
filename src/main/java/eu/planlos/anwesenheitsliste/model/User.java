@@ -251,8 +251,6 @@ public class User {
 		}
 	}
 	
-    //TODO correct?
-    @Override
     public boolean equals(Object o) {
 
         if (o == this) return true;
@@ -263,8 +261,6 @@ public class User {
         return this.idUser == user.getIdUser();
     }
 
-    //TODO correct?
-    @Override
     public int hashCode() {
         return Objects.hash(this.idUser);
     }

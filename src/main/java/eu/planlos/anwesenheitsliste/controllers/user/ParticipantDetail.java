@@ -1,7 +1,7 @@
 package eu.planlos.anwesenheitsliste.controllers.user;
 
 import static eu.planlos.anwesenheitsliste.ApplicationPath.RES_PARTICIPANT;
-import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_403;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_ERROR_403;
 import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_PARTICIPANT;
 import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_PARTICIPANTLIST;
 
@@ -47,7 +47,7 @@ public class ParticipantDetail {
 	public String edit(Model model, @PathVariable Long idParticipant) {
 
 		if(!securityService.isAdmin() && !hasPermissionForParticipant(idParticipant)) {
-			return "redirect:" + URL_403;
+			return "redirect:" + URL_ERROR_403;
 		}
 		
 		Participant participant = participantService.findById(idParticipant);
@@ -74,7 +74,7 @@ public class ParticipantDetail {
 
 		// Admin is always allowed, others if adding new or edited with permission
 		if(! securityService.isAdmin() && ( participant.getIdParticipant() != null && !hasPermissionForParticipant(participant.getIdParticipant())) ) {
-			return "redirect:" + URL_403;
+			return "redirect:" + URL_ERROR_403;
 		}
 		
 		if(errors.hasErrors()) {

@@ -4,6 +4,7 @@ import static eu.planlos.anwesenheitsliste.ApplicationPath.RES_FA_TEST;
 import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_FA_TEST;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import eu.planlos.anwesenheitsliste.service.BodyFillerService;
 
 @Controller
+@Profile(value = "DEV")
 public class FontAwesomeTester {
 
 	@Autowired

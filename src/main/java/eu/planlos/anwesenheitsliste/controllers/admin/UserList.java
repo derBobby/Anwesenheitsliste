@@ -59,7 +59,7 @@ public class UserList {
 		model.addAttribute("markedUserId", markedUserId);
 		
 		model.addAttribute("functionEdit", URL_USER);
-		model.addAttribute("functionResetPW", "TODO"); //TODO
+		model.addAttribute("functionResetPW", "TODO"); //TODO NEW Password reset
 		model.addAttribute("functionAdd", URL_USER);
 		
 		bf.fill(model, "Benutzerverwaltung", "Liste der Benutzer");

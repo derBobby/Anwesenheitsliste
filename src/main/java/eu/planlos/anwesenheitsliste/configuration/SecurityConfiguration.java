@@ -1,7 +1,8 @@
 package eu.planlos.anwesenheitsliste.configuration;
 
-import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_403;
 import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_AREA_ACTUATOR;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_ERROR_403;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_ERROR_DEFAULT;
 import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_AREA_ADMIN;
 import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_AREA_DEV;
 import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_403_TEST;
@@ -54,10 +55,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				 */
 			
 				// Ressources like CSS and JS
-				.antMatchers("/webjars/**", "/css/**") //TODO "/sbadmin/**", 
+				.antMatchers("/webjars/**", "/css/**") //"/sbadmin/**", 
 					.permitAll()
 				
-				.antMatchers("/", URL_LOGIN_FORM, URL_LOGIN, URL_DATENSCHUTZ, URL_IMPRESSUM)
+				.antMatchers("/", URL_LOGIN_FORM, URL_LOGIN, URL_DATENSCHUTZ, URL_IMPRESSUM, URL_ERROR_DEFAULT)
 					.permitAll()
 
 				/*
@@ -118,9 +119,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 			.and().exceptionHandling()
 			
 				// Use either own handler or
-				//.accessDeniedHandler(deniedHandler); //TODO CONTINUE HERE
+				//.accessDeniedHandler(deniedHandler);
 				// ... use this default handler
-				.accessDeniedPage(URL_403)
+				.accessDeniedPage(URL_ERROR_403)
 				;
 	}
 	

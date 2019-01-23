@@ -45,6 +45,7 @@ public class MenuFillerService implements EnvironmentAware {
 			if(profileName.equals("DEV")) {
 				model.addAttribute("URL_FA_TEST", URL_FA_TEST);
 				model.addAttribute("URL_403_TEST", URL_403_TEST);
+				model.addAttribute("URL_500_TEST", URL_500_TEST);
 				model.addAttribute("URL_BS_TEST", URL_BS_TEST);
 				break;
 		}	}
@@ -53,8 +54,8 @@ public class MenuFillerService implements EnvironmentAware {
 		/*
 		 * Account Menu
 		 */
-		//TODO Activities missing
-		//TODO Config missing
+		//TODO NEW Activities missing
+		//TODO NEW Config missing
 		model.addAttribute("URL_LOGOUT", URL_LOGOUT);	
 		
 		

@@ -118,8 +118,6 @@ public class Team {
 		this.users = users;
 	}
 	
-    //TODO correct?
-    @Override
     public boolean equals(Object o) {
 
         if (o == this) return true;
@@ -130,8 +128,6 @@ public class Team {
         return this.idTeam == team.getIdTeam();
     }
 
-    //TODO correct?
-    @Override
     public int hashCode() {
         return Objects.hash(this.idTeam);
     }

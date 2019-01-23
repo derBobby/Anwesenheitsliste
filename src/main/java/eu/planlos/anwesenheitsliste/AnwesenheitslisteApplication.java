@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication(scanBasePackages={
 		"eu.planlos.anwesenheitsliste",
-		"org.springframework.security.web.access"})
+		"org.springframework.security.web.access"}) //, exclude = { ErrorMvcAutoConfiguration.class }
 public class AnwesenheitslisteApplication {
 
 	//TODO implement /error site

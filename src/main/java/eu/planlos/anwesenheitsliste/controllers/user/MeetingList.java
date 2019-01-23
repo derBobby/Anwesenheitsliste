@@ -6,7 +6,7 @@ import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_MEETINGCHOOSETEAM
 import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_MEETINGFORTEAM;
 import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_MEETINGLIST;
 import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_MEETINGLISTFULL;
-import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_403;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_ERROR_403;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +42,7 @@ public class MeetingList {
 	public String meetingListForTeam(Model model, @PathVariable Long idTeam) {
 		
 		if(!securityService.isAdmin() && !hasPermissionForTeam(idTeam)) {
-			return "redirect:" + URL_403;
+			return "redirect:" + URL_ERROR_403;
 		}
 		
 		prepareContentForTeam(model, idTeam);
@@ -54,7 +54,7 @@ public class MeetingList {
 	public String meetingListForTeamMarked(Model model, @PathVariable Long idTeam, @PathVariable Long idMeeting) {
 
 		if(!securityService.isAdmin() && !hasPermissionForTeam(idTeam)) {
-			return "redirect:" + URL_403;
+			return "redirect:" + URL_ERROR_403;
 		}
 		
 		model.addAttribute("markedMeetingId", idMeeting);

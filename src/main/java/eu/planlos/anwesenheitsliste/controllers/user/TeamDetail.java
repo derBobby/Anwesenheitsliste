@@ -1,7 +1,7 @@
 package eu.planlos.anwesenheitsliste.controllers.user;
 
 import static eu.planlos.anwesenheitsliste.ApplicationPath.RES_TEAM;
-import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_403;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_ERROR_403;
 import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_TEAM;
 import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_TEAMLISTFULL;
 
@@ -51,7 +51,7 @@ public class TeamDetail {
 	public String edit(Model model, @PathVariable Long idTeam) {
 
 		if(!securityService.isAdmin() && !securityService.isUserAuthorizedForTeam(idTeam)) {
-			return "redirect:" + URL_403;
+			return "redirect:" + URL_ERROR_403;
 		}
 		
 		Team team = teamService.findById(idTeam);
@@ -65,7 +65,7 @@ public class TeamDetail {
 	public String add(Model model) {
 
 		if(!securityService.isAdmin()) {
-			return "redirect:" + URL_403;
+			return "redirect:" + URL_ERROR_403;
 		}
 		
 		Team team = new Team();
@@ -81,7 +81,7 @@ public class TeamDetail {
 
 		//Admin is always allowed, others if it is edit and is authorized
 		if(!securityService.isAdmin() && ( team.getIdTeam() == null || !securityService.isUserAuthorizedForTeam(team.getIdTeam()) ) ) {
-			return "redirect:" + URL_403;
+			return "redirect:" + URL_ERROR_403;
 		}
 		
 		if(errors.hasErrors()) {

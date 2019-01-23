@@ -41,11 +41,13 @@ public class ApplicationPath {
 	public static final String URL_FA_TEST = URL_AREA_DEV + DELIMETER + "fontawesome";
 	public static final String URL_BS_TEST = URL_AREA_DEV + DELIMETER + "bootstrap";
 	public static final String URL_403_TEST = URL_AREA_DEV + DELIMETER + "always403";
+	public static final String URL_500_TEST = URL_AREA_DEV + DELIMETER + "always500";
 
 	// Ressource paths
 	public static final String RES_FA_TEST = "dev/fontawesome";
 	public static final String RES_BS_TEST = "dev/bootstrap";
 	public static final String RES_403_TEST = "dev/always403";
+	public static final String RES_500_TEST = "dev/always500";
 	
 	
 	
@@ -86,7 +88,7 @@ public class ApplicationPath {
 	public static final String RES_TEAMLIST = "list/teamlist";
 	public static final String RES_TEAMPHONELIST = "list/teamphonelist";
 
-	public static final String RES_LOGIN = "session/login"; //TODO
+	public static final String RES_LOGIN = "login";
 	
 	
 	
@@ -100,13 +102,15 @@ public class ApplicationPath {
 	public static final String URL_HOME = URL_AREA_ANONYMOUS;
 	public static final String URL_IMPRESSUM = URL_AREA_ANONYMOUS + "impressum";
 	public static final String URL_DATENSCHUTZ = URL_AREA_ANONYMOUS + "datenschutz";
-	public static final String URL_403 = URL_AREA_ANONYMOUS + "403";
+	public static final String URL_ERROR_403 = URL_AREA_ANONYMOUS + "403";
+	public static final String URL_ERROR_DEFAULT = URL_AREA_ANONYMOUS + "error";
 
 	// Ressource paths
 	public static final String RES_HOME = "home";
 	public static final String RES_IMPRESSUM = "impressum";
 	public static final String RES_DATENSCHUTZ = "datenschutz";
-	public static final String RES_403 = "403"; //TODO
+	public static final String RES_ERROR_403 = "error_403";
+	public static final String RES_ERROR_UNKNOWN= "error_unknown";
 	
 	
 	

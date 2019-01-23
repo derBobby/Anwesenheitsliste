@@ -228,7 +228,6 @@ public class Participant {
 		}
 	}
 	
-    //TODO correct?
     @Override
     public boolean equals(Object o) {
 
@@ -240,7 +239,6 @@ public class Participant {
         return this.idParticipant == participant.getIdParticipant();
     }
 
-    //TODO correct?
     @Override
     public int hashCode() {
         return Objects.hash(this.idParticipant);

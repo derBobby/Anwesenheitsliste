@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head lang="de" th:replace="template :: header"></head>
+	<body>
+		<nav th:replace="template :: nav"></nav>
+	    <main class="container pt-5">
+	   	        <div class="card mb-3">
+		            <div class="card-header" th:text="${title}"></div>
+		            <div class="card-block p-0">
+						<!-- Page Content -->
+						<div class="col-lg-12 text-center mb-5">
+							<h1 class="mt-5" th:text="${title}"></h1>
+							<p class="lead">Es ist ein unbekannter Fehler aufgetreten.</p>
+							<p class="lead">Bleibt nur schmollen! :'(</p>
+							<p class="lead">Und vielleicht den Fehler zu melden?</p>
+							<table class="table table-bordered table-hover table-striped table-sm m-0 text-left">
+								<tr>
+									<td>Nachricht</td><td th:text="${errorMessage}"></td>
+								</tr>
+								<tr>
+									<td>Ausnahme</td><td th:text="${errorException}"></td>
+								</tr>
+								<tr>
+									<td>Fehlerstapel</td><td th:text="${errorTrace}"></td>
+								</tr>
+							</table>
+							
+						</div>
+		            </div>
+		            <div class="card-footer">
+		            	&nbsp;
+		            </div>			
+				</div>	
+		</main>
+	    <footer th:replace="template :: footer"></footer>		
+	</body>
+</html>

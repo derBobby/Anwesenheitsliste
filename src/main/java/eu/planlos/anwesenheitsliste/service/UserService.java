@@ -16,7 +16,6 @@ public class UserService {
 	@Autowired
 	private UserRepository userRepo;
 	
-	//TODO other classes?
 	public User save(User user) throws DuplicateKeyException {
 		
 		if(user.getIdUser() == null) {

@@ -187,7 +187,7 @@ public class MeetingDetail {
 		
 		//TODO only own teams
 		model.addAttribute("teams", teamService.findAll());
-		model.addAttribute("participants", new ArrayList<>()); //TODO No participants. Which to load? JQuery?
+		model.addAttribute("participants", new ArrayList<>());
 		model.addAttribute("formAction", URL_MEETINGADDPARTICIPANTS);
 		model.addAttribute("formCancel", URL_MEETINGLISTFULL);
 	}

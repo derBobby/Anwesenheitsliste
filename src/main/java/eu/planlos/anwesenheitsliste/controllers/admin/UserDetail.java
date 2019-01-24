@@ -7,7 +7,6 @@ import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_USERLIST;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -69,7 +68,7 @@ public class UserDetail {
 			User savedUser = userService.save(user);
 			return "redirect:" + URL_USERLIST + savedUser.getIdUser();
 			
-		} catch (DuplicateKeyException e) {
+		} catch (Exception e) {
 			//TODO logger
 			prepareContent(model, user);
 			model.addAttribute("customError", e.getMessage());

@@ -3,12 +3,14 @@ package eu.planlos.anwesenheitsliste.service;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import eu.planlos.anwesenheitsliste.model.Team;
 import eu.planlos.anwesenheitsliste.model.User;
 import eu.planlos.anwesenheitsliste.model.UserRepository;
 import eu.planlos.anwesenheitsliste.model.exception.EmptyIdException;
+import eu.planlos.anwesenheitsliste.model.exception.PasswordLengthError;
 
 @Service
 public class UserService {
@@ -16,7 +18,11 @@ public class UserService {
 	@Autowired
 	private UserRepository userRepo;
 	
-	public User save(User user) throws DuplicateKeyException {
+	private final int userMinLength = 10;
+	private final int userMaxLength = 50;
+	private final String passwordLengthError = "Das Passwort muss zwischen " + userMinLength + " und " + userMaxLength + " Zeichen lang sein";
+	
+	public User save(User user) throws DuplicateKeyException, PasswordLengthError, UnknownUserSaveException {
 		
 		if(user.getIdUser() == null) {
 			String firstName = user.getFirstName();
@@ -35,7 +41,31 @@ public class UserService {
 			}
 		}
 		
-		return userRepo.save(user);
+		// Is user is added and password is not set properly dont save
+		if(user.getIdUser() == null && ! ( userMinLength <= user.getPassword().length() && user.getPassword().length() <= userMaxLength) ) {
+			throw new PasswordLengthError(passwordLengthError);
+		}
+		
+		// Is user is edited and password is not set properly dont save
+		if(user.getIdUser() != null && ! user.getPassword().equals("") && ( user.getPassword().length() < userMinLength || userMaxLength < user.getPassword().length()) ) {
+			throw new PasswordLengthError(passwordLengthError);
+		}
+		
+		// If user is edited and password was not set load it back from db and save it
+		if(user.getIdUser() != null && ( user.getPassword().equals("")) ) {
+			User dbUser = userRepo.findById(user.getIdUser()).get();
+			user.setPassword(dbUser.getPassword());
+			return userRepo.save(user);
+		}
+
+		// If user is added or edited and the password is OK then encrypt it and save it
+		if(userMinLength <= user.getPassword().length() && user.getPassword().length() <= userMaxLength) { 
+			BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+			user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+			return userRepo.save(user);
+		}
+		
+		throw new UnknownUserSaveException("Ein unbekannter Fehler beim Speichern des Benutzers ist aufgetreten");
 	}
 	
 	public void delete(User user) {

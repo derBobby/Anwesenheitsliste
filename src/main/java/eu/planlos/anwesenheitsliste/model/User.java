@@ -44,10 +44,8 @@ public class User {
 	@Email(message="muss eine gültige E-Mailadresse sein")
 	private String email;
 	
-	//TODO validation length unsecure
+	//Validation happens in UserService before saving
 	@Column(nullable = false)
-	@NotNull
-	@NotEmpty
 	private String password;
 	
 	@Column

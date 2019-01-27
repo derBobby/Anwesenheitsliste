@@ -6,6 +6,7 @@ import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_ERROR_DEFAULT;
 import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_AREA_ADMIN;
 import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_AREA_DEV;
 import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_403_TEST;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_500_TEST;
 import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_AREA_USER;
 import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_HOME;
 import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_LOGIN;
@@ -76,6 +77,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				// DEV area
 				.antMatchers(URL_403_TEST)
 					.hasAnyAuthority("ROLE_NONEXISTENT")
+				.antMatchers(URL_500_TEST)
+					.permitAll()
 				.antMatchers(URL_AREA_DEV + "/**")
 					.hasAnyAuthority(ApplicationRole.ROLE_ADMIN)
 									 

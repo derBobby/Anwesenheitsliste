@@ -9,6 +9,7 @@ import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_MEETINGFORTEAM;
 import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_MEETINGLIST;
 import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_MEETINGLISTFULL;
 import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_MEETINGSUBMIT;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_HOME;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -27,7 +28,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import eu.planlos.anwesenheitsliste.model.Meeting;
-import eu.planlos.anwesenheitsliste.model.Participant;
 import eu.planlos.anwesenheitsliste.model.Team;
 import eu.planlos.anwesenheitsliste.service.BodyFillerService;
 import eu.planlos.anwesenheitsliste.service.MeetingService;
@@ -62,7 +62,7 @@ public class MeetingDetail {
 	@RequestMapping(path = URL_MEETINGFORTEAM + "{idTeam}/{idMeeting}", method = RequestMethod.GET)
 	public String edit(Model model, @PathVariable Long idTeam, @PathVariable Long idMeeting) {
 	
-		if(!securityService.isAdmin() && !securityService.isUserAuthorizedForTeam(idTeam)) {
+		if(isNotAuthorizedForTeam(idTeam)) {
 			return "redirect:" + URL_ERROR_403;
 		}
 		
@@ -70,7 +70,7 @@ public class MeetingDetail {
 		model.addAttribute(meeting);
 		prepareContent(model, meeting);
 		
-		prepareContentWithTeam(model, idTeam); //###############
+		prepareContentWithTeam(model, idTeam);
 		
 		return RES_MEETING;
 	}
@@ -79,7 +79,7 @@ public class MeetingDetail {
 	@RequestMapping(path = URL_MEETINGFORTEAM + "{idTeam}", method = RequestMethod.GET)
 	public String addForTeam(Model model, @PathVariable Long idTeam) {
 
-		if(!securityService.isAdmin() && !securityService.isUserAuthorizedForTeam(idTeam)) {
+		if(isNotAuthorizedForTeam(idTeam)) {
 			return "redirect:" + URL_ERROR_403;
 		}
 		
@@ -88,12 +88,11 @@ public class MeetingDetail {
 		model.addAttribute(meeting);
 		prepareContent(model, meeting);
 		
-		prepareContentWithTeam(model, idTeam); //###############
+		prepareContentWithTeam(model, idTeam);
 
 		return RES_MEETING;
 	}
 	
-	//TODO load only permitted!!!
 	// STEP 1 adding new meeting without a given team
 	@RequestMapping(path = URL_MEETINGCHOOSETEAM, method = RequestMethod.GET)
 	public String addWithoutTeam(Model model) {
@@ -115,7 +114,15 @@ public class MeetingDetail {
 	// STEP 2 adding new meeting without a given team
 	@RequestMapping(path = URL_MEETINGADDPARTICIPANTS, method = RequestMethod.POST)
 	public String addWithoutTeam(Model model, @Valid @ModelAttribute Meeting meeting, Errors errors) {
+	
+		if(isNotAuthorizedForMeeting(meeting)) {
+			return "redirect:" + URL_ERROR_403;
+		}
 
+		if(meeting.getTeam() != null && isNotAuthorizedForTeam(meeting.getTeam().getIdTeam())) {
+			return "redirect:" + URL_ERROR_403;
+		}
+		
 		if(errors.hasErrors()) {
 			handleValidationErrors(model, meeting);
 			return RES_MEETING; 
@@ -127,11 +134,29 @@ public class MeetingDetail {
 		return RES_MEETING; 
 	}
 	
+	private boolean isNotAuthorizedForTeam(Long idTeam) {
+		if(!securityService.isAdmin() && !securityService.isUserAuthorizedForTeam(idTeam) ) {
+			return true;
+		}
+		return false;
+	}
+	
+	private boolean isNotAuthorizedForMeeting(Meeting meeting) {
+		if(! securityService.isAdmin() && ( meeting.getIdMeeting() != null && !securityService.isUserAuthorizedForTeam(meeting.getTeam().getIdTeam())) ) {
+			return true;
+		}
+		return false;
+	}
+
 	// For submitting the added/edited meeting
 	@RequestMapping(path = URL_MEETINGSUBMIT, method = RequestMethod.POST)
 	public String submit(Model model, @Valid @ModelAttribute Meeting meeting, Errors errors) {
 		
-		if(! securityService.isAdmin() && ( meeting.getIdMeeting() != null && !securityService.isUserAuthorizedForTeam(meeting.getTeam().getIdTeam())) ) {
+		if(isNotAuthorizedForMeeting(meeting)) {
+			return "redirect:" + URL_ERROR_403;
+		}
+
+		if(meeting.getTeam() != null && isNotAuthorizedForTeam(meeting.getTeam().getIdTeam())) {
 			return "redirect:" + URL_ERROR_403;
 		}
 		
@@ -139,26 +164,9 @@ public class MeetingDetail {
 			handleValidationErrors(model, meeting);
 			return RES_MEETING; 
 		}
-	
-		//TODO check post data: authorized?
-		
-	// TODO Handling in Controller?
-	// TODO Transaction
-	// {
-		// Disabled checkboxes can be manipulated so that they could be set.
-		// Don't trust the frontend! :-P
-		// Save only editable Participants
-		List<Participant> trustedParticipants = meetingService.getOnlyEditableParticipantsForMeeting(meeting);
-		
-		// HTML currently doesn't send disabled checkboxes so we need to correct these
-		// because inactive participants should not be modifiable at the moment 
-		List <Participant> notTransmittedParticipants = participantService.getInactiveParticipantsForMeeting(meeting);
-		
-		meeting.setParticipants(trustedParticipants);
-		meeting.addParticipants(notTransmittedParticipants);
 
+		participantService.correctParticipantsInMeeting(meeting);
 		meeting = meetingService.save(meeting);
-	// }
 		
 		return "redirect:" + URL_MEETINGLIST + meeting.getTeam().getIdTeam() + DELIMETER + meeting.getIdMeeting();
 	}
@@ -185,11 +193,14 @@ public class MeetingDetail {
 	
 	private void prepareContentWithoutTeam(Model model) {
 		
-		//TODO only own teams
-		model.addAttribute("teams", teamService.findAll());
-		model.addAttribute("participants", new ArrayList<>());
+		model.addAttribute("teams", teamService.findTeamsForUser(securityService.getLoginName()));
 		model.addAttribute("formAction", URL_MEETINGADDPARTICIPANTS);
-		model.addAttribute("formCancel", URL_MEETINGLISTFULL);
+
+		if(securityService.isAdmin()) {
+			model.addAttribute("formCancel", URL_MEETINGLISTFULL);
+			return;
+		}
+		model.addAttribute("formCancel", URL_HOME);
 	}
 	
 	private void prepareContentWithTeam(Model model, Long idTeam) {

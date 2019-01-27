@@ -1,6 +1,5 @@
 package eu.planlos.anwesenheitsliste.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -78,15 +77,20 @@ public class ParticipantService {
 			}
 		}
 	}
+
+	public void correctParticipantsInMeeting(@Valid Meeting meeting) {
 	
-	public List<Participant> getInactiveParticipantsForMeeting(@Valid Meeting meeting) {
+		List<Participant> givenParticipants = meeting.getParticipants();
 		
-		if(meeting.getIdMeeting() == null) {
-			return new ArrayList<Participant>();
-		}
+		// 1.) HTML currently doesn't send disabled checkboxes so we need to correct these
+		// 2.) Disabled checkboxes (=inactive participants) can be manipulated so that:
+		// ----> unchecked could be checked -> remove db-inactive from POST
+		// ----> checked could be unchecked -> find in POST missing and insert from db
 		
-		List<Participant> inactiveParticipants = participantRepo.findAllByMeetingsInAndIsActive(meeting, false);
+		List<Participant> remove = participantRepo.findAllByTeamsContainingAndIsActive(meeting.getTeam(), false);
+		givenParticipants.removeAll(remove);
 		
-		return inactiveParticipants;
+		List<Participant> add = participantRepo.findAllByMeetingsContainingAndIsActive(meeting, false);
+		givenParticipants.addAll(add);
 	}
 }

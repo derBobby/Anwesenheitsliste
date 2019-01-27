@@ -76,15 +76,15 @@ public class SampleDataCreater implements ApplicationRunner {
 		
 		Calendar calendar = Calendar.getInstance();
 		
-		calendar.set(2018, 12, 26);
+		calendar.set(2018, 1, 26);
 		@SuppressWarnings("unused")
 		Meeting m1 = meetingsRepo.save(new Meeting(calendar.getTime(), "Just a Test", team1));
 		
-		calendar.set(2018, 12, 27);
+		calendar.set(2018, 1, 27);
 		@SuppressWarnings("unused")
 		Meeting m2 = meetingsRepo.save(new Meeting(calendar.getTime(), "Just a Test", team2));
 		
-		calendar.set(2018, 12, 28);
+		calendar.set(2018, 1, 28);
 		@SuppressWarnings("unused")
 		Meeting m3 = meetingsRepo.save(new Meeting(calendar.getTime(), "Just a Test", team3));
 
@@ -123,6 +123,7 @@ public class SampleDataCreater implements ApplicationRunner {
 		p1.addTeam(team2);
 		p1.addTeam(team3);
 
+		p2.addTeam(team1);
 		p2.addTeam(team2);
 		p2.addTeam(team3);
 

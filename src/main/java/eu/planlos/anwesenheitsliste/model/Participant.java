@@ -43,11 +43,14 @@ public class Participant {
 	@Column(nullable = false)
 	@NotNull
 	private Boolean isActive;
-	
+
 	@Column
 	@ManyToMany
 	private List<Team> teams;
 	
+	@Column
+	@ManyToMany(mappedBy = "participants")
+	private List<Meeting> meetings;
 	
 	/**
 	 * Standard constructor
@@ -165,6 +168,15 @@ public class Participant {
 		}
 		this.teams.add(team);
 	}
+	
+	/**
+	 * @param team the team to remove
+	 */
+	public void removeMeeting(Meeting meeting) {
+		if(this.meetings != null) {
+			this.meetings.remove(meeting);
+		}
+	}
 
 	/**
 	 * @return the idParticipant
@@ -185,9 +197,7 @@ public class Participant {
 	 */
 	public void removeTeam(Team team) {
 		if(this.teams != null) {
-			if(this.teams.contains(team)) {
-				this.teams.remove(team);
-			}
+			this.teams.remove(team);
 		}
 	}
 	

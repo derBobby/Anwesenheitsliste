@@ -78,7 +78,16 @@ public class ParticipantDetail {
 			return "redirect:" + URL_ERROR_403;
 		}
 		
+		if(participant.getTeams().isEmpty()) {
+			//TODO NEW go in try ant throw error instead?
+			//TODO set own error for attribute "team"?
+			model.addAttribute("customError", "Es muss mindestens eine Gruppe gewählt werden");
+			prepareContent(model, participant);
+			return RES_PARTICIPANT; 
+		}
+		
 		if(errors.hasErrors()) {
+			//TODO NEW go in try ant throw error instead?
 			prepareContent(model, participant);
 			return RES_PARTICIPANT; 
 		}

@@ -80,7 +80,7 @@ public class TeamDetail {
 	@RequestMapping(path = URL_TEAM, method = RequestMethod.POST)
 	public String submit(Model model, @Valid @ModelAttribute Team team, Errors errors) {
 
-		//Admin is always allowed, others if it is edit and is authorized
+		// Admin is always allowed, others if it is edit and is authorized
 		if(!securityService.isAdmin() && ( team.getIdTeam() == null || !securityService.isUserAuthorizedForTeam(team.getIdTeam()) ) ) {
 			return "redirect:" + URL_ERROR_403;
 		}
@@ -126,6 +126,11 @@ public class TeamDetail {
 		model.addAttribute("users", userService.findAll());
 		model.addAttribute("participants", participantService.findAll());
 		model.addAttribute("formAction", URL_TEAM);
-		model.addAttribute("formCancel", URL_TEAMLISTFULL);
+		
+		if(securityService.isAdmin()) {
+			model.addAttribute("formCancel", URL_TEAMLISTFULL);
+			return;
+		}
+		model.addAttribute("formCancel", URL_TEAMLIST + team.getIdTeam());
 	}
 }

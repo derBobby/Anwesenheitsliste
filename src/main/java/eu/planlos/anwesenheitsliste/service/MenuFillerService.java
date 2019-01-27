@@ -63,14 +63,14 @@ public class MenuFillerService implements EnvironmentAware {
 		 * Login URL only if not logged in
 		 */
     	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    	Boolean isNull = (authentication == null);
-    	//TODO check if possible: when Anonymous Authentication is enabled
+    	
+    	Boolean authenticationIsNull = (authentication == null);
     	Boolean isNotAuthenticated = ! authentication.isAuthenticated();
     	Boolean isAnonymous = authentication instanceof AnonymousAuthenticationToken;
-	    if(isNull || isNotAuthenticated || isAnonymous) {
+	    
+    	if(authenticationIsNull || isNotAuthenticated || isAnonymous) {
 	    	model.addAttribute("URL_LOGIN_FORM", URL_LOGIN_FORM);
     	}
-	    
 	    
 		/*
 		 * Info Menu

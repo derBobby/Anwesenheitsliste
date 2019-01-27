@@ -33,7 +33,6 @@ public class SecurityService {
 		return SecurityContextHolder.getContext().getAuthentication().getAuthorities().contains(new SimpleGrantedAuthority(ApplicationRole.ROLE_ADMIN));
 	}
 	
-	//TODO untested
 	public boolean isUserLoggedIn(){
 	   return SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof UserDetails;
 	}

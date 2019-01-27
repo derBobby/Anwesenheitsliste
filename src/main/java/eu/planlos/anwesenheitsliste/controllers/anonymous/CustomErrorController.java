@@ -51,7 +51,7 @@ public class CustomErrorController implements ErrorController {
 		return RES_ERROR_403;
 	}
 	
-	//TODO prevent stacktrace from being written to log
+	//TODO NEW prevent stacktrace from being written to log
 	@GetMapping(path = URL_ERROR_DEFAULT)
 	public String handleError(HttpServletRequest request, WebRequest webRequest, Model model) {
 	
@@ -64,9 +64,11 @@ public class CustomErrorController implements ErrorController {
         String errorTrace = (String) body.get("trace");
 	        
 		if(securityService.isUserLoggedIn()) {
-				
+			
+			model.addAttribute("printTrace", true);
 	        model.addAttribute("errorMessage", errorMessage);
 	        model.addAttribute("errorException", errorException);
+	        //TODO not for 404
 	        model.addAttribute("errorTrace", errorTrace);
 		}
 		

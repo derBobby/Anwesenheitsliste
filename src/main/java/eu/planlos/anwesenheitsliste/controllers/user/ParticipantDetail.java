@@ -4,6 +4,7 @@ import static eu.planlos.anwesenheitsliste.ApplicationPath.RES_PARTICIPANT;
 import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_ERROR_403;
 import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_PARTICIPANT;
 import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_PARTICIPANTLIST;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_PARTICIPANTLISTFULL;
 
 import javax.validation.Valid;
 
@@ -73,7 +74,7 @@ public class ParticipantDetail {
 	public String submit(Model model, @Valid @ModelAttribute Participant participant, Errors errors) {
 
 		// Admin is always allowed, others if adding new or edited with permission
-		if(! securityService.isAdmin() && ( participant.getIdParticipant() != null && !hasPermissionForParticipant(participant.getIdParticipant())) ) {
+		if(! securityService.isAdmin() && participant.getIdParticipant() != null && !hasPermissionForParticipant(participant.getIdParticipant()) ) {
 			return "redirect:" + URL_ERROR_403;
 		}
 		
@@ -84,8 +85,11 @@ public class ParticipantDetail {
 		
 		try {
 			Participant savedParticipant = participantService.save(participant);
-			//TODO where should admin be routed to?
-			return "redirect:" + URL_PARTICIPANTLIST + savedParticipant.getIdParticipant();
+
+			if( hasPermissionForParticipant(participant.getIdParticipant()) ) {
+				return "redirect:" + URL_PARTICIPANTLIST + savedParticipant.getIdParticipant();
+			}
+			return "redirect:" + URL_PARTICIPANTLISTFULL + savedParticipant.getIdParticipant();
 			
 		} catch (DuplicateKeyException e) {
 			prepareContent(model, participant);
@@ -102,8 +106,7 @@ public class ParticipantDetail {
 			bf.fill(model, STR_MODULE, STR_TITLE_ADD_USER);
 		}
 		
-		//TODO only own teams
-		model.addAttribute("teams", teamService.findAll());
+		model.addAttribute("teams", teamService.findTeamsForUser(securityService.getLoginName()));
 		model.addAttribute("formAction", URL_PARTICIPANT);
 		model.addAttribute("formCancel", URL_PARTICIPANTLIST);
 	}

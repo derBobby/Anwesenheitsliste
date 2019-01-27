@@ -65,7 +65,7 @@ public class ErrorMailNotificationService {
 			javaMailSender.send(mail);
 			
 		} catch (MessagingException e) {
-			// TODO Auto-generated catch block
+			// TODO Logger
 			e.printStackTrace();
 		}
 	}

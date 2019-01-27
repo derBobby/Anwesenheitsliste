@@ -69,7 +69,7 @@ public class UserDetail {
 			return "redirect:" + URL_USERLIST + savedUser.getIdUser();
 			
 		} catch (Exception e) {
-			//TODO logger
+			//TODO Logger
 			prepareContent(model, user);
 			model.addAttribute("customError", e.getMessage());
 			return RES_USER;

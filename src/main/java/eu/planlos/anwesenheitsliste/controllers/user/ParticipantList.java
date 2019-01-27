@@ -88,6 +88,16 @@ public class ParticipantList {
 		prepareContent(model, participants, null);
 		return RES_PARTICIPANTLIST;
 	}
+	
+	// Admin
+	@RequestMapping(path = URL_PARTICIPANTLISTFULL + "{markedParticipantId}")
+	public String markedParticipantListFull(Model model, @PathVariable Long markedParticipantId) {
+
+		List<Participant> participants = participantService.findAll();
+
+		prepareContent(model, participants, markedParticipantId);
+		return RES_PARTICIPANTLIST;
+	}
 
 	private void prepareContent(Model model, List<Participant> participants, Long markedParticipantId) {
 

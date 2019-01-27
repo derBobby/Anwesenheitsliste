@@ -13,7 +13,7 @@
 						<p class="lead">Es ist ein unbekannter Fehler aufgetreten.</p>
 						<p class="lead">Bleibt nur schmollen! :'(</p>
 						<p class="lead">Und vielleicht den Fehler zu melden?</p>
-						<div class="table-responsive">
+						<div th:if="${printTrace}" class="table-responsive">
 							<table class="table table-bordered table-hover table-striped m-0 text-left ">
 								<tr>
 									<td>Nachricht</td><td th:text="${errorMessage}"></td>

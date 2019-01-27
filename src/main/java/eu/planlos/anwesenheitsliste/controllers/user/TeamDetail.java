@@ -1,8 +1,9 @@
 package eu.planlos.anwesenheitsliste.controllers.user;
 
-import static eu.planlos.anwesenheitsliste.ApplicationPath.RES_TEAM;
 import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_ERROR_403;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.RES_TEAM;
 import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_TEAM;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_TEAMLIST;
 import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_TEAMLISTFULL;
 
 import javax.validation.Valid;
@@ -95,7 +96,9 @@ public class TeamDetail {
 			userService.updateTeamForUsers(team);
 			participantService.updateTeamForParticipants(team);
 			
-			//TODO normal user routed to admin page
+			if(securityService.isUserAuthorizedForTeam(team.getIdTeam())) {
+				return "redirect:" + URL_TEAMLIST + savedTeam.getIdTeam();
+			}
 			return "redirect:" + URL_TEAMLISTFULL + savedTeam.getIdTeam();
 
 		} catch (EmptyIdException e) {

@@ -28,7 +28,7 @@ public class MeetingService {
 	}
 	
 	public List<Meeting> findAllByTeam(Long idTeam) {
-		return (List<Meeting>) meetingRepo.findAllByTeamIdTeam(idTeam);
+		return meetingRepo.findAllByTeamIdTeam(idTeam);
 	}
 	
 	public Meeting findById(Long idMeeting) {

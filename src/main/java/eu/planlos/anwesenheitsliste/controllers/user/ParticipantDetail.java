@@ -79,8 +79,8 @@ public class ParticipantDetail {
 		}
 		
 		if(participant.getTeams().isEmpty()) {
-			//TODO NEW go in try ant throw error instead?
-			//TODO set own error for attribute "team"?
+			//TODO go in try ant throw error instead?
+			//TODO NEW set own error for attribute "team"?
 			model.addAttribute("customError", "Es muss mindestens eine Gruppe gewählt werden");
 			prepareContent(model, participant);
 			return RES_PARTICIPANT; 

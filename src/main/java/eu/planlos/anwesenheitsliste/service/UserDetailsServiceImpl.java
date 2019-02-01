@@ -38,7 +38,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		
 		User springSecurityUser = new User(user.getLoginName(), user.getPassword(), authoritiesList);
 		
-		return (UserDetails) springSecurityUser;
+		// (UserDetails)
+		return springSecurityUser;
 	}
 
 }

@@ -7,6 +7,8 @@ import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_TEAMPHONELIST;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,6 +28,8 @@ public class TeamPhonelist {
 	public final String STR_MODULE = "Gruppenverwaltung";
 	public final String STR_TITLE = "Telefonliste";
 
+	private static final Logger logger = LoggerFactory.getLogger(TeamPhonelist.class);
+	
 	@Autowired
 	private BodyFillerService bf;
 
@@ -42,6 +46,7 @@ public class TeamPhonelist {
 	public String markedTeamList(Model model, @PathVariable Long idTeam) {
 				
 		if(!securityService.isAdmin() && !securityService.isUserAuthorizedForTeam(idTeam)) {
+			logger.error("Benutzer \"" + securityService.getLoginName() + "\" hat unauthorisiert versucht auf Telefonliste von Gruppe id=" + idTeam + " zuzugreifen.");
 			return "redirect:" + URL_ERROR_403;
 		}
 		

@@ -58,21 +58,14 @@ public class ParticipantList {
 		return RES_PARTICIPANTLIST;
 	}
 
-	//TODO is there a better way to do this?
 	private List<Participant> participantsForUser() {
 		
 		String loginName = securityService.getLoginName();
 		List<Team> teams = teamService.findTeamsForUser(loginName);
 		
 		Set<Participant> participants = new HashSet<>();
-		//List<Participant> participants = new ArrayList<>();
 		
 		for(Team team : teams) {
-//			for(Participant participant : team.getParticipants()) {
-//				if(! participants.contains(participant)) {
-//					participants.add(participant);
-//				}
-//			}
 			participants.addAll(team.getParticipants());
 		}
 				

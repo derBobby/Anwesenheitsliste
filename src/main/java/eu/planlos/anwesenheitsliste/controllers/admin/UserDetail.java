@@ -6,6 +6,8 @@ import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_USERLIST;
 
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import eu.planlos.anwesenheitsliste.model.User;
 import eu.planlos.anwesenheitsliste.service.BodyFillerService;
+import eu.planlos.anwesenheitsliste.service.SecurityService;
 import eu.planlos.anwesenheitsliste.service.TeamService;
 import eu.planlos.anwesenheitsliste.service.UserService;
 
@@ -27,6 +30,8 @@ public class UserDetail {
 	public final String STR_TITLE_ADD_USER = "Benutzer hinzufügen";
 	public final String STR_TITLE_EDIT_USER = "Benutzer ändern";
 
+	private static final Logger logger = LoggerFactory.getLogger(UserDetail.class);
+
 	@Autowired
 	private BodyFillerService bf;
 	
@@ -35,6 +40,9 @@ public class UserDetail {
 
 	@Autowired
 	private TeamService teamService;
+	
+	@Autowired
+	private SecurityService securityService;
 	
 	@RequestMapping(path = URL_USER + "{idUser}", method = RequestMethod.GET)
 	public String edit(Model model, @PathVariable Long idUser) {
@@ -66,10 +74,13 @@ public class UserDetail {
 		
 		try {
 			User savedUser = userService.save(user);
+			logger.error("Benutzer " + user.getIdUser() + ": \"" + user.getLoginName() + "\" wurde von \"" + securityService.getLoginName() + "\" gespeichert");
 			return "redirect:" + URL_USERLIST + savedUser.getIdUser();
 			
 		} catch (Exception e) {
-			//TODO Logger
+			logger.error("Benutzer " + user.getIdUser() + ": \"" + user.getLoginName() + "\" konnte nicht von \"" + securityService.getLoginName() + "\" gespeichert werden: " + e.getMessage());
+			e.printStackTrace();
+			
 			prepareContent(model, user);
 			model.addAttribute("customError", e.getMessage());
 			return RES_USER;

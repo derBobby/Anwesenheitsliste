@@ -8,6 +8,8 @@ import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_PARTICIPANTLISTFU
 
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Controller;
@@ -30,6 +32,8 @@ public class ParticipantDetail {
 	public final String STR_MODULE = "Teilnehmerverwaltung";
 	public final String STR_TITLE_ADD_USER = "Teilnehmer hinzufügen";
 	public final String STR_TITLE_EDIT_USER = "Teilnehmer ändern";
+	
+	private static final Logger logger = LoggerFactory.getLogger(ParticipantDetail.class);
 
 	@Autowired
 	private BodyFillerService bf;
@@ -48,6 +52,7 @@ public class ParticipantDetail {
 	public String edit(Model model, @PathVariable Long idParticipant) {
 
 		if(!securityService.isAdmin() && !hasPermissionForParticipant(idParticipant)) {
+			logger.error("Benutzer \"" + securityService.getLoginName() + "\" hat unauthorisiert versucht auf Teilnehmer id=" + idParticipant + " zuzugreifen.");
 			return "redirect:" + URL_ERROR_403;
 		}
 		
@@ -75,19 +80,21 @@ public class ParticipantDetail {
 
 		// Admin is always allowed, others if adding new or edited with permission
 		if(! securityService.isAdmin() && participant.getIdParticipant() != null && !hasPermissionForParticipant(participant.getIdParticipant()) ) {
+			logger.error("Benutzer \"" + securityService.getLoginName() + "\" hat unauthorisiert versucht auf Teilnehmer id=" + participant.getIdParticipant() + " zuzugreifen.");
 			return "redirect:" + URL_ERROR_403;
 		}
 		
 		if(participant.getTeams().isEmpty()) {
 			//TODO go in try ant throw error instead?
 			//TODO NEW set own error for attribute "team"?
+			logger.error("Benutzer \"" + securityService.getLoginName() + "\" hat versucht den Teilnehmer id=" + participant.getIdParticipant() + " ohne Gruppe zu speichern.");
 			model.addAttribute("customError", "Es muss mindestens eine Gruppe gewählt werden");
 			prepareContent(model, participant);
 			return RES_PARTICIPANT; 
 		}
 		
 		if(errors.hasErrors()) {
-			//TODO NEW go in try ant throw error instead?
+			//TODO NEW go in try and throw error instead?
 			prepareContent(model, participant);
 			return RES_PARTICIPANT; 
 		}
@@ -101,6 +108,7 @@ public class ParticipantDetail {
 			return "redirect:" + URL_PARTICIPANTLISTFULL + savedParticipant.getIdParticipant();
 			
 		} catch (DuplicateKeyException e) {
+			logger.error("Benutzer \"" + securityService.getLoginName() + "\" hat versucht den Teilnehmer id=" + participant.getIdParticipant() + " zu speichern: " + e.getMessage());
 			prepareContent(model, participant);
 			model.addAttribute("customError", e.getMessage());
 			return RES_PARTICIPANT;

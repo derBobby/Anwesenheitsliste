@@ -26,32 +26,24 @@ public class SampleDataCreater implements ApplicationRunner {
 	
 	private static final Logger logger = LoggerFactory.getLogger(SampleDataCreater.class);	
 
+	@Autowired
     private MeetingRepository meetingsRepo;
-    private ParticipantRepository participantRepo;
-    private TeamRepository teamRepo;
-    private UserRepository userRepo;
     
-    @Autowired
-    public SampleDataCreater(MeetingRepository meetingsRepo, ParticipantRepository participantRepo, TeamRepository teamRepo, UserRepository userRepository) {
-        this.meetingsRepo = meetingsRepo;
-        this.participantRepo = participantRepo;
-        this.teamRepo = teamRepo;
-        this.userRepo = userRepository;
-    }
+	@Autowired
+	private ParticipantRepository participantRepo;
     
+	@Autowired
+	private TeamRepository teamRepo;
+    
+	@Autowired
+	private UserRepository userRepo;
+        
     @Override
     public void run(ApplicationArguments args) throws ParseException {
 
-//    	if(args.containsOption("")) {
-//    		logger.debug("Startparameter \"initdb\" gefunden -> Initialisiere Datenbank");
-//    		initDB();
-//    		return;
-//    	}
-//    	logger.debug("Startparameter \"initdb\" nicht gefunden -> Initialisiere Datenbank nicht");
-    	
-		logger.debug("Profil \"CREATEDB\" gefunden -> Initialisiere Datenbank");
+		logger.debug("Profil \"CREATESAMPLEDATA\" gefunden -> Initialisiere Datenbank");
     	initDB();
-    	logger.debug("Profil \"CREATEDB\" gefunden -> Initialisiere Datenbank -> FERTIG!");
+    	logger.debug("Profil \"CREATESAMPLEDATA\" gefunden -> Initialisiere Datenbank -> FERTIG!");
     }
 
 	private void initDB() throws ParseException {

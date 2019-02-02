@@ -13,12 +13,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.stereotype.Component;
-import eu.planlos.anwesenheitsliste.SampleDataCreater;
 
 @Component
 public class LoginAccessDeniedHandler implements AccessDeniedHandler {
 
-	private static final Logger logger = LoggerFactory.getLogger(SampleDataCreater.class);	
+	private static final Logger logger = LoggerFactory.getLogger(LoginAccessDeniedHandler.class);	
 
 	@Override
 	public void handle(HttpServletRequest request, HttpServletResponse response,

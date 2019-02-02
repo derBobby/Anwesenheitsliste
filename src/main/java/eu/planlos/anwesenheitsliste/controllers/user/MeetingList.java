@@ -11,6 +11,8 @@ import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_ERROR_403;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,6 +30,8 @@ public class MeetingList {
 	public final String STR_MODULE = "Terminverwaltung";
 	public final String STR_TITLE = "Liste der Termine";
 
+	private static final Logger logger = LoggerFactory.getLogger(MeetingList.class);
+
 	@Autowired
 	private BodyFillerService bf;
 
@@ -42,6 +46,7 @@ public class MeetingList {
 	public String meetingListForTeam(Model model, @PathVariable Long idTeam) {
 		
 		if(!securityService.isAdmin() && !hasPermissionForTeam(idTeam)) {
+			logger.error("Benutzer \"" + securityService.getLoginName() + "\" hat unauthorisiert versucht auf Terminliste von Gruppe id=" + idTeam + " zuzugreifen.");
 			return "redirect:" + URL_ERROR_403;
 		}
 		
@@ -53,13 +58,8 @@ public class MeetingList {
 	@RequestMapping(path = URL_MEETINGLIST + "{idTeam}" + DELIMETER + "{idMeeting}")
 	public String meetingListForTeamMarked(Model model, @PathVariable Long idTeam, @PathVariable Long idMeeting) {
 
-		if(!securityService.isAdmin() && !hasPermissionForTeam(idTeam)) {
-			return "redirect:" + URL_ERROR_403;
-		}
-		
 		model.addAttribute("markedMeetingId", idMeeting);
-		prepareContentForTeam(model, idTeam);
-		return RES_MEETINGLIST;
+		return meetingListForTeam(model, idTeam);
 	}
 	
 	// Admin

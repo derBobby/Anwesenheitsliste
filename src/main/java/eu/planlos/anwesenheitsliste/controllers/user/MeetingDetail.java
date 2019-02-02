@@ -18,6 +18,8 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -43,6 +45,8 @@ public class MeetingDetail {
 	public final String STR_TITLE_ADD_MEETING = "Termin hinzufügen";
 	public final String STR_TITLE_EDIT_MEETING = "Termin ändern";
 
+	private static final Logger logger = LoggerFactory.getLogger(MeetingDetail.class);
+			
 	@Autowired
 	private BodyFillerService bf;
 	
@@ -63,6 +67,7 @@ public class MeetingDetail {
 	public String edit(Model model, @PathVariable Long idTeam, @PathVariable Long idMeeting) {
 	
 		if(isNotAuthorizedForTeam(idTeam)) {
+			logger.error("Benutzer \"" + securityService.getLoginName() + "\" hat unauthorisiert versucht auf Termin id=" + idMeeting + "von Gruppe id=" + idTeam + " zuzugreifen.");
 			return "redirect:" + URL_ERROR_403;
 		}
 		
@@ -80,6 +85,7 @@ public class MeetingDetail {
 	public String addForTeam(Model model, @PathVariable Long idTeam) {
 
 		if(isNotAuthorizedForTeam(idTeam)) {
+			logger.error("Benutzer \"" + securityService.getLoginName() + "\" hat unauthorisiert versucht einen Termin für Gruppe id=" + idTeam + " anzulegen.");
 			return "redirect:" + URL_ERROR_403;
 		}
 		
@@ -94,6 +100,7 @@ public class MeetingDetail {
 	}
 	
 	// STEP 1 adding new meeting without a given team
+	// -> View for choosing team
 	@RequestMapping(path = URL_MEETINGCHOOSETEAM, method = RequestMethod.GET)
 	public String addWithoutTeam(Model model) {
 		
@@ -112,18 +119,17 @@ public class MeetingDetail {
 	}
 
 	// STEP 2 adding new meeting without a given team
+	// -> View with participants for chosen team
 	@RequestMapping(path = URL_MEETINGADDPARTICIPANTS, method = RequestMethod.POST)
 	public String addWithoutTeam(Model model, @Valid @ModelAttribute Meeting meeting, Errors errors) {
 	
-		if(isNotAuthorizedForMeeting(meeting)) {
-			return "redirect:" + URL_ERROR_403;
-		}
-
 		if(meeting.getTeam() != null && isNotAuthorizedForTeam(meeting.getTeam().getIdTeam())) {
+			logger.error("Benutzer \"" + securityService.getLoginName() + "\" hat unauthorisiert versucht einen Termin für Gruppe id=" + meeting.getTeam().getIdTeam() + " anzulegen.");
 			return "redirect:" + URL_ERROR_403;
 		}
 		
 		if(errors.hasErrors()) {
+			logger.error("Validierungsfehler in Schritt zwei beim Anlegen ohne Team von Benutzer \"" + securityService.getLoginName() + "\".");
 			handleValidationErrors(model, meeting);
 			return RES_MEETING; 
 		}
@@ -140,29 +146,20 @@ public class MeetingDetail {
 		}
 		return false;
 	}
-	
-	private boolean isNotAuthorizedForMeeting(Meeting meeting) {
-		if(! securityService.isAdmin() && ( meeting.getIdMeeting() != null && !securityService.isUserAuthorizedForTeam(meeting.getTeam().getIdTeam())) ) {
-			return true;
-		}
-		return false;
-	}
 
 	// For submitting the added/edited meeting
 	@RequestMapping(path = URL_MEETINGSUBMIT, method = RequestMethod.POST)
 	public String submit(Model model, @Valid @ModelAttribute Meeting meeting, Errors errors) {
 		
-		if(isNotAuthorizedForMeeting(meeting)) {
-			return "redirect:" + URL_ERROR_403;
-		}
-
-		if(meeting.getTeam() != null && isNotAuthorizedForTeam(meeting.getTeam().getIdTeam())) {
-			return "redirect:" + URL_ERROR_403;
-		}
-		
 		if(errors.hasErrors()) {
+			logger.error("Validierungsfehler beim Submit eines Termins von Benutzer \"" + securityService.getLoginName() + "\".");
 			handleValidationErrors(model, meeting);
 			return RES_MEETING; 
+		}
+
+		if(isNotAuthorizedForTeam(meeting.getTeam().getIdTeam())) {
+			logger.error("Benutzer \"" + securityService.getLoginName() + "\" hat unauthorisiert versucht einen Termin für Gruppe id=" + meeting.getTeam().getIdTeam() + " zu speichern.");
+			return "redirect:" + URL_ERROR_403;
 		}
 
 		participantService.correctParticipantsInMeeting(meeting);

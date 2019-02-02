@@ -11,6 +11,8 @@ import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_ERROR_DEFAULT;
 import static eu.planlos.anwesenheitsliste.ApplicationPath.RES_ERROR_UNKNOWN;
 import static eu.planlos.anwesenheitsliste.ApplicationPath.RES_ERROR_403;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.error.ErrorAttributes;
 import org.springframework.boot.web.servlet.error.ErrorController;
@@ -29,6 +31,8 @@ public class CustomErrorController implements ErrorController {
 
 	private final ErrorAttributes errorAttributes;
 
+	private static final Logger logger = LoggerFactory.getLogger(CustomErrorController.class);
+
 	@Autowired
 	private BodyFillerService bf;
 	
@@ -45,6 +49,14 @@ public class CustomErrorController implements ErrorController {
     
 	@GetMapping(path = URL_ERROR_403)
 	public String forbidden(Model model) {
+		
+		System.out.println(model);
+		
+		if(securityService.isUserLoggedIn()) {
+			logger.error("Benutzer \"" + securityService.getLoginName() + "\" wollte unauthorisiert auf eine Seite zugreifen.");
+		} else {
+			logger.error("Ein nicht authentifizierter Benutzer wollte unauthorisiert auf eine Seite zugreifen.");			
+		}
 		
 		bf.fill(model, "Fehler", "Verboten - 403");
 		

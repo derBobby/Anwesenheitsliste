@@ -4,6 +4,8 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
 import org.apache.commons.compress.utils.CharsetNames;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -11,9 +13,13 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import eu.planlos.anwesenheitsliste.controllers.user.TeamDetail;
+
 @Service
 public class ErrorMailNotificationService {
 	
+	private static final Logger logger = LoggerFactory.getLogger(TeamDetail.class);
+
 	@Autowired
 	private JavaMailSender javaMailSender;
 
@@ -63,9 +69,10 @@ public class ErrorMailNotificationService {
 			mail.setContent(htmlBody, "text/html; charset=utf-8");
 			
 			javaMailSender.send(mail);
+			logger.error("E-Mailbenachrichtigung wurde verschickt.");
 			
 		} catch (MessagingException e) {
-			// TODO Logger
+			logger.error("E-Mailbenachrichtigung konnte nicht verschickt werden: " + e.getMessage());
 			e.printStackTrace();
 		}
 	}

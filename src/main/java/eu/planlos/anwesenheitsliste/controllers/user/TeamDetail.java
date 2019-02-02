@@ -8,6 +8,8 @@ import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_TEAMLISTFULL;
 
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Controller;
@@ -33,6 +35,8 @@ public class TeamDetail {
 	public final String STR_TITLE_ADD_TEAM = "Gruppe hinzufügen";
 	public final String STR_TITLE_EDIT_TEAM = "Gruppe ändern";
 
+	private static final Logger logger = LoggerFactory.getLogger(TeamDetail.class);
+	
 	@Autowired
 	private BodyFillerService bf;
 	
@@ -52,6 +56,7 @@ public class TeamDetail {
 	public String edit(Model model, @PathVariable Long idTeam) {
 
 		if(!securityService.isAdmin() && !securityService.isUserAuthorizedForTeam(idTeam)) {
+			logger.error("Benutzer \"" + securityService.getLoginName() + "\" hat unauthorisiert versucht auf Gruppe id=" + idTeam + " zuzugreifen.");
 			return "redirect:" + URL_ERROR_403;
 		}
 		
@@ -65,7 +70,9 @@ public class TeamDetail {
 	@RequestMapping(path = URL_TEAM, method = RequestMethod.GET)
 	public String add(Model model) {
 
+		//TODO should be admin url
 		if(!securityService.isAdmin()) {
+			logger.error("Benutzer \"" + securityService.getLoginName() + "\" hat unauthorisiert versucht eine Gruppe anzulegen.");
 			return "redirect:" + URL_ERROR_403;
 		}
 		
@@ -82,10 +89,13 @@ public class TeamDetail {
 
 		// Admin is always allowed, others if it is edit and is authorized
 		if(!securityService.isAdmin() && ( team.getIdTeam() == null || !securityService.isUserAuthorizedForTeam(team.getIdTeam()) ) ) {
+			String teamInfo = team.getIdTeam() == null ? "" : "(id= " + team.getIdTeam() + ") " ;
+			logger.error("Benutzer \"" + securityService.getLoginName() + "\" hat unauthorisiert versucht eine Gruppe " + teamInfo + "zu speichern.");
 			return "redirect:" + URL_ERROR_403;
 		}
 		
 		if(errors.hasErrors()) {
+			logger.error("Validierungsfehler beim Submit von Gruppe \"" + team.getTeamName() + "\" von Benutzer \"" + securityService.getLoginName() + "\" .");
 			prepareContent(model, team);
 			return RES_TEAM;
 		}
@@ -93,6 +103,7 @@ public class TeamDetail {
 		try {
 			Team savedTeam = teamService.save(team);
 
+			//TODO what happens in this two methods?
 			userService.updateTeamForUsers(team);
 			participantService.updateTeamForParticipants(team);
 			
@@ -102,12 +113,12 @@ public class TeamDetail {
 			return "redirect:" + URL_TEAMLISTFULL + savedTeam.getIdTeam();
 
 		} catch (EmptyIdException e) {
-			//TODO Logger
+			logger.error("Team "+ team.getIdTeam() +": " + team.getTeamName() + " konnte nicht gespeichert werden -> ID eines Benutzers nicht gesetzt?.");
 			model.addAttribute("customError", e.getMessage());
 			prepareContent(model, team);
 			
 		} catch (DuplicateKeyException e) {
-			//TODO Logger
+			logger.error("Team "+ team.getIdTeam() +": " + team.getTeamName() + " konnte nicht gespeichert werden -> Unique Constraint.");
 			model.addAttribute("customError", e.getMessage());
 			prepareContent(model, team);
 		}

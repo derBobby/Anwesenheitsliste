@@ -28,6 +28,7 @@ import eu.planlos.anwesenheitsliste.ApplicationRole;
 import eu.planlos.anwesenheitsliste.security.LoginAuthenticationSuccessHandler;
 import eu.planlos.anwesenheitsliste.service.UserDetailsServiceImpl;
 
+//Schalter für SimpleAuthentication
 //@EnableGlobalMethodSecurity(securedEnabled = true)
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {

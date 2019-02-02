@@ -43,6 +43,7 @@ public class ParticipantService {
 		return (List<Participant>) participantRepo.findAll();
 	}
 	
+	//TODO throws doesnotexist?
 	public Participant findById(Long idParticipant) {
 		return participantRepo.findById(idParticipant).get();
 	}

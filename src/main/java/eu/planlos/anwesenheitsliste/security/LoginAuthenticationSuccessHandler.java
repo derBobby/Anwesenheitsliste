@@ -12,12 +12,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
-import eu.planlos.anwesenheitsliste.SampleDataCreater;
-
 @Component
 public class LoginAuthenticationSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
  
-	private static final Logger logger = LoggerFactory.getLogger(SampleDataCreater.class);	
+	private static final Logger logger = LoggerFactory.getLogger(LoginAuthenticationSuccessHandler.class);	
 
 	public static final String REDIRECT_URL_SESSION_ATTRIBUTE_NAME = "REDIRECT_URL";
 	

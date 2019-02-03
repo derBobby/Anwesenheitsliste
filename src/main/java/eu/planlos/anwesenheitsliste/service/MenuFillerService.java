@@ -2,6 +2,8 @@ package eu.planlos.anwesenheitsliste.service;
 
 import static eu.planlos.anwesenheitsliste.ApplicationPath.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.Environment;
@@ -14,6 +16,8 @@ import org.springframework.ui.Model;
 @Service
 public class MenuFillerService implements EnvironmentAware {
 
+	private static final Logger logger = LoggerFactory.getLogger(MenuFillerService.class);
+	
 	@Autowired
 	private Environment environment;
 	
@@ -43,6 +47,8 @@ public class MenuFillerService implements EnvironmentAware {
 		// URLs for DEV profile
 		for (final String profileName : environment.getActiveProfiles()) {
 			if(profileName.equals("DEV")) {
+            	logger.debug("Preparing menu model for DEV profile.");
+
 				model.addAttribute("URL_FA_TEST", URL_FA_TEST);
 				model.addAttribute("URL_403_TEST", URL_403_TEST);
 				model.addAttribute("URL_500_TEST", URL_500_TEST);
@@ -68,6 +74,7 @@ public class MenuFillerService implements EnvironmentAware {
     			|| ! authentication.isAuthenticated()
     			|| authentication instanceof AnonymousAuthenticationToken) {
     		
+        	logger.debug("Adding login form URL.");
 	    	model.addAttribute("URL_LOGIN_FORM", URL_LOGIN_FORM);
     	}
 	    

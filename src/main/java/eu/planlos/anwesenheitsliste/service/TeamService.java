@@ -2,6 +2,8 @@ package eu.planlos.anwesenheitsliste.service;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
@@ -12,6 +14,8 @@ import eu.planlos.anwesenheitsliste.model.TeamRepository;
 @Service
 public class TeamService {
 
+	private static final Logger logger = LoggerFactory.getLogger(TeamService.class);
+			
 	@Autowired
 	private TeamRepository teamRepo;
 	
@@ -22,6 +26,7 @@ public class TeamService {
 			
 			// Should cover all constraints of the Entity
 			if(teamRepo.existsByTeamName(teamName)) {
+				logger.error("Tried to save team with existing teamName.");
 				throw new DuplicateKeyException("Bitte probiere es mit einem anderen Gruppennamen");
 			}
 		}

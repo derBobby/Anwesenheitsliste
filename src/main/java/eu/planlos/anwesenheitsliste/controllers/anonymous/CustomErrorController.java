@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.context.request.WebRequest;
 
 import eu.planlos.anwesenheitsliste.service.BodyFillerService;
-import eu.planlos.anwesenheitsliste.service.ErrorMailNotificationService;
+import eu.planlos.anwesenheitsliste.service.MailService;
 import eu.planlos.anwesenheitsliste.service.SecurityService;
 
 @Controller
@@ -40,7 +40,7 @@ public class CustomErrorController implements ErrorController {
 	private SecurityService securityService;
 	
 	@Autowired
-	private ErrorMailNotificationService errorMailNotificationService;
+	private MailService errorMailNotificationService;
 
     @Autowired
     public CustomErrorController(ErrorAttributes errorAttributes) {
@@ -100,7 +100,7 @@ public class CustomErrorController implements ErrorController {
 	    }
 	    
 	    // Send email notification
-	    errorMailNotificationService.sendEmailNotification(title, errorMessage, errorException, errorTrace);
+	    errorMailNotificationService.sendErrorNotification(title, errorMessage, errorException, errorTrace);
 	    
 		bf.fill(model, "Fehler", title);
 		

@@ -16,7 +16,6 @@ public class SecurityService {
 	private TeamRepository teamRepo;
 	
 	public boolean isUserAuthorizedForTeam(long idTeam) {
-		
 		return teamRepo.existsByIdTeamAndUsersLoginName(idTeam, getLoginName());
 	}
 	

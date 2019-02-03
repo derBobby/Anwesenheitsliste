@@ -14,6 +14,7 @@ import eu.planlos.anwesenheitsliste.model.Team;
 import eu.planlos.anwesenheitsliste.model.Meeting;
 import eu.planlos.anwesenheitsliste.model.exception.EmptyIdException;
 
+//TODO Logging
 @Service
 public class ParticipantService {
 

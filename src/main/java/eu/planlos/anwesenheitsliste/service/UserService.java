@@ -11,7 +11,9 @@ import eu.planlos.anwesenheitsliste.model.User;
 import eu.planlos.anwesenheitsliste.model.UserRepository;
 import eu.planlos.anwesenheitsliste.model.exception.EmptyIdException;
 import eu.planlos.anwesenheitsliste.model.exception.PasswordLengthError;
+import eu.planlos.anwesenheitsliste.model.exception.UnknownUserSaveException;
 
+//TODO Logger
 @Service
 public class UserService {
 

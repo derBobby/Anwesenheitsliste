@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 import eu.planlos.anwesenheitsliste.controllers.user.TeamDetail;
 
 @Service
-public class ErrorMailNotificationService {
+public class MailService {
 	
 	private static final Logger logger = LoggerFactory.getLogger(TeamDetail.class);
 
@@ -33,21 +33,14 @@ public class ErrorMailNotificationService {
 	private boolean sendErrorNotification;
 	
 	@Async
-	public void sendEmailNotification(String title, String errorMessage, Exception errorException, String errorTrace) {
+	public void sendErrorNotification(String title, String errorMessage, Exception errorException, String errorTrace) {
 
 		if(!sendErrorNotification) {
+			logger.debug("Not sending email with error notification.");
 			return;
 		}
 		
-//		while(true) {
-//			try {
-//				Thread.sleep(1000);
-//				System.out.println("sleeping...");
-//			} catch (InterruptedException e) {
-//				e.printStackTrace();
-//				break;
-//			}
-//		}
+		logger.debug("Sending email with error notification.");
 		
 		MimeMessage mail = javaMailSender.createMimeMessage();
 		MimeMessageHelper mailHelper;
@@ -69,10 +62,10 @@ public class ErrorMailNotificationService {
 			mail.setContent(htmlBody, "text/html; charset=utf-8");
 			
 			javaMailSender.send(mail);
-			logger.error("E-Mailbenachrichtigung wurde verschickt.");
+			logger.debug("Email with error notification has been sent.");
 			
 		} catch (MessagingException e) {
-			logger.error("E-Mailbenachrichtigung konnte nicht verschickt werden: " + e.getMessage());
+			logger.error("Email with error notification could not been sent: " + e.getMessage());
 			e.printStackTrace();
 		}
 	}

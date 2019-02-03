@@ -1,5 +1,7 @@
 package eu.planlos.anwesenheitsliste.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.Environment;
@@ -8,6 +10,8 @@ import org.springframework.ui.Model;
 
 @Service
 public class BodyFillerService implements EnvironmentAware {
+
+	private static final Logger logger = LoggerFactory.getLogger(BodyFillerService.class);
 
 	@Autowired
 	private Environment environment;
@@ -19,6 +23,7 @@ public class BodyFillerService implements EnvironmentAware {
 		
         for (final String profileName : environment.getActiveProfiles()) {
             if(profileName.equals("DEV")) {
+            	logger.debug("Preparing model for DEV profile.");
         		model.addAttribute("isDevProfile", true);
         		break;
             }

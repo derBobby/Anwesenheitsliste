@@ -1,4 +1,4 @@
-package eu.planlos.anwesenheitsliste.service;
+package eu.planlos.anwesenheitsliste.model.exception;
 
 public class UnknownUserSaveException extends Exception {
 

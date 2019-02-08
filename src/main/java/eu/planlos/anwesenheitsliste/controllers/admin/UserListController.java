@@ -18,13 +18,13 @@ import eu.planlos.anwesenheitsliste.service.BodyFillerService;
 import eu.planlos.anwesenheitsliste.service.UserService;
 
 @Controller
-public class UserList {
+public class UserListController {
 
 	@Autowired
 	private BodyFillerService bf;
 
 	@Autowired
-    UserService userService;
+    private UserService userService;
 	
 	@RequestMapping(value = URL_USERLIST + "{markedUserId}")
 	@Secured ({"USER"})

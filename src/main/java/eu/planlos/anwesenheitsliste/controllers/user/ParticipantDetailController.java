@@ -27,13 +27,13 @@ import eu.planlos.anwesenheitsliste.service.SecurityService;
 import eu.planlos.anwesenheitsliste.service.TeamService;
 
 @Controller
-public class ParticipantDetail {
+public class ParticipantDetailController {
 
 	public final String STR_MODULE = "Teilnehmerverwaltung";
 	public final String STR_TITLE_ADD_USER = "Teilnehmer hinzufügen";
 	public final String STR_TITLE_EDIT_USER = "Teilnehmer ändern";
 	
-	private static final Logger logger = LoggerFactory.getLogger(ParticipantDetail.class);
+	private static final Logger logger = LoggerFactory.getLogger(ParticipantDetailController.class);
 
 	@Autowired
 	private BodyFillerService bf;

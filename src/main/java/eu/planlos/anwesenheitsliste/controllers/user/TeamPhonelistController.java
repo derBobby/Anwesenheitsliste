@@ -4,6 +4,7 @@ import static eu.planlos.anwesenheitsliste.ApplicationPath.RES_TEAMPHONELIST;
 import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_ERROR_403;
 import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_TEAMPHONELIST;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,12 +24,12 @@ import eu.planlos.anwesenheitsliste.service.SecurityService;
 import eu.planlos.anwesenheitsliste.service.TeamService;
 
 @Controller
-public class TeamPhonelist {
+public class TeamPhonelistController {
 
 	public final String STR_MODULE = "Gruppenverwaltung";
 	public final String STR_TITLE = "Telefonliste";
 
-	private static final Logger logger = LoggerFactory.getLogger(TeamPhonelist.class);
+	private static final Logger logger = LoggerFactory.getLogger(TeamPhonelistController.class);
 	
 	@Autowired
 	private BodyFillerService bf;

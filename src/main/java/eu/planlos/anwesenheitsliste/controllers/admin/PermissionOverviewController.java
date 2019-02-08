@@ -13,7 +13,7 @@ import eu.planlos.anwesenheitsliste.service.TeamService;
 import eu.planlos.anwesenheitsliste.service.UserService;
 
 @Controller
-public class PermissionOverview {
+public class PermissionOverviewController {
 
 	@Autowired
 	private BodyFillerService bf;

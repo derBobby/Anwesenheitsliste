@@ -39,13 +39,13 @@ import eu.planlos.anwesenheitsliste.service.TeamService;
 
 //TODO may be simplified
 @Controller
-public class MeetingDetail {
+public class MeetingDetailController {
 
 	public final String STR_MODULE = "Terminverwaltung";
 	public final String STR_TITLE_ADD_MEETING = "Termin hinzufügen";
 	public final String STR_TITLE_EDIT_MEETING = "Termin ändern";
 
-	private static final Logger logger = LoggerFactory.getLogger(MeetingDetail.class);
+	private static final Logger logger = LoggerFactory.getLogger(MeetingDetailController.class);
 			
 	@Autowired
 	private BodyFillerService bf;

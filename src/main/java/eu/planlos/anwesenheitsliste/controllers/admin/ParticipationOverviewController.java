@@ -13,7 +13,7 @@ import eu.planlos.anwesenheitsliste.service.ParticipantService;
 import eu.planlos.anwesenheitsliste.service.TeamService;
 
 @Controller
-public class ParticipationOverview {
+public class ParticipationOverviewController {
 
 	public final String STR_MODULE = "Übersicht";
 	public final String STR_TITLE = "Übersicht der Gruppenteilnahmen";

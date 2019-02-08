@@ -13,12 +13,10 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import eu.planlos.anwesenheitsliste.controllers.user.TeamDetail;
-
 @Service
 public class MailService {
 	
-	private static final Logger logger = LoggerFactory.getLogger(TeamDetail.class);
+	private static final Logger logger = LoggerFactory.getLogger(MailService.class);
 
 	@Autowired
 	private JavaMailSender javaMailSender;

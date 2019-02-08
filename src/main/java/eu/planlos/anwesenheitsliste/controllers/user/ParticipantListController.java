@@ -25,7 +25,7 @@ import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_PARTICIPANTLIST;
 import static eu.planlos.anwesenheitsliste.ApplicationPath.RES_PARTICIPANTLIST;
 
 @Controller
-public class ParticipantList {
+public class ParticipantListController {
 
 	public final String STR_MODULE = "Teilnehmerverwaltung";
 	public final String STR_TITLE = "Liste der Teilnehmer";

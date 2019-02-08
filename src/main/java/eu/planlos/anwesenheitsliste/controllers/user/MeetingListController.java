@@ -25,12 +25,12 @@ import eu.planlos.anwesenheitsliste.service.MeetingService;
 import eu.planlos.anwesenheitsliste.service.SecurityService;
 
 @Controller
-public class MeetingList {
+public class MeetingListController {
 
 	public final String STR_MODULE = "Terminverwaltung";
 	public final String STR_TITLE = "Liste der Termine";
 
-	private static final Logger logger = LoggerFactory.getLogger(MeetingList.class);
+	private static final Logger logger = LoggerFactory.getLogger(MeetingListController.class);
 
 	@Autowired
 	private BodyFillerService bf;

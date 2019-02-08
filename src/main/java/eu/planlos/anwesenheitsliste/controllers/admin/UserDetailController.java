@@ -24,13 +24,13 @@ import eu.planlos.anwesenheitsliste.service.TeamService;
 import eu.planlos.anwesenheitsliste.service.UserService;
 
 @Controller
-public class UserDetail {
+public class UserDetailController {
 
 	public final String STR_MODULE = "Benutzerverwaltung";
 	public final String STR_TITLE_ADD_USER = "Benutzer hinzufügen";
 	public final String STR_TITLE_EDIT_USER = "Benutzer ändern";
 
-	private static final Logger logger = LoggerFactory.getLogger(UserDetail.class);
+	private static final Logger logger = LoggerFactory.getLogger(UserDetailController.class);
 
 	@Autowired
 	private BodyFillerService bf;

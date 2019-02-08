@@ -6,6 +6,8 @@ import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_TEAM;
 import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_TEAMLIST;
 import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_TEAMLISTFULL;
 
+import java.security.Principal;
+
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
@@ -29,13 +31,13 @@ import eu.planlos.anwesenheitsliste.service.TeamService;
 import eu.planlos.anwesenheitsliste.service.UserService;
 
 @Controller
-public class TeamDetail {
+public class TeamDetailController {
 
 	public final String STR_MODULE = "Gruppenverwaltung";
 	public final String STR_TITLE_ADD_TEAM = "Gruppe hinzufügen";
 	public final String STR_TITLE_EDIT_TEAM = "Gruppe ändern";
 
-	private static final Logger logger = LoggerFactory.getLogger(TeamDetail.class);
+	private static final Logger logger = LoggerFactory.getLogger(TeamDetailController.class);
 	
 	@Autowired
 	private BodyFillerService bf;
@@ -85,10 +87,14 @@ public class TeamDetail {
 
 	//TODO Transactional
 	@RequestMapping(path = URL_TEAM, method = RequestMethod.POST)
-	public String submit(Model model, @Valid @ModelAttribute Team team, Errors errors) {
+	public String submit(Model model, Principal principal, @Valid @ModelAttribute Team team, Errors errors) {
 
+		boolean isAuthorizedForTeam = securityService.isUserAuthorizedForTeam(team.getIdTeam();
+		boolean isAdmin = !securityService.isAdmin();
+		boolean isAddTeam = team.getIdTeam() == null;
+		
 		// Admin is always allowed, others if it is edit and is authorized
-		if(!securityService.isAdmin() && ( team.getIdTeam() == null || !securityService.isUserAuthorizedForTeam(team.getIdTeam()) ) ) {
+		if(!isAdmin && ( isAddTeam || !isAuthorizedForTeam) ) {
 			String teamInfo = team.getIdTeam() == null ? "" : "(id= " + team.getIdTeam() + ") " ;
 			logger.error("Benutzer \"" + securityService.getLoginName() + "\" hat unauthorisiert versucht eine Gruppe " + teamInfo + "zu speichern.");
 			return "redirect:" + URL_ERROR_403;
@@ -107,7 +113,7 @@ public class TeamDetail {
 			userService.updateTeamForUsers(team);
 			participantService.updateTeamForParticipants(team);
 			
-			if(securityService.isUserAuthorizedForTeam(team.getIdTeam())) {
+			if(isAuthorizedForTeam) {
 				return "redirect:" + URL_TEAMLIST + savedTeam.getIdTeam();
 			}
 			return "redirect:" + URL_TEAMLISTFULL + savedTeam.getIdTeam();

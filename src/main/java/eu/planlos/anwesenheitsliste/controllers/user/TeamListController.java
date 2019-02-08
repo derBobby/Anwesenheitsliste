@@ -21,7 +21,7 @@ import eu.planlos.anwesenheitsliste.service.SecurityService;
 import eu.planlos.anwesenheitsliste.service.TeamService;
 
 @Controller
-public class TeamList {
+public class TeamListController {
 
 	public final String STR_MODULE = "Gruppenverwaltung";
 	public final String STR_TITLE = "Liste der Gruppen";

@@ -1,6 +1,9 @@
 package eu.planlos.anwesenheitsliste.service;
 
 import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -19,6 +22,11 @@ public class UserService {
 
 	@Autowired
 	private UserRepository userRepo;
+
+	@Autowired
+	private SecurityService securityService;
+	
+	private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 	
 	private final int userMinLength = 10;
 	private final int userMaxLength = 50;
@@ -36,6 +44,8 @@ public class UserService {
 			if(userRepo.existsByLoginNameOrEmail(loginName, email)
 					|| userRepo.existsByFirstNameAndLastName(firstName, lastName)
 					) {
+				
+				logger.debug("Benutzer " + securityService.getLoginName() + " hat versucht einen Benutzer mit existierenden Attributen anzulegen.");
 				throw new DuplicateKeyException("Ein Benutzer mit dem Namen \"" + firstName + " " + lastName + "\""
 						+ "oder dem Benutzernamen \"" + loginName + "\""
 								+ "oder der E-Mailadresse \"" + email + "\" existiert bereits");
@@ -45,11 +55,13 @@ public class UserService {
 		
 		// Is user is added and password is not set properly dont save
 		if(user.getIdUser() == null && ! ( userMinLength <= user.getPassword().length() && user.getPassword().length() <= userMaxLength) ) {
+			logger.debug("Benutzer " + securityService.getLoginName() + " hat versucht einen Benutzer anzulegen, dass Passwort enspricht nicht den Anforderungen.");
 			throw new PasswordLengthError(passwordLengthError);
 		}
 		
 		// Is user is edited and password is not set properly dont save
 		if(user.getIdUser() != null && ! user.getPassword().equals("") && ( user.getPassword().length() < userMinLength || userMaxLength < user.getPassword().length()) ) {
+			logger.debug("Benutzer " + securityService.getLoginName() + " hat versucht einen Benutzer zu editieren, dass Passwort enspricht nicht den Anforderungen.");
 			throw new PasswordLengthError(passwordLengthError);
 		}
 		
@@ -57,6 +69,7 @@ public class UserService {
 		if(user.getIdUser() != null && ( user.getPassword().equals("")) ) {
 			User dbUser = userRepo.findById(user.getIdUser()).get();
 			user.setPassword(dbUser.getPassword());
+			logger.debug("Benutzer " + securityService.getLoginName() + " ändert einen Benutzer ohne Angabe eines neuen Passworts.");
 			return userRepo.save(user);
 		}
 
@@ -64,9 +77,10 @@ public class UserService {
 		if(userMinLength <= user.getPassword().length() && user.getPassword().length() <= userMaxLength) { 
 			BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 			user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+			logger.debug("Benutzer " + securityService.getLoginName() + " ändert einen Benutzer unter Angabe eines neuen Passworts.");
 			return userRepo.save(user);
 		}
-		
+		logger.error("Benutzer " + securityService.getLoginName() + " ändert einen Benutzer. Hier hätten wir nicht ankommen dürfen.");
 		throw new UnknownUserSaveException("Ein unbekannter Fehler beim Speichern des Benutzers ist aufgetreten");
 	}
 	
@@ -90,6 +104,7 @@ public class UserService {
 		return userRepo.findByLoginName(loginName);
 	}
 
+	//TODO LOGGING
 	/**
 	 * Updates relation between team and users. Users not active will be ignored.
 	 * @param team

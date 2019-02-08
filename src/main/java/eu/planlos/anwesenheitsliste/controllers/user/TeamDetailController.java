@@ -89,7 +89,7 @@ public class TeamDetailController {
 	@RequestMapping(path = URL_TEAM, method = RequestMethod.POST)
 	public String submit(Model model, Principal principal, @Valid @ModelAttribute Team team, Errors errors) {
 
-		boolean isAuthorizedForTeam = securityService.isUserAuthorizedForTeam(team.getIdTeam();
+		boolean isAuthorizedForTeam = securityService.isUserAuthorizedForTeam(team.getIdTeam());
 		boolean isAdmin = !securityService.isAdmin();
 		boolean isAddTeam = team.getIdTeam() == null;
 		

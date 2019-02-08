@@ -41,6 +41,7 @@ public class ApplicationPath {
 	public static final String URL_FA_TEST = URL_AREA_DEV + DELIMETER + "fontawesome";
 	public static final String URL_BS_TEST = URL_AREA_DEV + DELIMETER + "bootstrap";
 	public static final String URL_403_TEST = URL_AREA_DEV + DELIMETER + "always403";
+	public static final String URL_404_TEST = URL_AREA_DEV + DELIMETER + "always404";
 	public static final String URL_500_TEST = URL_AREA_DEV + DELIMETER + "always500";
 
 	// Ressource paths

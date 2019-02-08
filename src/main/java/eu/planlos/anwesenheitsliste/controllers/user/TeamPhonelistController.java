@@ -4,7 +4,6 @@ import static eu.planlos.anwesenheitsliste.ApplicationPath.RES_TEAMPHONELIST;
 import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_ERROR_403;
 import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_TEAMPHONELIST;
 
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -3,7 +3,6 @@ package eu.planlos.anwesenheitsliste.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import eu.planlos.anwesenheitsliste.ApplicationRole;
@@ -30,10 +29,6 @@ public class SecurityService {
 
 	public boolean isAdmin() {
 		return SecurityContextHolder.getContext().getAuthentication().getAuthorities().contains(new SimpleGrantedAuthority(ApplicationRole.ROLE_ADMIN));
-	}
-	
-	public boolean isUserLoggedIn(){
-	   return SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof UserDetails;
 	}
 }
 

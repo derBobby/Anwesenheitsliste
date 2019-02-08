@@ -14,6 +14,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.stereotype.Component;
 
+/**
+ * Will be used from Spring Boot if user is authenticated but not authorised.
+ * Method call is triggered/configured in @see SecurityConfiguration
+ * @author derBobby
+ *
+ */
 @Component
 public class LoginAccessDeniedHandler implements AccessDeniedHandler {
 
@@ -26,7 +32,7 @@ public class LoginAccessDeniedHandler implements AccessDeniedHandler {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		
 		if(auth != null) {
-			logger.error("Fehlgeschlagener Zugriff von :" + auth.getName() + " auf " + request.getRequestURI());
+			logger.error("Fehlgeschlagener Zugriff von: " + auth.getName() + " auf " + request.getRequestURI());
 		} else {
 			logger.error("Fehlgeschlagener Zugriff mit leerer Variable auth auf " + request.getRequestURI());
 		}

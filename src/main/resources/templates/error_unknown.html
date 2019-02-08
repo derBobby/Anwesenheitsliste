@@ -10,7 +10,7 @@
 					<!-- Page Content -->
 					<div class="col-lg-12 text-center mb-5">
 						<h1 class="mt-5" th:text="${title}"></h1>
-						<p class="lead">Es ist ein unbekannter Fehler aufgetreten.</p>
+						<p th:if="${status>=500}" class="lead">Es ist ein unbekannter Fehler aufgetreten.</p>
 						<p class="lead">Bleibt nur schmollen! :'(</p>
 						<p class="lead">Und vielleicht den Fehler zu melden?</p>
 						<div th:if="${printTrace}" class="table-responsive">

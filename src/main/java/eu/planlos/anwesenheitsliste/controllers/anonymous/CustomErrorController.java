@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.error.ErrorAttributes;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -47,12 +48,17 @@ public class CustomErrorController implements ErrorController {
         this.errorAttributes = errorAttributes;
     }
     
+    /**
+     * Will be used from Spring Boot if user is authenticated but not authorised.
+     * Method call is triggered/configured in @see SecurityConfiguration
+     * @param model
+     * @param auth
+     * @return
+     */
 	@GetMapping(path = URL_ERROR_403)
-	public String forbidden(Model model) {
-		
-		System.out.println(model);
-		
-		if(securityService.isUserLoggedIn()) {
+	public String forbidden(Model model, Authentication auth) {
+			
+		if(auth != null) {
 			logger.error("Benutzer \"" + securityService.getLoginName() + "\" wollte unauthorisiert auf eine Seite zugreifen.");
 		} else {
 			logger.error("Ein nicht authentifizierter Benutzer wollte unauthorisiert auf eine Seite zugreifen.");			
@@ -65,7 +71,7 @@ public class CustomErrorController implements ErrorController {
 	
 	//TODO NEW prevent stacktrace from being written to log
 	@GetMapping(path = URL_ERROR_DEFAULT)
-	public String handleError(HttpServletRequest request, WebRequest webRequest, Model model) {
+	public String handleError(HttpServletRequest request, Authentication auth, WebRequest webRequest, Model model) {
 	
         String errorMessage = (String)request.getAttribute(RequestDispatcher.ERROR_MESSAGE);
         Exception errorException = (Exception)request.getAttribute(RequestDispatcher.ERROR_EXCEPTION);
@@ -75,7 +81,7 @@ public class CustomErrorController implements ErrorController {
         // Extract stack trace string
         String errorTrace = (String) body.get("trace");
 	        
-		if(securityService.isUserLoggedIn()) {
+		if(auth != null) {
 			
 			model.addAttribute("printTrace", true);
 	        model.addAttribute("errorMessage", errorMessage);
@@ -89,7 +95,11 @@ public class CustomErrorController implements ErrorController {
 	     
 	    if (status != null) {
 	        Integer statusCode = Integer.valueOf(status.toString());
-	     
+
+	        if(statusCode == HttpStatus.FORBIDDEN.value()) {
+	        	return forbidden(model, auth);
+	        }
+	        
 	        if(statusCode == HttpStatus.NOT_FOUND.value()) {
 	        	title = "Seite existiert nicht - 404";
 	        }
@@ -102,6 +112,7 @@ public class CustomErrorController implements ErrorController {
 	    // Send email notification
 	    errorMailNotificationService.sendErrorNotification(title, errorMessage, errorException, errorTrace);
 	    
+	    model.addAttribute("status", status);
 		bf.fill(model, "Fehler", title);
 		
 		return RES_ERROR_UNKNOWN;

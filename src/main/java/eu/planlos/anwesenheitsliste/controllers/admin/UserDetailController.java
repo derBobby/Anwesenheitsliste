@@ -4,6 +4,8 @@ import static eu.planlos.anwesenheitsliste.ApplicationPath.RES_USER;
 import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_USER;
 import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_USERLIST;
 
+import java.security.Principal;
+
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
@@ -19,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import eu.planlos.anwesenheitsliste.model.User;
 import eu.planlos.anwesenheitsliste.service.BodyFillerService;
-import eu.planlos.anwesenheitsliste.service.SecurityService;
 import eu.planlos.anwesenheitsliste.service.TeamService;
 import eu.planlos.anwesenheitsliste.service.UserService;
 
@@ -40,9 +41,6 @@ public class UserDetailController {
 
 	@Autowired
 	private TeamService teamService;
-	
-	@Autowired
-	private SecurityService securityService;
 	
 	@RequestMapping(path = URL_USER + "{idUser}", method = RequestMethod.GET)
 	public String edit(Model model, @PathVariable Long idUser) {
@@ -65,7 +63,7 @@ public class UserDetailController {
 	}
 
 	@RequestMapping(path = URL_USER, method = RequestMethod.POST)
-	public String submit(Model model, @Valid @ModelAttribute User user, Errors errors) {
+	public String submit(Model model, Principal principal, @Valid @ModelAttribute User user, Errors errors) {
 		
 		if(errors.hasErrors()) {
 			prepareContent(model, user);
@@ -74,11 +72,11 @@ public class UserDetailController {
 		
 		try {
 			User savedUser = userService.save(user);
-			logger.error("Benutzer " + user.getIdUser() + ": \"" + user.getLoginName() + "\" wurde von \"" + securityService.getLoginName() + "\" gespeichert");
+			logger.error("Benutzer " + user.getIdUser() + ": \"" + user.getLoginName() + "\" wurde von \"" + principal.getName() + "\" gespeichert");
 			return "redirect:" + URL_USERLIST + savedUser.getIdUser();
 			
 		} catch (Exception e) {
-			logger.error("Benutzer " + user.getIdUser() + ": \"" + user.getLoginName() + "\" konnte nicht von \"" + securityService.getLoginName() + "\" gespeichert werden: " + e.getMessage());
+			logger.error("Benutzer " + user.getIdUser() + ": \"" + user.getLoginName() + "\" konnte nicht von \"" + principal.getName() + "\" gespeichert werden: " + e.getMessage());
 			e.printStackTrace();
 			
 			prepareContent(model, user);

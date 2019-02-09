@@ -1,5 +1,6 @@
 package eu.planlos.anwesenheitsliste.controllers.user;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -15,7 +16,6 @@ import eu.planlos.anwesenheitsliste.model.Participant;
 import eu.planlos.anwesenheitsliste.model.Team;
 import eu.planlos.anwesenheitsliste.service.BodyFillerService;
 import eu.planlos.anwesenheitsliste.service.ParticipantService;
-import eu.planlos.anwesenheitsliste.service.SecurityService;
 import eu.planlos.anwesenheitsliste.service.TeamService;
 
 import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_PARTICIPANTLISTFULL;
@@ -38,29 +38,25 @@ public class ParticipantListController {
 	
 	@Autowired
 	private TeamService teamService;
-	
-	@Autowired
-	private SecurityService securityService;
 
 	// User
 	@RequestMapping(path = URL_PARTICIPANTLIST + "{markedParticipantId}")
-	public String markedParticipantList(Model model, @PathVariable Long markedParticipantId) {
+	public String markedParticipantList(Model model, Principal principal, @PathVariable Long markedParticipantId) {
 	
-		prepareContent(model, participantsForUser(), markedParticipantId);
+		prepareContent(model, participantsForUser(principal.getName()), markedParticipantId);
 		return RES_PARTICIPANTLIST;
 	}
 
 	// User
 	@RequestMapping(path = URL_PARTICIPANTLIST)
-	public String participantList(Model model) {
+	public String participantList(Model model, Principal principal) {
 
-		prepareContent(model, participantsForUser(), null);
+		prepareContent(model, participantsForUser(principal.getName()), null);
 		return RES_PARTICIPANTLIST;
 	}
 
-	private List<Participant> participantsForUser() {
+	private List<Participant> participantsForUser(String loginName) {
 		
-		String loginName = securityService.getLoginName();
 		List<Team> teams = teamService.findTeamsForUser(loginName);
 		
 		Set<Participant> participants = new HashSet<>();

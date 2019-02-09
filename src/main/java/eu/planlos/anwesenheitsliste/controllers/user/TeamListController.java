@@ -7,6 +7,7 @@ import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_TEAMLIST;
 import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_TEAMLISTFULL;
 import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_TEAMPHONELIST;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +18,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import eu.planlos.anwesenheitsliste.model.Team;
 import eu.planlos.anwesenheitsliste.service.BodyFillerService;
-import eu.planlos.anwesenheitsliste.service.SecurityService;
 import eu.planlos.anwesenheitsliste.service.TeamService;
 
 @Controller
@@ -32,15 +32,11 @@ public class TeamListController {
 	@Autowired
     private TeamService teamService;
 	
-	@Autowired
-	private SecurityService securityService;
-
 	// User
 	@RequestMapping(value = URL_TEAMLIST + "{markedTeamId}")
-	public String markedTeamList(Model model, @PathVariable Long markedTeamId) {
+	public String markedTeamList(Model model, Principal principal,  @PathVariable Long markedTeamId) {
 		
-		String loginName = securityService.getLoginName();
-		List<Team> teams = teamService.findTeamsForUser(loginName);
+		List<Team> teams = teamService.findTeamsForUser(principal.getName());
 
 		prepareContent(model, teams, markedTeamId);
 		return RES_TEAMLIST;
@@ -48,10 +44,9 @@ public class TeamListController {
 	
 	// User
 	@RequestMapping(value = URL_TEAMLIST)
-	public String teamList(Model model) {
+	public String teamList(Model model, Principal principal) {
 
-		String loginName = securityService.getLoginName();
-		List<Team> teams = teamService.findTeamsForUser(loginName);
+		List<Team> teams = teamService.findTeamsForUser(principal.getName());
 		
 		prepareContent(model, teams, null);
 		return RES_TEAMLIST;

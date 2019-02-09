@@ -8,17 +8,20 @@ import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_MEETINGLIST;
 import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_MEETINGLISTFULL;
 import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_ERROR_403;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.session.Session;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import eu.planlos.anwesenheitsliste.SessionAttributes;
 import eu.planlos.anwesenheitsliste.model.Meeting;
 import eu.planlos.anwesenheitsliste.service.BodyFillerService;
 import eu.planlos.anwesenheitsliste.service.MeetingService;
@@ -43,10 +46,12 @@ public class MeetingListController {
 	
 	// User
 	@RequestMapping(path = URL_MEETINGLIST + "{idTeam}")
-	public String meetingListForTeam(Model model, @PathVariable Long idTeam) {
+	public String meetingListForTeam(Model model, Principal principal, Session session, @PathVariable Long idTeam) {
 		
-		if(!securityService.isAdmin() && !hasPermissionForTeam(idTeam)) {
-			logger.error("Benutzer \"" + securityService.getLoginName() + "\" hat unauthorisiert versucht auf Terminliste von Gruppe id=" + idTeam + " zuzugreifen.");
+		boolean isAdmin = session.getAttribute(SessionAttributes.ISADMIN);
+		
+		if(!isAdmin && !hasPermissionForTeam(idTeam, principal.getName())) {
+			logger.error("Benutzer \"" + principal.getName() + "\" hat unauthorisiert versucht auf Terminliste von Gruppe id=" + idTeam + " zuzugreifen.");
 			return "redirect:" + URL_ERROR_403;
 		}
 		
@@ -56,10 +61,10 @@ public class MeetingListController {
 
 	// User
 	@RequestMapping(path = URL_MEETINGLIST + "{idTeam}" + DELIMETER + "{idMeeting}")
-	public String meetingListForTeamMarked(Model model, @PathVariable Long idTeam, @PathVariable Long idMeeting) {
+	public String meetingListForTeamMarked(Model model, Principal principal, Session session, @PathVariable Long idTeam, @PathVariable Long idMeeting) {
 
 		model.addAttribute("markedMeetingId", idMeeting);
-		return meetingListForTeam(model, idTeam);
+		return meetingListForTeam(model, principal, session, idTeam);
 	}
 	
 	// Admin
@@ -119,7 +124,7 @@ public class MeetingListController {
 		return meetingService.findAllByTeam(idTeam);
 	}
 	
-	private boolean hasPermissionForTeam(long idTeam) {
-		return securityService.isUserAuthorizedForTeam(idTeam);
+	private boolean hasPermissionForTeam(long idTeam, String loginName) {
+		return securityService.isUserAuthorizedForTeam(idTeam, loginName);
 	}
 }

@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.session.Session;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import eu.planlos.anwesenheitsliste.SessionAttributes;
 import eu.planlos.anwesenheitsliste.model.Team;
 import eu.planlos.anwesenheitsliste.model.exception.EmptyIdException;
 import eu.planlos.anwesenheitsliste.service.BodyFillerService;
@@ -55,54 +57,61 @@ public class TeamDetailController {
 	private SecurityService securityService;
 	
 	@RequestMapping(path = URL_TEAM + "{idTeam}", method = RequestMethod.GET)
-	public String edit(Model model, @PathVariable Long idTeam) {
+	public String edit(Model model, Principal principal, Session session, @PathVariable Long idTeam) {
 
-		if(!securityService.isAdmin() && !securityService.isUserAuthorizedForTeam(idTeam)) {
-			logger.error("Benutzer \"" + securityService.getLoginName() + "\" hat unauthorisiert versucht auf Gruppe id=" + idTeam + " zuzugreifen.");
+		String loginName = principal.getName();
+		boolean isAdmin = isAdmin(session);
+		
+		if(!isAdmin && !securityService.isUserAuthorizedForTeam(idTeam, loginName)) {
+			logger.error("Benutzer \"" + loginName + "\" hat unauthorisiert versucht auf Gruppe id=" + idTeam + " zuzugreifen.");
 			return "redirect:" + URL_ERROR_403;
 		}
 		
 		Team team = teamService.findById(idTeam);
 		model.addAttribute(team);
-		prepareContent(model, team);
+		prepareContent(model, team, isAdmin);
 				
 		return RES_TEAM;
 	}
 	
 	@RequestMapping(path = URL_TEAM, method = RequestMethod.GET)
-	public String add(Model model) {
+	public String add(Model model, Principal principal, Session session) {
 
+		boolean isAdmin = isAdmin(session);
+		
 		//TODO should be admin url
-		if(!securityService.isAdmin()) {
-			logger.error("Benutzer \"" + securityService.getLoginName() + "\" hat unauthorisiert versucht eine Gruppe anzulegen.");
+		if(!isAdmin) {
+			logger.error("Benutzer \"" + principal.getName() + "\" hat unauthorisiert versucht eine Gruppe anzulegen.");
 			return "redirect:" + URL_ERROR_403;
 		}
 		
 		Team team = new Team();
 		model.addAttribute(team);
-		prepareContent(model, team);
+		prepareContent(model, team, isAdmin);
 				
 		return RES_TEAM;
 	}
 
 	//TODO Transactional
 	@RequestMapping(path = URL_TEAM, method = RequestMethod.POST)
-	public String submit(Model model, Principal principal, @Valid @ModelAttribute Team team, Errors errors) {
+	public String submit(Model model, Principal principal, Session session, @Valid @ModelAttribute Team team, Errors errors) {
 
-		boolean isAuthorizedForTeam = securityService.isUserAuthorizedForTeam(team.getIdTeam());
-		boolean isAdmin = !securityService.isAdmin();
+		String loginName = principal.getName();
+		
+		boolean isAuthorizedForTeam = securityService.isUserAuthorizedForTeam(team.getIdTeam(), loginName);
+		boolean isAdmin = isAdmin(session);
 		boolean isAddTeam = team.getIdTeam() == null;
 		
 		// Admin is always allowed, others if it is edit and is authorized
 		if(!isAdmin && ( isAddTeam || !isAuthorizedForTeam) ) {
 			String teamInfo = team.getIdTeam() == null ? "" : "(id= " + team.getIdTeam() + ") " ;
-			logger.error("Benutzer \"" + securityService.getLoginName() + "\" hat unauthorisiert versucht eine Gruppe " + teamInfo + "zu speichern.");
+			logger.error("Benutzer \"" + loginName + "\" hat unauthorisiert versucht eine Gruppe " + teamInfo + "zu speichern.");
 			return "redirect:" + URL_ERROR_403;
 		}
 		
 		if(errors.hasErrors()) {
-			logger.error("Validierungsfehler beim Submit von Gruppe \"" + team.getTeamName() + "\" von Benutzer \"" + securityService.getLoginName() + "\" .");
-			prepareContent(model, team);
+			logger.error("Validierungsfehler beim Submit von Gruppe \"" + team.getTeamName() + "\" von Benutzer \"" + loginName + "\" .");
+			prepareContent(model, team, isAdmin);
 			return RES_TEAM;
 		}
 		
@@ -121,18 +130,17 @@ public class TeamDetailController {
 		} catch (EmptyIdException e) {
 			logger.error("Team "+ team.getIdTeam() +": " + team.getTeamName() + " konnte nicht gespeichert werden -> ID eines Benutzers nicht gesetzt?.");
 			model.addAttribute("customError", e.getMessage());
-			prepareContent(model, team);
 			
 		} catch (DuplicateKeyException e) {
 			logger.error("Team "+ team.getIdTeam() +": " + team.getTeamName() + " konnte nicht gespeichert werden -> Unique Constraint.");
 			model.addAttribute("customError", e.getMessage());
-			prepareContent(model, team);
 		}
 		
+		prepareContent(model, team, isAdmin);
 		return RES_TEAM;
 	}
 	
-	private void prepareContent(Model model, Team team) {
+	private void prepareContent(Model model, Team team, boolean isAdmin) {
 		
 		if(team.getIdTeam() != null) {
 			bf.fill(model, STR_MODULE, STR_TITLE_EDIT_TEAM);
@@ -144,10 +152,14 @@ public class TeamDetailController {
 		model.addAttribute("participants", participantService.findAll());
 		model.addAttribute("formAction", URL_TEAM);
 		
-		if(securityService.isAdmin()) {
+		if(isAdmin) {
 			model.addAttribute("formCancel", URL_TEAMLISTFULL);
 			return;
 		}
 		model.addAttribute("formCancel", URL_TEAMLIST + team.getIdTeam());
+	}
+	
+	private boolean isAdmin(Session session) {
+		return session.getAttribute(SessionAttributes.ISADMIN);
 	}
 }

@@ -22,9 +22,6 @@ public class UserService {
 
 	@Autowired
 	private UserRepository userRepo;
-
-	@Autowired
-	private SecurityService securityService;
 	
 	private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 	
@@ -45,7 +42,7 @@ public class UserService {
 					|| userRepo.existsByFirstNameAndLastName(firstName, lastName)
 					) {
 				
-				logger.debug("Benutzer " + securityService.getLoginName() + " hat versucht einen Benutzer mit existierenden Attributen anzulegen.");
+				logger.debug("Kann Benutzer nicht anlegen.");
 				throw new DuplicateKeyException("Ein Benutzer mit dem Namen \"" + firstName + " " + lastName + "\""
 						+ "oder dem Benutzernamen \"" + loginName + "\""
 								+ "oder der E-Mailadresse \"" + email + "\" existiert bereits");
@@ -55,13 +52,13 @@ public class UserService {
 		
 		// Is user is added and password is not set properly dont save
 		if(user.getIdUser() == null && ! ( userMinLength <= user.getPassword().length() && user.getPassword().length() <= userMaxLength) ) {
-			logger.debug("Benutzer " + securityService.getLoginName() + " hat versucht einen Benutzer anzulegen, dass Passwort enspricht nicht den Anforderungen.");
+			logger.debug("Benutzer anlegen: das Passwort enspricht nicht den Anforderungen.");
 			throw new PasswordLengthError(passwordLengthError);
 		}
 		
 		// Is user is edited and password is not set properly dont save
 		if(user.getIdUser() != null && ! user.getPassword().equals("") && ( user.getPassword().length() < userMinLength || userMaxLength < user.getPassword().length()) ) {
-			logger.debug("Benutzer " + securityService.getLoginName() + " hat versucht einen Benutzer zu editieren, dass Passwort enspricht nicht den Anforderungen.");
+			logger.debug("Benutzer bearbeiten: das Passwort enspricht nicht den Anforderungen.");
 			throw new PasswordLengthError(passwordLengthError);
 		}
 		
@@ -69,7 +66,7 @@ public class UserService {
 		if(user.getIdUser() != null && ( user.getPassword().equals("")) ) {
 			User dbUser = userRepo.findById(user.getIdUser()).get();
 			user.setPassword(dbUser.getPassword());
-			logger.debug("Benutzer " + securityService.getLoginName() + " ändert einen Benutzer ohne Angabe eines neuen Passworts.");
+			logger.debug("Benutzer bearbeiten: kein Passwort angegeben, benutze altes.");
 			return userRepo.save(user);
 		}
 
@@ -77,10 +74,10 @@ public class UserService {
 		if(userMinLength <= user.getPassword().length() && user.getPassword().length() <= userMaxLength) { 
 			BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 			user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-			logger.debug("Benutzer " + securityService.getLoginName() + " ändert einen Benutzer unter Angabe eines neuen Passworts.");
+			logger.debug("Benutzer bearbeiten: neues Passwort angegeben.");
 			return userRepo.save(user);
 		}
-		logger.error("Benutzer " + securityService.getLoginName() + " ändert einen Benutzer. Hier hätten wir nicht ankommen dürfen.");
+		logger.error("Benutzer speichern: Hier hätten wir nicht ankommen dürfen.");
 		throw new UnknownUserSaveException("Ein unbekannter Fehler beim Speichern des Benutzers ist aufgetreten");
 	}
 	

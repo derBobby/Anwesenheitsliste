@@ -25,7 +25,6 @@ import org.springframework.web.context.request.WebRequest;
 
 import eu.planlos.anwesenheitsliste.service.BodyFillerService;
 import eu.planlos.anwesenheitsliste.service.MailService;
-import eu.planlos.anwesenheitsliste.service.SecurityService;
 
 @Controller
 public class CustomErrorController implements ErrorController {
@@ -35,10 +34,7 @@ public class CustomErrorController implements ErrorController {
 	private static final Logger logger = LoggerFactory.getLogger(CustomErrorController.class);
 
 	@Autowired
-	private BodyFillerService bf;
-	
-	@Autowired
-	private SecurityService securityService;
+	private BodyFillerService bf;	
 	
 	@Autowired
 	private MailService errorMailNotificationService;
@@ -59,7 +55,7 @@ public class CustomErrorController implements ErrorController {
 	public String forbidden(Model model, Authentication auth) {
 			
 		if(auth != null) {
-			logger.error("Benutzer \"" + securityService.getLoginName() + "\" wollte unauthorisiert auf eine Seite zugreifen.");
+			logger.error("Benutzer \"" + auth.getName() + "\" wollte unauthorisiert auf eine Seite zugreifen.");
 		} else {
 			logger.error("Ein nicht authentifizierter Benutzer wollte unauthorisiert auf eine Seite zugreifen.");			
 		}

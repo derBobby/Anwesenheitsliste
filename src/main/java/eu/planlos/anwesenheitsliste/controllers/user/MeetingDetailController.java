@@ -11,6 +11,7 @@ import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_MEETINGLISTFULL;
 import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_MEETINGSUBMIT;
 import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_HOME;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -21,6 +22,7 @@ import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.session.Session;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -29,6 +31,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import eu.planlos.anwesenheitsliste.SessionAttributes;
 import eu.planlos.anwesenheitsliste.model.Meeting;
 import eu.planlos.anwesenheitsliste.model.Team;
 import eu.planlos.anwesenheitsliste.service.BodyFillerService;
@@ -64,10 +67,10 @@ public class MeetingDetailController {
 	
 	// For editing a given meeting for given team
 	@RequestMapping(path = URL_MEETINGFORTEAM + "{idTeam}/{idMeeting}", method = RequestMethod.GET)
-	public String edit(Model model, @PathVariable Long idTeam, @PathVariable Long idMeeting) {
+	public String edit(Model model, Principal principal, Session session, @PathVariable Long idTeam, @PathVariable Long idMeeting) {
 	
-		if(isNotAuthorizedForTeam(idTeam)) {
-			logger.error("Benutzer \"" + securityService.getLoginName() + "\" hat unauthorisiert versucht auf Termin id=" + idMeeting + "von Gruppe id=" + idTeam + " zuzugreifen.");
+		if(!isAdmin(session) && isNotAuthorizedForTeam(idTeam, principal.getName())) {
+			logger.error("Benutzer \"" + principal.getName() + "\" hat unauthorisiert versucht auf Termin id=" + idMeeting + "von Gruppe id=" + idTeam + " zuzugreifen.");
 			return "redirect:" + URL_ERROR_403;
 		}
 		
@@ -82,10 +85,10 @@ public class MeetingDetailController {
 
 	// For adding new meeting for given team
 	@RequestMapping(path = URL_MEETINGFORTEAM + "{idTeam}", method = RequestMethod.GET)
-	public String addForTeam(Model model, @PathVariable Long idTeam) {
+	public String addForTeam(Model model, Principal principal, Session session, @PathVariable Long idTeam) {
 
-		if(isNotAuthorizedForTeam(idTeam)) {
-			logger.error("Benutzer \"" + securityService.getLoginName() + "\" hat unauthorisiert versucht einen Termin für Gruppe id=" + idTeam + " anzulegen.");
+		if(!isAdmin(session) && isNotAuthorizedForTeam(idTeam, principal.getName())) {
+			logger.error("Benutzer \"" + principal.getName() + "\" hat unauthorisiert versucht einen Termin für Gruppe id=" + idTeam + " anzulegen.");
 			return "redirect:" + URL_ERROR_403;
 		}
 		
@@ -99,17 +102,21 @@ public class MeetingDetailController {
 		return RES_MEETING;
 	}
 	
+	private boolean isAdmin(Session session) {
+		return session.getAttribute(SessionAttributes.ISADMIN);
+	}
+
 	// STEP 1 adding new meeting without a given team
 	// -> View for choosing team
 	@RequestMapping(path = URL_MEETINGCHOOSETEAM, method = RequestMethod.GET)
-	public String addWithoutTeam(Model model) {
+	public String addWithoutTeam(Model model, Principal principal, Session session) {
 		
 		Meeting meeting = new Meeting();
 		meeting.setMeetingDate(today());
 		model.addAttribute(meeting);
 		prepareContent(model, meeting);
 
-		prepareContentWithoutTeam(model);
+		prepareContentWithoutTeam(model, principal.getName(), isAdmin(session));
 		
 		return RES_MEETING;
 	}
@@ -121,16 +128,18 @@ public class MeetingDetailController {
 	// STEP 2 adding new meeting without a given team
 	// -> View with participants for chosen team
 	@RequestMapping(path = URL_MEETINGADDPARTICIPANTS, method = RequestMethod.POST)
-	public String addWithoutTeam(Model model, @Valid @ModelAttribute Meeting meeting, Errors errors) {
-	
-		if(meeting.getTeam() != null && isNotAuthorizedForTeam(meeting.getTeam().getIdTeam())) {
-			logger.error("Benutzer \"" + securityService.getLoginName() + "\" hat unauthorisiert versucht einen Termin für Gruppe id=" + meeting.getTeam().getIdTeam() + " anzulegen.");
+	public String addWithoutTeam(Model model, Principal principal, Session session, @Valid @ModelAttribute Meeting meeting, Errors errors) {
+			
+		String loginName = principal.getName();
+		
+		if(meeting.getTeam() != null && !isAdmin(session) && isNotAuthorizedForTeam(meeting.getTeam().getIdTeam(), principal.getName())) {
+			logger.error("Benutzer \"" + loginName + "\" hat unauthorisiert versucht einen Termin für Gruppe id=" + meeting.getTeam().getIdTeam() + " anzulegen.");
 			return "redirect:" + URL_ERROR_403;
 		}
 		
 		if(errors.hasErrors()) {
-			logger.error("Validierungsfehler in Schritt zwei beim Anlegen ohne Team von Benutzer \"" + securityService.getLoginName() + "\".");
-			handleValidationErrors(model, meeting);
+			logger.error("Validierungsfehler in Schritt zwei beim Anlegen ohne Team von Benutzer \"" + principal.getName() + "\".");
+			handleValidationErrors(model, meeting, loginName, isAdmin(session));
 			return RES_MEETING; 
 		}
 		
@@ -140,25 +149,24 @@ public class MeetingDetailController {
 		return RES_MEETING; 
 	}
 	
-	private boolean isNotAuthorizedForTeam(Long idTeam) {
-		if(!securityService.isAdmin() && !securityService.isUserAuthorizedForTeam(idTeam) ) {
-			return true;
-		}
-		return false;
+	private boolean isNotAuthorizedForTeam(Long idTeam, String loginName) {
+		return !securityService.isUserAuthorizedForTeam(idTeam, loginName);
 	}
 
 	// For submitting the added/edited meeting
 	@RequestMapping(path = URL_MEETINGSUBMIT, method = RequestMethod.POST)
-	public String submit(Model model, @Valid @ModelAttribute Meeting meeting, Errors errors) {
+	public String submit(Model model, Principal principal, Session session, @Valid @ModelAttribute Meeting meeting, Errors errors) {
+		
+		String loginName = principal.getName();
 		
 		if(errors.hasErrors()) {
-			logger.error("Validierungsfehler beim Submit eines Termins von Benutzer \"" + securityService.getLoginName() + "\".");
-			handleValidationErrors(model, meeting);
+			logger.error("Validierungsfehler beim Submit eines Termins von Benutzer \"" + loginName + "\".");
+			handleValidationErrors(model, meeting, loginName, isAdmin(session));
 			return RES_MEETING; 
 		}
 
-		if(isNotAuthorizedForTeam(meeting.getTeam().getIdTeam())) {
-			logger.error("Benutzer \"" + securityService.getLoginName() + "\" hat unauthorisiert versucht einen Termin für Gruppe id=" + meeting.getTeam().getIdTeam() + " zu speichern.");
+		if(!isAdmin(session) && isNotAuthorizedForTeam(meeting.getTeam().getIdTeam(), principal.getName())) {
+			logger.error("Benutzer \"" + loginName + "\" hat unauthorisiert versucht einen Termin für Gruppe id=" + meeting.getTeam().getIdTeam() + " zu speichern.");
 			return "redirect:" + URL_ERROR_403;
 		}
 
@@ -168,14 +176,14 @@ public class MeetingDetailController {
 		return "redirect:" + URL_MEETINGLIST + meeting.getTeam().getIdTeam() + DELIMETER + meeting.getIdMeeting();
 	}
 	
-	private void handleValidationErrors(Model model, Meeting meeting) {
+	private void handleValidationErrors(Model model, Meeting meeting, String loginName, boolean isAdmin) {
 		
 		prepareContent(model, meeting);
 
 		if(meeting.getTeam() != null) {
 			prepareContentWithTeam(model, meeting.getTeam().getIdTeam());
 		} else {
-			prepareContentWithoutTeam(model);
+			prepareContentWithoutTeam(model, loginName, isAdmin);
 		}
 	}
 
@@ -188,12 +196,12 @@ public class MeetingDetailController {
 		}
 	}
 	
-	private void prepareContentWithoutTeam(Model model) {
+	private void prepareContentWithoutTeam(Model model, String loginName, boolean isAdmin) {
 		
-		model.addAttribute("teams", teamService.findTeamsForUser(securityService.getLoginName()));
+		model.addAttribute("teams", teamService.findTeamsForUser(loginName));
 		model.addAttribute("formAction", URL_MEETINGADDPARTICIPANTS);
 
-		if(securityService.isAdmin()) {
+		if(isAdmin) {
 			model.addAttribute("formCancel", URL_MEETINGLISTFULL);
 			return;
 		}

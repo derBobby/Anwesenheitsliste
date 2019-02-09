@@ -76,22 +76,18 @@ public class CustomErrorController implements ErrorController {
         Map<String, Object> body = errorAttributes.getErrorAttributes(webRequest, true);
         // Extract stack trace string
         String errorTrace = (String) body.get("trace");
-	        
-		if(auth != null) {
-			
-			model.addAttribute("printTrace", true);
-	        model.addAttribute("errorMessage", errorMessage);
-	        model.addAttribute("errorException", errorException);
-	        //TODO not for 404
-	        model.addAttribute("errorTrace", errorTrace);
-		}
 		
 		String title = "Unbekannter Fehler";
 	    Object status = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
-	     
+	    
 	    if (status != null) {
+	    	
 	        Integer statusCode = Integer.valueOf(status.toString());
 
+		    if(auth != null && statusCode >= 500) {
+		    	prepareContentWithErrorInformation(model, errorMessage, errorException, errorTrace);
+		    }
+	        
 	        if(statusCode == HttpStatus.FORBIDDEN.value()) {
 	        	return forbidden(model, auth);
 	        }
@@ -112,6 +108,14 @@ public class CustomErrorController implements ErrorController {
 		bf.fill(model, "Fehler", title);
 		
 		return RES_ERROR_UNKNOWN;
+	}
+
+	private void prepareContentWithErrorInformation(Model model, String errorMessage, Exception errorException,
+			String errorTrace) {
+		model.addAttribute("printTrace", true);
+		model.addAttribute("errorMessage", errorMessage);
+		model.addAttribute("errorException", errorException);
+		model.addAttribute("errorTrace", errorTrace);
 	}
 
 	@Override

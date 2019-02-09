@@ -55,7 +55,7 @@ public class UserListController {
 		headings.add("Funktionen");
 	
 		model.addAttribute("headings", headings);
-		model.addAttribute("users", userService.findAll());
+		model.addAttribute("users", userService.loadAllUsers());
 		model.addAttribute("markedUserId", markedUserId);
 		
 		model.addAttribute("functionEdit", URL_USER);

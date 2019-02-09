@@ -36,7 +36,7 @@ public class TeamListController {
 	@RequestMapping(value = URL_TEAMLIST + "{markedTeamId}")
 	public String markedTeamList(Model model, Principal principal,  @PathVariable Long markedTeamId) {
 		
-		List<Team> teams = teamService.findTeamsForUser(principal.getName());
+		List<Team> teams = teamService.loadTeamsForUser(principal.getName());
 
 		prepareContent(model, teams, markedTeamId);
 		return RES_TEAMLIST;
@@ -46,7 +46,7 @@ public class TeamListController {
 	@RequestMapping(value = URL_TEAMLIST)
 	public String teamList(Model model, Principal principal) {
 
-		List<Team> teams = teamService.findTeamsForUser(principal.getName());
+		List<Team> teams = teamService.loadTeamsForUser(principal.getName());
 		
 		prepareContent(model, teams, null);
 		return RES_TEAMLIST;
@@ -56,7 +56,7 @@ public class TeamListController {
 	@RequestMapping(value = URL_TEAMLISTFULL)
 	public String teamListFull(Model model) {
 		
-		List<Team> teams = teamService.findAll();
+		List<Team> teams = teamService.loadAllTeams();
 		
 		//Admin function add
 		model.addAttribute("functionAdd", URL_TEAM);
@@ -69,7 +69,7 @@ public class TeamListController {
 	@RequestMapping(value = URL_TEAMLISTFULL + "{markedTeamId}")
 	public String markedteamListFull(Model model, @PathVariable Long markedTeamId) {
 		
-		List<Team> teams = teamService.findAll();
+		List<Team> teams = teamService.loadAllTeams();
 		
 		//Admin function add
 		model.addAttribute("functionAdd", URL_TEAM);

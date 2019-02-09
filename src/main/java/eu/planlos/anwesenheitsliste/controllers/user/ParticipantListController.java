@@ -57,7 +57,7 @@ public class ParticipantListController {
 
 	private List<Participant> participantsForUser(String loginName) {
 		
-		List<Team> teams = teamService.findTeamsForUser(loginName);
+		List<Team> teams = teamService.loadTeamsForUser(loginName);
 		
 		Set<Participant> participants = new HashSet<>();
 		
@@ -72,7 +72,7 @@ public class ParticipantListController {
 	@RequestMapping(path = URL_PARTICIPANTLISTFULL)
 	public String participantListFull(Model model) {
 
-		List<Participant> participants = participantService.findAll();
+		List<Participant> participants = participantService.loadAllParticipants();
 
 		prepareContent(model, participants, null);
 		return RES_PARTICIPANTLIST;
@@ -82,7 +82,7 @@ public class ParticipantListController {
 	@RequestMapping(path = URL_PARTICIPANTLISTFULL + "{markedParticipantId}")
 	public String markedParticipantListFull(Model model, @PathVariable Long markedParticipantId) {
 
-		List<Participant> participants = participantService.findAll();
+		List<Participant> participants = participantService.loadAllParticipants();
 
 		prepareContent(model, participants, markedParticipantId);
 		return RES_PARTICIPANTLIST;

@@ -27,8 +27,8 @@ public class PermissionOverviewController {
 	@RequestMapping(path = URL_PERMISSIONSOVERVIEW)
 	public String permissionOverview(Model model) {
 		
-		model.addAttribute("teams", teamService.findAll());
-		model.addAttribute("users", userService.findAll());
+		model.addAttribute("teams", teamService.loadAllTeams());
+		model.addAttribute("users", userService.loadAllUsers());
 		
 		bf.fill(model, "Übersicht", "Übersicht der Berechtigungen");
 		

@@ -81,26 +81,26 @@ public class UserService {
 		throw new UnknownUserSaveException("Ein unbekannter Fehler beim Speichern des Benutzers ist aufgetreten");
 	}
 	
-	public void delete(User user) {
-		userRepo.delete(user);
-	}
-	
-	public List<User> findAll() {
+	public List<User> loadAllUsers() {
+		logger.debug("Lade alle Benutzer");
 		return (List<User>) userRepo.findAll();
 	}
 	
-	public User findById(Long idUser) {
+	public User loadUser(Long idUser) {
+		logger.debug("Lade Benutzer mit id " + idUser);
 		return userRepo.findById(idUser).get();
 	}
 
-	public List<User> findAllByTeamsIdTeam(Long idTeam) {
-		return userRepo.findAllByTeamsIdTeam(idTeam);
-	}
+//	public User loadUser(String loginName) {
+//		return userRepo.findByLoginName(loginName);
+//	}
 
-	public User findByLoginName(String loginName) {
-		return userRepo.findByLoginName(loginName);
-	}
+//	public List<User> loadUsersAuthorizedForTeam(Long idTeam) {
+//		logger.debug("Lade Benutzer mit Berechtigung für Team mit id " + idTeam);
+//		return userRepo.findAllByTeamsIdTeam(idTeam);
+//	}
 
+	//TODO probably not working
 	//TODO LOGGING
 	/**
 	 * Updates relation between team and users. Users not active will be ignored.

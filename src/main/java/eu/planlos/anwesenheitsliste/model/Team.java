@@ -23,16 +23,19 @@ public class Team {
 	@NotBlank
 	private String teamName;
 
+	/*
+	 * CONNECTIONS
+	 */
 	@ManyToMany(mappedBy = "teams")
 	private List<Participant> participants;
-
-	@OneToMany(mappedBy = "team")
-	private List<Meeting> meetings;
 	
 	@ManyToMany(mappedBy = "teams")
 	private List<User> users;
+
+	@OneToMany(mappedBy = "team")
+	private List<Meeting> meetings;
 			
-	/**
+	/*
 	 * Standard constructor
 	 */
 	public Team() {

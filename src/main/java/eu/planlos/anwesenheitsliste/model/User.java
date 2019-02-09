@@ -59,10 +59,13 @@ public class User {
 	@NotNull
 	private Boolean isAdmin;
 
+	/*
+	 * CONNECTIONS
+	 */
 	@ManyToMany
 	private List<Team> teams;
 	
-	/**
+	/*
 	 * Standard constructor
 	 */
 	public User() {

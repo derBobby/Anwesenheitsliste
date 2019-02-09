@@ -69,10 +69,10 @@ public class TeamPhonelistController {
 		headings.add("Aktiv");
 		model.addAttribute("headings", headings);
 
-		List<Participant> participants = participantService.findAllByTeamsIdTeam(idTeam);
+		List<Participant> participants = participantService.loadParticipantsForTeam(idTeam);
 		model.addAttribute("participants", participants);
 
-		Team team = teamService.findById(idTeam);
+		Team team = teamService.loadTeam(idTeam);
 		
 		bf.fill(model, STR_MODULE, STR_TITLE + " für " + team.getTeamName());
 	}

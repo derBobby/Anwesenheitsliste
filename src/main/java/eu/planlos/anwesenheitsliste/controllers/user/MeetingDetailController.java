@@ -74,7 +74,7 @@ public class MeetingDetailController {
 			return "redirect:" + URL_ERROR_403;
 		}
 		
-		Meeting meeting = meetingService.findById(idMeeting);
+		Meeting meeting = meetingService.loadMeeting(idMeeting);
 		model.addAttribute(meeting);
 		prepareContent(model, meeting);
 		
@@ -171,7 +171,7 @@ public class MeetingDetailController {
 		}
 
 		participantService.correctParticipantsInMeeting(meeting);
-		meeting = meetingService.save(meeting);
+		meeting = meetingService.saveMeeting(meeting);
 		
 		return "redirect:" + URL_MEETINGLIST + meeting.getTeam().getIdTeam() + DELIMETER + meeting.getIdMeeting();
 	}
@@ -198,7 +198,7 @@ public class MeetingDetailController {
 	
 	private void prepareContentWithoutTeam(Model model, String loginName, boolean isAdmin) {
 		
-		model.addAttribute("teams", teamService.findTeamsForUser(loginName));
+		model.addAttribute("teams", teamService.loadTeamsForUser(loginName));
 		model.addAttribute("formAction", URL_MEETINGADDPARTICIPANTS);
 
 		if(isAdmin) {
@@ -210,12 +210,12 @@ public class MeetingDetailController {
 	
 	private void prepareContentWithTeam(Model model, Long idTeam) {
 		
-		Team team = teamService.findById(idTeam);
+		Team team = teamService.loadTeam(idTeam);
 		List<Team> teams = new ArrayList<>();
 		teams.add(team);
 		
 		model.addAttribute("teams", teams);
-		model.addAttribute("participants", participantService.findAllByTeamsIdTeam(idTeam));
+		model.addAttribute("participants", participantService.loadParticipantsForTeam(idTeam));
 		model.addAttribute("formAction", URL_MEETINGSUBMIT);
 		model.addAttribute("formCancel", URL_MEETINGLIST + idTeam);
 	}

@@ -30,7 +30,10 @@ public class Meeting {
 	@Column(nullable = false)
 	@NotNull
 	private String description;
-	
+
+	/*
+	 * CONNECTIONS
+	 */
 	@ManyToOne
 	@NotNull(message = "darf nicht leer sein") 
 	private Team team;
@@ -38,7 +41,7 @@ public class Meeting {
 	@ManyToMany
 	private List<Participant> participants; 
 	
-	/**
+	/*
 	 * Standard constructor
 	 */
 	public Meeting() {

@@ -67,7 +67,7 @@ public class TeamDetailController {
 			return "redirect:" + URL_ERROR_403;
 		}
 		
-		Team team = teamService.findById(idTeam);
+		Team team = teamService.loadTeam(idTeam);
 		model.addAttribute(team);
 		prepareContent(model, team, isAdmin);
 				
@@ -116,7 +116,7 @@ public class TeamDetailController {
 		}
 		
 		try {
-			Team savedTeam = teamService.save(team);
+			Team savedTeam = teamService.saveTeam(team);
 
 			//TODO what happens in this two methods?
 			userService.updateTeamForUsers(team);
@@ -148,8 +148,8 @@ public class TeamDetailController {
 			bf.fill(model, STR_MODULE, STR_TITLE_ADD_TEAM);
 		}
 		
-		model.addAttribute("users", userService.findAll());
-		model.addAttribute("participants", participantService.findAll());
+		model.addAttribute("users", userService.loadAllUsers());
+		model.addAttribute("participants", participantService.loadAllParticipants());
 		model.addAttribute("formAction", URL_TEAM);
 		
 		if(isAdmin) {

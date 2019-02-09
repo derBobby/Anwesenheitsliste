@@ -45,7 +45,7 @@ public class UserDetailController {
 	@RequestMapping(path = URL_USER + "{idUser}", method = RequestMethod.GET)
 	public String edit(Model model, @PathVariable Long idUser) {
 
-		User user = userService.findById(idUser);
+		User user = userService.loadUser(idUser);
 		model.addAttribute(user);
 		prepareContent(model, user);
 		
@@ -93,7 +93,7 @@ public class UserDetailController {
 			bf.fill(model, STR_MODULE, STR_TITLE_ADD_USER);
 		}
 		
-		model.addAttribute("teams", teamService.findAll());
+		model.addAttribute("teams", teamService.loadAllTeams());
 		model.addAttribute("formAction", URL_USER);
 		model.addAttribute("formCancel", URL_USERLIST);
 	}

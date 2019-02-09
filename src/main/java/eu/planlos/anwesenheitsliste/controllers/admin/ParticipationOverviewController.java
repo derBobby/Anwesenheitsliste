@@ -30,8 +30,8 @@ public class ParticipationOverviewController {
 	@RequestMapping(path = URL_PARTICIPATIONOVERVIEW)
 	public String participationOverview(Model model) {
 		
-		model.addAttribute("teams", teamService.findAll());
-		model.addAttribute("participants", participantService.findAll());
+		model.addAttribute("teams", teamService.loadAllTeams());
+		model.addAttribute("participants", participantService.loadAllParticipants());
 		
 		bf.fill(model, STR_MODULE, STR_TITLE);
 		

@@ -44,15 +44,16 @@ public class Participant {
 	@NotNull
 	private Boolean isActive;
 
-	@Column
+	/*
+	 * CONNECTIONS
+	 */
 	@ManyToMany
 	private List<Team> teams;
 	
-	@Column
 	@ManyToMany(mappedBy = "participants")
 	private List<Meeting> meetings;
 	
-	/**
+	/*
 	 * Standard constructor
 	 */
 	public Participant() {

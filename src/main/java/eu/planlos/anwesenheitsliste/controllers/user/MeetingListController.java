@@ -119,9 +119,9 @@ public class MeetingListController {
 	private List<Meeting> getMeetingsForTeam(Long idTeam) {
 
 		if(idTeam == null) {
-			return meetingService.findAll();
+			return meetingService.loadAllMeetings();
 		}
-		return meetingService.findAllByTeam(idTeam);
+		return meetingService.loadMeetingsForTeam(idTeam);
 	}
 	
 	private boolean hasPermissionForTeam(long idTeam, String loginName) {

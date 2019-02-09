@@ -19,34 +19,33 @@ public class TeamService {
 	@Autowired
 	private TeamRepository teamRepo;
 	
-	public Team save(Team team) throws DuplicateKeyException {
+	public Team saveTeam(Team team) throws DuplicateKeyException {
 		
 		if(team.getIdTeam() == null) {
 			String teamName = team.getTeamName();
 			
 			// Should cover all constraints of the Entity
 			if(teamRepo.existsByTeamName(teamName)) {
-				logger.error("Tried to save team with existing teamName.");
-				throw new DuplicateKeyException("Bitte probiere es mit einem anderen Gruppennamen");
+				logger.debug("Gruppe speichern nicht möglich: Der Gruppenname wird bereits verwendet");
+				throw new DuplicateKeyException("Der Gruppenname wird bereits verwendet");
 			}
 		}
-				
+		logger.debug("Speichere Gruppe");		
 		return teamRepo.save(team);
 	}
 	
-	public void deleteUser(Team team) {
-		teamRepo.delete(team);
-	}
-	
-	public List<Team> findAll() {
+	public List<Team> loadAllTeams() {
+		logger.debug("Lade alle Gruppen");
 		return (List<Team>) teamRepo.findAll();
 	}
 	
-	public Team findById(Long idTeam) {
+	public Team loadTeam(Long idTeam) {
+		logger.debug("Lade Gruppe mit id " + idTeam);
 		return teamRepo.findById(idTeam).get();
 	}
 
-	public List<Team> findTeamsForUser(String loginName) {
+	public List<Team> loadTeamsForUser(String loginName) {
+		logger.debug("Lade Gruppen für Benutzer " + loginName);
 		return teamRepo.findAllByUsersLoginName(loginName);
 	}
 }

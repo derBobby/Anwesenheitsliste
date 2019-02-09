@@ -62,7 +62,7 @@ public class ParticipantDetailController {
 			return "redirect:" + URL_ERROR_403;
 		}
 		
-		Participant participant = participantService.findById(idParticipant);
+		Participant participant = participantService.loadParticipant(idParticipant);
 		model.addAttribute(participant);
 		prepareContent(model, participant, loginName);
 		
@@ -112,7 +112,7 @@ public class ParticipantDetailController {
 		}
 		
 		try {
-			Participant savedParticipant = participantService.save(participant);
+			Participant savedParticipant = participantService.saveParticipant(participant);
 
 			if( hasPermissionForParticipant(participant.getIdParticipant(), loginName) ) {
 				return "redirect:" + URL_PARTICIPANTLIST + savedParticipant.getIdParticipant();
@@ -135,7 +135,7 @@ public class ParticipantDetailController {
 			bf.fill(model, STR_MODULE, STR_TITLE_ADD_USER);
 		}
 		
-		model.addAttribute("teams", teamService.findTeamsForUser(loginName));
+		model.addAttribute("teams", teamService.loadTeamsForUser(loginName));
 		model.addAttribute("formAction", URL_PARTICIPANT);
 		model.addAttribute("formCancel", URL_PARTICIPANTLIST);
 	}

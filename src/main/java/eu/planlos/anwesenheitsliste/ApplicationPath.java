@@ -72,6 +72,9 @@ public class ApplicationPath {
 	public static final String URL_TEAM = URL_AREA_USER + DELIMETER + "teamdetail" + DELIMETER;
 	public static final String URL_TEAMLIST = URL_AREA_USER + DELIMETER + "teamlist" + DELIMETER;
 	public static final String URL_TEAMPHONELIST = URL_AREA_USER + DELIMETER + "teamphonelist" + DELIMETER;
+
+	public static final String URL_CONFIG = URL_AREA_USER + DELIMETER + "config";
+	public static final String URL_ACTIVITIES = URL_AREA_USER + DELIMETER + "activities";
 	
 	public static final String URL_LOGOUT = URL_AREA_USER + DELIMETER + "logout";
 	public static final String URL_LOGIN = "/login_handler";

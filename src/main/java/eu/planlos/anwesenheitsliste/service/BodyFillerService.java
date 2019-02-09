@@ -9,6 +9,8 @@ import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_HOME;
 import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_IMPRESSUM;
 import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_LOGIN_FORM;
 import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_LOGOUT;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_ACTIVITIES;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_CONFIG;
 import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_MEETINGCHOOSETEAM;
 import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_MEETINGLISTFULL;
 import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_PARTICIPANTLIST;
@@ -93,8 +95,8 @@ public class BodyFillerService implements EnvironmentAware {
 		/*
 		 * Account Menu
 		 */
-		//TODO NEW Activities missing
-		//TODO NEW Config missing
+		model.addAttribute("URL_CONFIG", URL_CONFIG);	
+		model.addAttribute("URL_ACTIVITIES", URL_ACTIVITIES);	
 		model.addAttribute("URL_LOGOUT", URL_LOGOUT);	
 		
 		

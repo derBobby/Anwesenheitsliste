@@ -1,5 +1,3 @@
-/application-createdb.properties
-/application-dbproperties.properties
-/application-DB.properties
-/application-MAIL.properties
 /application-PROD.properties
+/application-TEST.properties
+/application-DEV.properties

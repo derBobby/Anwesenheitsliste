@@ -25,10 +25,12 @@ public class LoginAuthenticationSuccessHandler extends SavedRequestAwareAuthenti
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 			Authentication authentication) throws IOException, ServletException {
-
+		
+		boolean isAdmin = false;
 		if(authentication.getAuthorities().contains(new SimpleGrantedAuthority(ApplicationRole.ROLE_ADMIN))) {
-			request.getSession().setAttribute("isAdmin", true);
+			isAdmin = true;
 		}
+		request.getSession().setAttribute("isAdmin", isAdmin);
 		
 		logger.error("Erfolgreicher Loginversuch für : \"" + authentication.getName() + "\"");
 

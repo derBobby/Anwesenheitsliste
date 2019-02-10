@@ -8,13 +8,13 @@ import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_TEAMLISTFULL;
 
 import java.security.Principal;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
-import org.springframework.session.Session;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -57,7 +57,7 @@ public class TeamDetailController {
 	private SecurityService securityService;
 	
 	@RequestMapping(path = URL_TEAM + "{idTeam}", method = RequestMethod.GET)
-	public String edit(Model model, Principal principal, Session session, @PathVariable Long idTeam) {
+	public String edit(Model model, Principal principal, HttpSession session, @PathVariable Long idTeam) {
 
 		String loginName = principal.getName();
 		boolean isAdmin = isAdmin(session);
@@ -75,7 +75,7 @@ public class TeamDetailController {
 	}
 	
 	@RequestMapping(path = URL_TEAM, method = RequestMethod.GET)
-	public String add(Model model, Principal principal, Session session) {
+	public String add(Model model, Principal principal, HttpSession session) {
 
 		boolean isAdmin = isAdmin(session);
 		
@@ -94,7 +94,7 @@ public class TeamDetailController {
 
 	//TODO Transactional
 	@RequestMapping(path = URL_TEAM, method = RequestMethod.POST)
-	public String submit(Model model, Principal principal, Session session, @Valid @ModelAttribute Team team, Errors errors) {
+	public String submit(Model model, Principal principal, HttpSession session, @Valid @ModelAttribute Team team, Errors errors) {
 
 		String loginName = principal.getName();
 		
@@ -159,7 +159,7 @@ public class TeamDetailController {
 		model.addAttribute("formCancel", URL_TEAMLIST + team.getIdTeam());
 	}
 	
-	private boolean isAdmin(Session session) {
-		return session.getAttribute(SessionAttributes.ISADMIN);
+	private boolean isAdmin(HttpSession session) {
+		return (boolean) session.getAttribute(SessionAttributes.ISADMIN);
 	}
 }

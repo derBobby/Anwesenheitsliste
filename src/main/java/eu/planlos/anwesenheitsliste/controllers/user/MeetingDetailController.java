@@ -17,12 +17,12 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.session.Session;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -67,7 +67,7 @@ public class MeetingDetailController {
 	
 	// For editing a given meeting for given team
 	@RequestMapping(path = URL_MEETINGFORTEAM + "{idTeam}/{idMeeting}", method = RequestMethod.GET)
-	public String edit(Model model, Principal principal, Session session, @PathVariable Long idTeam, @PathVariable Long idMeeting) {
+	public String edit(Model model, Principal principal, HttpSession session, @PathVariable Long idTeam, @PathVariable Long idMeeting) {
 	
 		if(!isAdmin(session) && isNotAuthorizedForTeam(idTeam, principal.getName())) {
 			logger.error("Benutzer \"" + principal.getName() + "\" hat unauthorisiert versucht auf Termin id=" + idMeeting + "von Gruppe id=" + idTeam + " zuzugreifen.");
@@ -85,7 +85,7 @@ public class MeetingDetailController {
 
 	// For adding new meeting for given team
 	@RequestMapping(path = URL_MEETINGFORTEAM + "{idTeam}", method = RequestMethod.GET)
-	public String addForTeam(Model model, Principal principal, Session session, @PathVariable Long idTeam) {
+	public String addForTeam(Model model, Principal principal, HttpSession session, @PathVariable Long idTeam) {
 
 		if(!isAdmin(session) && isNotAuthorizedForTeam(idTeam, principal.getName())) {
 			logger.error("Benutzer \"" + principal.getName() + "\" hat unauthorisiert versucht einen Termin für Gruppe id=" + idTeam + " anzulegen.");
@@ -102,14 +102,14 @@ public class MeetingDetailController {
 		return RES_MEETING;
 	}
 	
-	private boolean isAdmin(Session session) {
-		return session.getAttribute(SessionAttributes.ISADMIN);
+	private boolean isAdmin(HttpSession session) {
+		return (boolean) session.getAttribute(SessionAttributes.ISADMIN);
 	}
 
 	// STEP 1 adding new meeting without a given team
 	// -> View for choosing team
 	@RequestMapping(path = URL_MEETINGCHOOSETEAM, method = RequestMethod.GET)
-	public String addWithoutTeam(Model model, Principal principal, Session session) {
+	public String addWithoutTeam(Model model, Principal principal, HttpSession session) {
 		
 		Meeting meeting = new Meeting();
 		meeting.setMeetingDate(today());
@@ -128,7 +128,7 @@ public class MeetingDetailController {
 	// STEP 2 adding new meeting without a given team
 	// -> View with participants for chosen team
 	@RequestMapping(path = URL_MEETINGADDPARTICIPANTS, method = RequestMethod.POST)
-	public String addWithoutTeam(Model model, Principal principal, Session session, @Valid @ModelAttribute Meeting meeting, Errors errors) {
+	public String addWithoutTeam(Model model, Principal principal, HttpSession session, @Valid @ModelAttribute Meeting meeting, Errors errors) {
 			
 		String loginName = principal.getName();
 		
@@ -155,7 +155,7 @@ public class MeetingDetailController {
 
 	// For submitting the added/edited meeting
 	@RequestMapping(path = URL_MEETINGSUBMIT, method = RequestMethod.POST)
-	public String submit(Model model, Principal principal, Session session, @Valid @ModelAttribute Meeting meeting, Errors errors) {
+	public String submit(Model model, Principal principal, HttpSession session, @Valid @ModelAttribute Meeting meeting, Errors errors) {
 		
 		String loginName = principal.getName();
 		

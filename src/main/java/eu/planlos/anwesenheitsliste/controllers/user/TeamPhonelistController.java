@@ -8,10 +8,11 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.session.Session;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -46,10 +47,10 @@ public class TeamPhonelistController {
     private SecurityService securityService;
 
 	@RequestMapping(value = URL_TEAMPHONELIST + "{idTeam}")
-	public String markedTeamList(Model model, Principal principal, Session session, @PathVariable Long idTeam) {
+	public String teamPhoneList(Model model, HttpSession session, Principal principal, @PathVariable Long idTeam) {
 
 		String loginName = principal.getName();
-		boolean isAdmin = session.getAttribute(SessionAttributes.ISADMIN);
+		boolean isAdmin = (boolean) session.getAttribute(SessionAttributes.ISADMIN);
 		
 		if(!isAdmin && !securityService.isUserAuthorizedForTeam(idTeam, loginName)) {
 			logger.error("Benutzer \"" + loginName + "\" hat unauthorisiert versucht auf Telefonliste von Gruppe id=" + idTeam + " zuzugreifen.");

@@ -12,10 +12,11 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.session.Session;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -46,9 +47,9 @@ public class MeetingListController {
 	
 	// User
 	@RequestMapping(path = URL_MEETINGLIST + "{idTeam}")
-	public String meetingListForTeam(Model model, Principal principal, Session session, @PathVariable Long idTeam) {
+	public String meetingListForTeam(Model model, Principal principal, HttpSession session, @PathVariable Long idTeam) {
 		
-		boolean isAdmin = session.getAttribute(SessionAttributes.ISADMIN);
+		boolean isAdmin = (boolean) session.getAttribute(SessionAttributes.ISADMIN);
 		
 		if(!isAdmin && !hasPermissionForTeam(idTeam, principal.getName())) {
 			logger.error("Benutzer \"" + principal.getName() + "\" hat unauthorisiert versucht auf Terminliste von Gruppe id=" + idTeam + " zuzugreifen.");
@@ -61,7 +62,7 @@ public class MeetingListController {
 
 	// User
 	@RequestMapping(path = URL_MEETINGLIST + "{idTeam}" + DELIMETER + "{idMeeting}")
-	public String meetingListForTeamMarked(Model model, Principal principal, Session session, @PathVariable Long idTeam, @PathVariable Long idMeeting) {
+	public String meetingListForTeamMarked(Model model, Principal principal, HttpSession session, @PathVariable Long idTeam, @PathVariable Long idMeeting) {
 
 		model.addAttribute("markedMeetingId", idMeeting);
 		return meetingListForTeam(model, principal, session, idTeam);

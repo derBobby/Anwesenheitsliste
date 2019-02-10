@@ -8,13 +8,13 @@ import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_PARTICIPANTLISTFU
 
 import java.security.Principal;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
-import org.springframework.session.Session;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -53,7 +53,7 @@ public class ParticipantDetailController {
 	
 	// User
 	@RequestMapping(path = URL_PARTICIPANT + "{idParticipant}", method = RequestMethod.GET)
-	public String edit(Model model, Principal principal, Session session, @PathVariable Long idParticipant) {
+	public String edit(Model model, Principal principal, HttpSession session, @PathVariable Long idParticipant) {
 
 		String loginName = principal.getName();
 		
@@ -69,8 +69,8 @@ public class ParticipantDetailController {
 		return RES_PARTICIPANT;
 	}
 
-	private boolean isAdmin(Session session) {
-		return session.getAttribute(SessionAttributes.ISADMIN);
+	private boolean isAdmin(HttpSession session) {
+		return (boolean) session.getAttribute(SessionAttributes.ISADMIN);
 	}
 
 	// User
@@ -86,7 +86,7 @@ public class ParticipantDetailController {
 
 	// User
 	@RequestMapping(path = URL_PARTICIPANT, method = RequestMethod.POST)
-	public String submit(Model model, Principal principal, Session session, @Valid @ModelAttribute Participant participant, Errors errors) {
+	public String submit(Model model, Principal principal, HttpSession session, @Valid @ModelAttribute Participant participant, Errors errors) {
 
 		String loginName = principal.getName();
 		

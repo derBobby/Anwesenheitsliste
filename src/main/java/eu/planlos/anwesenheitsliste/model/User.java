@@ -23,6 +23,10 @@ import javax.validation.constraints.Size;
 )
 //public class User extends org.springframework.security.core.userdetails.User {
 public class User {
+
+	public static final int passwordMinLength = 10;
+	public static final int passwordMaxLength = 50;
+	
 	@Id
     @GeneratedValue(strategy = GenerationType.AUTO)
 	private Long idUser;
@@ -175,6 +179,10 @@ public class User {
 	public void setPassword(String password) {
 		this.password = password;
 	}
+
+	public boolean isPasswordLengthOK( ) {
+		return password.length() < passwordMinLength || passwordMaxLength < password.length();
+	}
 	
 	/**
 	 * @return the resetHash
@@ -264,7 +272,5 @@ public class User {
 
     public int hashCode() {
         return Objects.hash(this.idUser);
-    }
-	
-	
+    }	
 }

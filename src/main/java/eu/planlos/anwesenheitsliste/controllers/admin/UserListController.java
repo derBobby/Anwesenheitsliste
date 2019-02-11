@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,21 +29,21 @@ public class UserListController {
 	
 	@RequestMapping(value = URL_USERLIST + "{markedUserId}")
 	@Secured ({"USER"})
-	public String  markedUserList(Model model, @PathVariable Long markedUserId) {
+	public String  markedUserList(Model model, Authentication auth, @PathVariable Long markedUserId) {
 
-		prepareContent(model, markedUserId);
+		prepareContent(model, auth, markedUserId);
 		return RES_USERLIST;
 	}
 
 	@RequestMapping(value = URL_USERLIST)
 	@Secured ({"USER"})
-	public String  userList(Model model) {
+	public String  userList(Model model, Authentication auth) {
 		
-		prepareContent(model, null);
+		prepareContent(model, auth, null);
 		return RES_USERLIST;
 	}
 	
-	private void prepareContent(Model model, Long markedUserId) {
+	private void prepareContent(Model model, Authentication auth, Long markedUserId) {
 		
 		List<String> headings = new ArrayList<>();	
 		headings.add("#");
@@ -62,6 +63,6 @@ public class UserListController {
 		model.addAttribute("functionResetPW", "TODO"); //TODO NEW Password reset
 		model.addAttribute("functionAdd", URL_USER);
 		
-		bf.fill(model, "Benutzerverwaltung", "Liste der Benutzer");
+		bf.fill(model, auth, "Benutzerverwaltung", "Liste der Benutzer");
 	}
 }

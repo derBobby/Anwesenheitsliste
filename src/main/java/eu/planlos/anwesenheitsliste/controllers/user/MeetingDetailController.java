@@ -23,6 +23,7 @@ import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -67,7 +68,7 @@ public class MeetingDetailController {
 	
 	// For editing a given meeting for given team
 	@RequestMapping(path = URL_MEETINGFORTEAM + "{idTeam}/{idMeeting}", method = RequestMethod.GET)
-	public String edit(Model model, Principal principal, HttpSession session, @PathVariable Long idTeam, @PathVariable Long idMeeting) {
+	public String edit(Model model, Authentication auth, Principal principal, HttpSession session, @PathVariable Long idTeam, @PathVariable Long idMeeting) {
 	
 		if(!isAdmin(session) && isNotAuthorizedForTeam(idTeam, principal.getName())) {
 			logger.error("Benutzer \"" + principal.getName() + "\" hat unauthorisiert versucht auf Termin id=" + idMeeting + "von Gruppe id=" + idTeam + " zuzugreifen.");
@@ -76,7 +77,7 @@ public class MeetingDetailController {
 		
 		Meeting meeting = meetingService.loadMeeting(idMeeting);
 		model.addAttribute(meeting);
-		prepareContent(model, meeting);
+		prepareContent(model, auth, meeting);
 		
 		prepareContentWithTeam(model, idTeam);
 		
@@ -85,7 +86,7 @@ public class MeetingDetailController {
 
 	// For adding new meeting for given team
 	@RequestMapping(path = URL_MEETINGFORTEAM + "{idTeam}", method = RequestMethod.GET)
-	public String addForTeam(Model model, Principal principal, HttpSession session, @PathVariable Long idTeam) {
+	public String addForTeam(Model model,  Authentication auth, Principal principal, HttpSession session, @PathVariable Long idTeam) {
 
 		if(!isAdmin(session) && isNotAuthorizedForTeam(idTeam, principal.getName())) {
 			logger.error("Benutzer \"" + principal.getName() + "\" hat unauthorisiert versucht einen Termin für Gruppe id=" + idTeam + " anzulegen.");
@@ -95,7 +96,7 @@ public class MeetingDetailController {
 		Meeting meeting = new Meeting();
 		meeting.setMeetingDate(today());
 		model.addAttribute(meeting);
-		prepareContent(model, meeting);
+		prepareContent(model, auth, meeting);
 		
 		prepareContentWithTeam(model, idTeam);
 
@@ -109,12 +110,12 @@ public class MeetingDetailController {
 	// STEP 1 adding new meeting without a given team
 	// -> View for choosing team
 	@RequestMapping(path = URL_MEETINGCHOOSETEAM, method = RequestMethod.GET)
-	public String addWithoutTeam(Model model, Principal principal, HttpSession session) {
+	public String addWithoutTeam(Model model, Authentication auth, Principal principal, HttpSession session) {
 		
 		Meeting meeting = new Meeting();
 		meeting.setMeetingDate(today());
 		model.addAttribute(meeting);
-		prepareContent(model, meeting);
+		prepareContent(model, auth, meeting);
 
 		prepareContentWithoutTeam(model, principal.getName(), isAdmin(session));
 		
@@ -128,7 +129,7 @@ public class MeetingDetailController {
 	// STEP 2 adding new meeting without a given team
 	// -> View with participants for chosen team
 	@RequestMapping(path = URL_MEETINGADDPARTICIPANTS, method = RequestMethod.POST)
-	public String addWithoutTeam(Model model, Principal principal, HttpSession session, @Valid @ModelAttribute Meeting meeting, Errors errors) {
+	public String addWithoutTeam(Model model, Authentication auth, Principal principal, HttpSession session, @Valid @ModelAttribute Meeting meeting, Errors errors) {
 			
 		String loginName = principal.getName();
 		
@@ -139,11 +140,11 @@ public class MeetingDetailController {
 		
 		if(errors.hasErrors()) {
 			logger.error("Validierungsfehler in Schritt zwei beim Anlegen ohne Team von Benutzer \"" + principal.getName() + "\".");
-			handleValidationErrors(model, meeting, loginName, isAdmin(session));
+			handleValidationErrors(model, auth, meeting, loginName, isAdmin(session));
 			return RES_MEETING; 
 		}
 		
-		prepareContent(model, meeting);
+		prepareContent(model, auth, meeting);
 		prepareContentWithTeam(model, meeting.getTeam().getIdTeam());
 		
 		return RES_MEETING; 
@@ -155,13 +156,13 @@ public class MeetingDetailController {
 
 	// For submitting the added/edited meeting
 	@RequestMapping(path = URL_MEETINGSUBMIT, method = RequestMethod.POST)
-	public String submit(Model model, Principal principal, HttpSession session, @Valid @ModelAttribute Meeting meeting, Errors errors) {
+	public String submit(Model model, Authentication auth, Principal principal, HttpSession session, @Valid @ModelAttribute Meeting meeting, Errors errors) {
 		
 		String loginName = principal.getName();
 		
 		if(errors.hasErrors()) {
 			logger.error("Validierungsfehler beim Submit eines Termins von Benutzer \"" + loginName + "\".");
-			handleValidationErrors(model, meeting, loginName, isAdmin(session));
+			handleValidationErrors(model, auth, meeting, loginName, isAdmin(session));
 			return RES_MEETING; 
 		}
 
@@ -176,9 +177,9 @@ public class MeetingDetailController {
 		return "redirect:" + URL_MEETINGLIST + meeting.getTeam().getIdTeam() + DELIMETER + meeting.getIdMeeting();
 	}
 	
-	private void handleValidationErrors(Model model, Meeting meeting, String loginName, boolean isAdmin) {
+	private void handleValidationErrors(Model model, Authentication auth, Meeting meeting, String loginName, boolean isAdmin) {
 		
-		prepareContent(model, meeting);
+		prepareContent(model, auth, meeting);
 
 		if(meeting.getTeam() != null) {
 			prepareContentWithTeam(model, meeting.getTeam().getIdTeam());
@@ -187,12 +188,12 @@ public class MeetingDetailController {
 		}
 	}
 
-	private void prepareContent(Model model, Meeting meeting) {
+	private void prepareContent(Model model, Authentication auth, Meeting meeting) {
 		
 		if(meeting.getIdMeeting() != null) {
-			bf.fill(model, STR_MODULE, STR_TITLE_EDIT_MEETING);
+			bf.fill(model, auth, STR_MODULE, STR_TITLE_EDIT_MEETING);
 		} else {
-			bf.fill(model, STR_MODULE, STR_TITLE_ADD_MEETING);
+			bf.fill(model, auth, STR_MODULE, STR_TITLE_ADD_MEETING);
 		}
 	}
 	

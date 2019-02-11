@@ -24,9 +24,7 @@ public class UserService {
 	
 	private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 	
-	private final int userMinLength = 10;
-	private final int userMaxLength = 50;
-	private final String passwordLengthError = "Das Passwort muss zwischen " + userMinLength + " und " + userMaxLength + " Zeichen lang sein";
+	private final String passwordLengthError = "Das Passwort muss zwischen " + User.passwordMinLength + " und " + User.passwordMaxLength + " Zeichen lang sein";
 	
 	public User save(User user) throws DuplicateKeyException, PasswordLengthError, UnknownUserSaveException {
 		
@@ -50,13 +48,13 @@ public class UserService {
 		}
 		
 		// Is user is added and password is not set properly dont save
-		if(user.getIdUser() == null && ! ( userMinLength <= user.getPassword().length() && user.getPassword().length() <= userMaxLength) ) {
+		if(user.getIdUser() == null && ! user.isPasswordLengthOK() ) {
 			logger.debug("Benutzer anlegen: das Passwort enspricht nicht den Anforderungen.");
 			throw new PasswordLengthError(passwordLengthError);
 		}
 		
 		// Is user is edited and password is not set properly dont save
-		if(user.getIdUser() != null && ! user.getPassword().equals("") && ( user.getPassword().length() < userMinLength || userMaxLength < user.getPassword().length()) ) {
+		if(user.getIdUser() != null && ! user.getPassword().equals("") && user.isPasswordLengthOK() ) {
 			logger.debug("Benutzer bearbeiten: das Passwort enspricht nicht den Anforderungen.");
 			throw new PasswordLengthError(passwordLengthError);
 		}
@@ -70,7 +68,7 @@ public class UserService {
 		}
 
 		// If user is added or edited and the password is OK then encrypt it and save it
-		if(userMinLength <= user.getPassword().length() && user.getPassword().length() <= userMaxLength) { 
+		if(user.isPasswordLengthOK()) { 
 			BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 			user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
 			logger.debug("Benutzer bearbeiten: neues Passwort angegeben.");

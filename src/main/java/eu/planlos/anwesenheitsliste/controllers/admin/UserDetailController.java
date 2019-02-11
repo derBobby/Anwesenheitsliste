@@ -11,6 +11,7 @@ import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -43,30 +44,30 @@ public class UserDetailController {
 	private TeamService teamService;
 	
 	@RequestMapping(path = URL_USER + "{idUser}", method = RequestMethod.GET)
-	public String edit(Model model, @PathVariable Long idUser) {
+	public String edit(Model model, Authentication auth, @PathVariable Long idUser) {
 
 		User user = userService.loadUser(idUser);
 		model.addAttribute(user);
-		prepareContent(model, user);
+		prepareContent(model, auth, user);
 		
 		return RES_USER;
 	}
 	
 	@RequestMapping(path = URL_USER, method = RequestMethod.GET)
-	public String add(Model model) {
+	public String add(Model model, Authentication auth) {
 		
 		User user = new User();
 		model.addAttribute(user);
-		prepareContent(model, user);
+		prepareContent(model, auth, user);
 		
 		return RES_USER;
 	}
 
 	@RequestMapping(path = URL_USER, method = RequestMethod.POST)
-	public String submit(Model model, Principal principal, @Valid @ModelAttribute User user, Errors errors) {
+	public String submit(Model model, Authentication auth, Principal principal, @Valid @ModelAttribute User user, Errors errors) {
 		
 		if(errors.hasErrors()) {
-			prepareContent(model, user);
+			prepareContent(model, auth, user);
 			return RES_USER;
 		}
 		
@@ -79,18 +80,18 @@ public class UserDetailController {
 			logger.error("Benutzer " + user.getIdUser() + ": \"" + user.getLoginName() + "\" konnte nicht von \"" + principal.getName() + "\" gespeichert werden: " + e.getMessage());
 			e.printStackTrace();
 			
-			prepareContent(model, user);
+			prepareContent(model, auth, user);
 			model.addAttribute("customError", e.getMessage());
 			return RES_USER;
 		}
 	}
 
-	private void prepareContent(Model model, User user) {
+	private void prepareContent(Model model, Authentication auth, User user) {
 		
 		if(user.getIdUser() != null) {
-			bf.fill(model, STR_MODULE, STR_TITLE_EDIT_USER);
+			bf.fill(model, auth, STR_MODULE, STR_TITLE_EDIT_USER);
 		} else {
-			bf.fill(model, STR_MODULE, STR_TITLE_ADD_USER);
+			bf.fill(model, auth, STR_MODULE, STR_TITLE_ADD_USER);
 		}
 		
 		model.addAttribute("teams", teamService.loadAllTeams());

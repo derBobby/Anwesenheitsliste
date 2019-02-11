@@ -4,6 +4,7 @@ import static eu.planlos.anwesenheitsliste.ApplicationPath.RES_PARTICIPATIONOVER
 import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_PARTICIPATIONOVERVIEW;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,12 +29,12 @@ public class ParticipationOverviewController {
 	private TeamService teamService;
 
 	@RequestMapping(path = URL_PARTICIPATIONOVERVIEW)
-	public String participationOverview(Model model) {
+	public String participationOverview(Model model, Authentication auth) {
 		
 		model.addAttribute("teams", teamService.loadAllTeams());
 		model.addAttribute("participants", participantService.loadAllParticipants());
 		
-		bf.fill(model, STR_MODULE, STR_TITLE);
+		bf.fill(model, auth, STR_MODULE, STR_TITLE);
 		
 		return RES_PARTICIPATIONOVERVIEW;
 	}

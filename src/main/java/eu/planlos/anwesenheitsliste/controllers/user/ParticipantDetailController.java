@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -53,7 +54,7 @@ public class ParticipantDetailController {
 	
 	// User
 	@RequestMapping(path = URL_PARTICIPANT + "{idParticipant}", method = RequestMethod.GET)
-	public String edit(Model model, Principal principal, HttpSession session, @PathVariable Long idParticipant) {
+	public String edit(Model model, Authentication auth, Principal principal, HttpSession session, @PathVariable Long idParticipant) {
 
 		String loginName = principal.getName();
 		
@@ -64,7 +65,7 @@ public class ParticipantDetailController {
 		
 		Participant participant = participantService.loadParticipant(idParticipant);
 		model.addAttribute(participant);
-		prepareContent(model, participant, loginName);
+		prepareContent(model, auth, participant, loginName);
 		
 		return RES_PARTICIPANT;
 	}
@@ -75,18 +76,18 @@ public class ParticipantDetailController {
 
 	// User
 	@RequestMapping(path = URL_PARTICIPANT, method = RequestMethod.GET)
-	public String add(Model model, Principal principal) {
+	public String add(Model model, Authentication auth, Principal principal) {
 		
 		Participant participant = new Participant();
 		model.addAttribute(participant);
-		prepareContent(model, participant, principal.getName());
+		prepareContent(model, auth, participant, principal.getName());
 		
 		return RES_PARTICIPANT;
 	}
 
 	// User
 	@RequestMapping(path = URL_PARTICIPANT, method = RequestMethod.POST)
-	public String submit(Model model, Principal principal, HttpSession session, @Valid @ModelAttribute Participant participant, Errors errors) {
+	public String submit(Model model, Authentication auth, Principal principal, HttpSession session, @Valid @ModelAttribute Participant participant, Errors errors) {
 
 		String loginName = principal.getName();
 		
@@ -101,13 +102,13 @@ public class ParticipantDetailController {
 			//TODO NEW set own error for attribute "team"?
 			logger.error("Benutzer \"" + loginName + "\" hat versucht den Teilnehmer id=" + participant.getIdParticipant() + " ohne Gruppe zu speichern.");
 			model.addAttribute("customError", "Es muss mindestens eine Gruppe gewählt werden");
-			prepareContent(model, participant, loginName);
+			prepareContent(model, auth, participant, loginName);
 			return RES_PARTICIPANT; 
 		}
 		
 		if(errors.hasErrors()) {
 			//TODO NEW go in try and throw error instead?
-			prepareContent(model, participant, loginName);
+			prepareContent(model, auth, participant, loginName);
 			return RES_PARTICIPANT; 
 		}
 		
@@ -121,18 +122,18 @@ public class ParticipantDetailController {
 			
 		} catch (DuplicateKeyException e) {
 			logger.error("Benutzer \"" + loginName + "\" hat versucht den Teilnehmer id=" + participant.getIdParticipant() + " zu speichern: " + e.getMessage());
-			prepareContent(model, participant, loginName);
+			prepareContent(model, auth, participant, loginName);
 			model.addAttribute("customError", e.getMessage());
 			return RES_PARTICIPANT;
 		}
 	}
 
-	private void prepareContent(Model model, Participant participant, String loginName) {
+	private void prepareContent(Model model, Authentication auth, Participant participant, String loginName) {
 
 		if(participant.getIdParticipant() != null) {
-			bf.fill(model, STR_MODULE, STR_TITLE_EDIT_USER);
+			bf.fill(model, auth, STR_MODULE, STR_TITLE_EDIT_USER);
 		} else {
-			bf.fill(model, STR_MODULE, STR_TITLE_ADD_USER);
+			bf.fill(model, auth, STR_MODULE, STR_TITLE_ADD_USER);
 		}
 		
 		model.addAttribute("teams", teamService.loadTeamsForUser(loginName));

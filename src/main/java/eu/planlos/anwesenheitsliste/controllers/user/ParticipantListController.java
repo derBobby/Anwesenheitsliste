@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -41,17 +42,17 @@ public class ParticipantListController {
 
 	// User
 	@RequestMapping(path = URL_PARTICIPANTLIST + "{markedParticipantId}")
-	public String markedParticipantList(Model model, Principal principal, @PathVariable Long markedParticipantId) {
+	public String markedParticipantList(Model model, Authentication auth, Principal principal, @PathVariable Long markedParticipantId) {
 	
-		prepareContent(model, participantsForUser(principal.getName()), markedParticipantId);
+		prepareContent(model, auth, participantsForUser(principal.getName()), markedParticipantId);
 		return RES_PARTICIPANTLIST;
 	}
 
 	// User
 	@RequestMapping(path = URL_PARTICIPANTLIST)
-	public String participantList(Model model, Principal principal) {
+	public String participantList(Model model, Authentication auth, Principal principal) {
 
-		prepareContent(model, participantsForUser(principal.getName()), null);
+		prepareContent(model, auth, participantsForUser(principal.getName()), null);
 		return RES_PARTICIPANTLIST;
 	}
 
@@ -70,25 +71,25 @@ public class ParticipantListController {
 
 	// Admin
 	@RequestMapping(path = URL_PARTICIPANTLISTFULL)
-	public String participantListFull(Model model) {
+	public String participantListFull(Model model, Authentication auth) {
 
 		List<Participant> participants = participantService.loadAllParticipants();
 
-		prepareContent(model, participants, null);
+		prepareContent(model, auth, participants, null);
 		return RES_PARTICIPANTLIST;
 	}
 	
 	// Admin
 	@RequestMapping(path = URL_PARTICIPANTLISTFULL + "{markedParticipantId}")
-	public String markedParticipantListFull(Model model, @PathVariable Long markedParticipantId) {
+	public String markedParticipantListFull(Model model, Authentication auth, @PathVariable Long markedParticipantId) {
 
 		List<Participant> participants = participantService.loadAllParticipants();
 
-		prepareContent(model, participants, markedParticipantId);
+		prepareContent(model, auth, participants, markedParticipantId);
 		return RES_PARTICIPANTLIST;
 	}
 
-	private void prepareContent(Model model, List<Participant> participants, Long markedParticipantId) {
+	private void prepareContent(Model model, Authentication auth, List<Participant> participants, Long markedParticipantId) {
 
 		List<String> headings = new ArrayList<>();
 		headings.add("#");
@@ -106,6 +107,6 @@ public class ParticipantListController {
 		model.addAttribute("functionEdit", URL_PARTICIPANT);
 		model.addAttribute("functionAdd", URL_PARTICIPANT);
 
-		bf.fill(model, STR_MODULE, STR_TITLE);
+		bf.fill(model, auth, STR_MODULE, STR_TITLE);
 	}
 }

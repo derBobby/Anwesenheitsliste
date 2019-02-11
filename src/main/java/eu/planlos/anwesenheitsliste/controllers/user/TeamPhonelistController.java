@@ -13,6 +13,7 @@ import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -47,7 +48,7 @@ public class TeamPhonelistController {
     private SecurityService securityService;
 
 	@RequestMapping(value = URL_TEAMPHONELIST + "{idTeam}")
-	public String teamPhoneList(Model model, HttpSession session, Principal principal, @PathVariable Long idTeam) {
+	public String teamPhoneList(Model model, Authentication auth, HttpSession session, Principal principal, @PathVariable Long idTeam) {
 
 		String loginName = principal.getName();
 		boolean isAdmin = (boolean) session.getAttribute(SessionAttributes.ISADMIN);
@@ -57,11 +58,11 @@ public class TeamPhonelistController {
 			return "redirect:" + URL_ERROR_403;
 		}
 		
-		prepareContent(model, idTeam);
+		prepareContent(model, auth, idTeam);
 		return RES_TEAMPHONELIST;
 	}
 	
-	private void prepareContent(Model model, Long idTeam) {
+	private void prepareContent(Model model, Authentication auth, Long idTeam) {
 		
 		List<String> headings = new ArrayList<String>();	
 		headings.add("#");
@@ -75,6 +76,6 @@ public class TeamPhonelistController {
 
 		Team team = teamService.loadTeam(idTeam);
 		
-		bf.fill(model, STR_MODULE, STR_TITLE + " für " + team.getTeamName());
+		bf.fill(model, auth, STR_MODULE, STR_TITLE + " für " + team.getTeamName());
 	}
 }

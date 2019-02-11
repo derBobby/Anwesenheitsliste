@@ -28,7 +28,6 @@ import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
@@ -40,7 +39,7 @@ public class BodyFillerService implements EnvironmentAware {
 	@Autowired
 	private Environment environment;
 	
-	public void fill(Model model, String module, String title) {
+	public void fill(Model model, Authentication auth, String module, String title) {
 		
         for (final String profileName : environment.getActiveProfiles()) {
             if(profileName.equals("DEV")) {
@@ -53,10 +52,10 @@ public class BodyFillerService implements EnvironmentAware {
 		model.addAttribute("module", module);
 		model.addAttribute("title", title);		
 		
-		fillMenu(model);
+		fillMenu(model, auth);
 	}
 	
-	private void fillMenu(Model model) {
+	private void fillMenu(Model model, Authentication auth) {
 
 		model.addAttribute("URL_HOME", URL_HOME);	
 		
@@ -103,11 +102,9 @@ public class BodyFillerService implements EnvironmentAware {
 		/*
 		 * Login URL only if not logged in
 		 */
-    	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-	    
-    	if(authentication == null
-    			|| ! authentication.isAuthenticated()
-    			|| authentication instanceof AnonymousAuthenticationToken) {
+    	if(auth == null
+    			|| ! auth.isAuthenticated()
+    			|| auth instanceof AnonymousAuthenticationToken) {
     		
         	logger.debug("Adding login form URL.");
 	    	model.addAttribute("URL_LOGIN_FORM", URL_LOGIN_FORM);

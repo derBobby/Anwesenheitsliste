@@ -17,6 +17,7 @@ import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -47,7 +48,7 @@ public class MeetingListController {
 	
 	// User
 	@RequestMapping(path = URL_MEETINGLIST + "{idTeam}")
-	public String meetingListForTeam(Model model, Principal principal, HttpSession session, @PathVariable Long idTeam) {
+	public String meetingListForTeam(Model model, Authentication auth, Principal principal, HttpSession session, @PathVariable Long idTeam) {
 		
 		boolean isAdmin = (boolean) session.getAttribute(SessionAttributes.ISADMIN);
 		
@@ -56,26 +57,26 @@ public class MeetingListController {
 			return "redirect:" + URL_ERROR_403;
 		}
 		
-		prepareContentForTeam(model, idTeam);
+		prepareContentForTeam(model, auth, idTeam);
 		return RES_MEETINGLIST;
 	}
 
 	// User
 	@RequestMapping(path = URL_MEETINGLIST + "{idTeam}" + DELIMETER + "{idMeeting}")
-	public String meetingListForTeamMarked(Model model, Principal principal, HttpSession session, @PathVariable Long idTeam, @PathVariable Long idMeeting) {
+	public String meetingListForTeamMarked(Model model, Authentication auth, Principal principal, HttpSession session, @PathVariable Long idTeam, @PathVariable Long idMeeting) {
 
 		model.addAttribute("markedMeetingId", idMeeting);
-		return meetingListForTeam(model, principal, session, idTeam);
+		return meetingListForTeam(model, auth, principal, session, idTeam);
 	}
 	
 	// Admin
 	@RequestMapping(path = URL_MEETINGLISTFULL)
-	public String meetingListFull(Model model) {
+	public String meetingListFull(Model model, Authentication auth) {
 		
 		model.addAttribute("functionEdit", URL_MEETINGFORTEAM);
 		model.addAttribute("functionAdd", URL_MEETINGCHOOSETEAM);
 		
-		prepareContent(model, null);
+		prepareContent(model, auth, null);
 		
 		return RES_MEETINGLIST;
 	}
@@ -84,22 +85,22 @@ public class MeetingListController {
 	 * CONTENT PREPARATION
 	 */
 	
-	private void prepareContentForTeam(Model model, Long idTeam) {
+	private void prepareContentForTeam(Model model, Authentication auth, Long idTeam) {
 		
 		model.addAttribute("idTeam", idTeam);
 		
 		model.addAttribute("functionEdit", URL_MEETINGFORTEAM);
 		model.addAttribute("functionAdd", URL_MEETINGFORTEAM);
 		
-		prepareContent(model, idTeam);
+		prepareContent(model, auth, idTeam);
 	}
 
-	private void prepareContent(Model model, Long idTeam) {
+	private void prepareContent(Model model, Authentication auth, Long idTeam) {
 
 		model.addAttribute("headings", getHeadingsForTeam(idTeam));
 		model.addAttribute("meetings", getMeetingsForTeam(idTeam));
 		
-		bf.fill(model, STR_MODULE, STR_TITLE);
+		bf.fill(model, auth, STR_MODULE, STR_TITLE);
 	}
 	
 	private List<String> getHeadingsForTeam(Long idTeam) {

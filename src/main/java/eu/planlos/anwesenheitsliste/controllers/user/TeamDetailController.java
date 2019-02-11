@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -57,7 +58,7 @@ public class TeamDetailController {
 	private SecurityService securityService;
 	
 	@RequestMapping(path = URL_TEAM + "{idTeam}", method = RequestMethod.GET)
-	public String edit(Model model, Principal principal, HttpSession session, @PathVariable Long idTeam) {
+	public String edit(Model model, Authentication auth, Principal principal, HttpSession session, @PathVariable Long idTeam) {
 
 		String loginName = principal.getName();
 		boolean isAdmin = isAdmin(session);
@@ -69,13 +70,13 @@ public class TeamDetailController {
 		
 		Team team = teamService.loadTeam(idTeam);
 		model.addAttribute(team);
-		prepareContent(model, team, isAdmin);
+		prepareContent(model, auth, team, isAdmin);
 				
 		return RES_TEAM;
 	}
 	
 	@RequestMapping(path = URL_TEAM, method = RequestMethod.GET)
-	public String add(Model model, Principal principal, HttpSession session) {
+	public String add(Model model, Authentication auth, Principal principal, HttpSession session) {
 
 		boolean isAdmin = isAdmin(session);
 		
@@ -87,14 +88,14 @@ public class TeamDetailController {
 		
 		Team team = new Team();
 		model.addAttribute(team);
-		prepareContent(model, team, isAdmin);
+		prepareContent(model, auth, team, isAdmin);
 				
 		return RES_TEAM;
 	}
 
 	//TODO Transactional
 	@RequestMapping(path = URL_TEAM, method = RequestMethod.POST)
-	public String submit(Model model, Principal principal, HttpSession session, @Valid @ModelAttribute Team team, Errors errors) {
+	public String submit(Model model, Authentication auth, Principal principal, HttpSession session, @Valid @ModelAttribute Team team, Errors errors) {
 
 		String loginName = principal.getName();
 		
@@ -111,7 +112,7 @@ public class TeamDetailController {
 		
 		if(errors.hasErrors()) {
 			logger.error("Validierungsfehler beim Submit von Gruppe \"" + team.getTeamName() + "\" von Benutzer \"" + loginName + "\" .");
-			prepareContent(model, team, isAdmin);
+			prepareContent(model, auth, team, isAdmin);
 			return RES_TEAM;
 		}
 		
@@ -136,16 +137,16 @@ public class TeamDetailController {
 			model.addAttribute("customError", e.getMessage());
 		}
 		
-		prepareContent(model, team, isAdmin);
+		prepareContent(model, auth, team, isAdmin);
 		return RES_TEAM;
 	}
 	
-	private void prepareContent(Model model, Team team, boolean isAdmin) {
+	private void prepareContent(Model model, Authentication auth, Team team, boolean isAdmin) {
 		
 		if(team.getIdTeam() != null) {
-			bf.fill(model, STR_MODULE, STR_TITLE_EDIT_TEAM);
+			bf.fill(model, auth, STR_MODULE, STR_TITLE_EDIT_TEAM);
 		} else {
-			bf.fill(model, STR_MODULE, STR_TITLE_ADD_TEAM);
+			bf.fill(model, auth, STR_MODULE, STR_TITLE_ADD_TEAM);
 		}
 		
 		model.addAttribute("users", userService.loadAllUsers());

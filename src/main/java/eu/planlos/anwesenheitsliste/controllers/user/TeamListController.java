@@ -12,10 +12,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+
 import eu.planlos.anwesenheitsliste.model.Team;
 import eu.planlos.anwesenheitsliste.service.BodyFillerService;
 import eu.planlos.anwesenheitsliste.service.TeamService;
@@ -34,51 +36,51 @@ public class TeamListController {
 	
 	// User
 	@RequestMapping(value = URL_TEAMLIST + "{markedTeamId}")
-	public String markedTeamList(Model model, Principal principal,  @PathVariable Long markedTeamId) {
+	public String markedTeamList(Model model, Authentication auth, Principal principal,  @PathVariable Long markedTeamId) {
 		
 		List<Team> teams = teamService.loadTeamsForUser(principal.getName());
 
-		prepareContent(model, teams, markedTeamId);
+		prepareContent(model, auth, teams, markedTeamId);
 		return RES_TEAMLIST;
 	}
 	
 	// User
 	@RequestMapping(value = URL_TEAMLIST)
-	public String teamList(Model model, Principal principal) {
+	public String teamList(Model model, Authentication auth, Principal principal) {
 
 		List<Team> teams = teamService.loadTeamsForUser(principal.getName());
 		
-		prepareContent(model, teams, null);
+		prepareContent(model, auth, teams, null);
 		return RES_TEAMLIST;
 	}
 	
 	// Admin
 	@RequestMapping(value = URL_TEAMLISTFULL)
-	public String teamListFull(Model model) {
+	public String teamListFull(Model model, Authentication auth) {
 		
 		List<Team> teams = teamService.loadAllTeams();
 		
 		//Admin function add
 		model.addAttribute("functionAdd", URL_TEAM);
 		
-		prepareContent(model, teams, null);
+		prepareContent(model, auth, teams, null);
 		return RES_TEAMLIST;
 	}
 	
 	// Admin
 	@RequestMapping(value = URL_TEAMLISTFULL + "{markedTeamId}")
-	public String markedteamListFull(Model model, @PathVariable Long markedTeamId) {
+	public String markedteamListFull(Model model, Authentication auth, @PathVariable Long markedTeamId) {
 		
 		List<Team> teams = teamService.loadAllTeams();
 		
 		//Admin function add
 		model.addAttribute("functionAdd", URL_TEAM);
 		
-		prepareContent(model, teams, markedTeamId);
+		prepareContent(model, auth, teams, markedTeamId);
 		return RES_TEAMLIST;
 	}
 
-	private void prepareContent(Model model, List<Team> teams, Long markedTeamId) {
+	private void prepareContent(Model model, Authentication auth, List<Team> teams, Long markedTeamId) {
 		
 		List<String> headings = new ArrayList<String>();	
 		headings.add("#");
@@ -93,6 +95,6 @@ public class TeamListController {
 		model.addAttribute("functionMeetings", URL_MEETINGLIST);
 		model.addAttribute("functionPhonelist", URL_TEAMPHONELIST);
 		
-		bf.fill(model, STR_MODULE, STR_TITLE);
+		bf.fill(model, auth, STR_MODULE, STR_TITLE);
 	}
 }

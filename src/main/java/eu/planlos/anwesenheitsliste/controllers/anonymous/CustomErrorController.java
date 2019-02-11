@@ -60,7 +60,7 @@ public class CustomErrorController implements ErrorController {
 			logger.error("Ein nicht authentifizierter Benutzer wollte unauthorisiert auf eine Seite zugreifen.");			
 		}
 		
-		bf.fill(model, "Fehler", "Verboten - 403");
+		bf.fill(model, auth, "Fehler", "Verboten - 403");
 		
 		return RES_ERROR_403;
 	}
@@ -105,7 +105,7 @@ public class CustomErrorController implements ErrorController {
 	    errorMailNotificationService.sendErrorNotification(title, errorMessage, errorException, errorTrace);
 	    
 	    model.addAttribute("status", status);
-		bf.fill(model, "Fehler", title);
+		bf.fill(model, auth, "Fehler", title);
 		
 		return RES_ERROR_UNKNOWN;
 	}

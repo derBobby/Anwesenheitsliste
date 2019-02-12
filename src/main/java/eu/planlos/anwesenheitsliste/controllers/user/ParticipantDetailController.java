@@ -97,6 +97,7 @@ public class ParticipantDetailController {
 			return "redirect:" + URL_ERROR_403;
 		}
 		
+		//TODO delemeter??
 		if(participant.getTeams().isEmpty()) {
 			//TODO go in try ant throw error instead?
 			//TODO NEW set own error for attribute "team"?

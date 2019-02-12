@@ -29,20 +29,16 @@ import eu.planlos.anwesenheitsliste.service.MailService;
 @Controller
 public class CustomErrorController implements ErrorController {
 
-	private final ErrorAttributes errorAttributes;
-
 	private static final Logger logger = LoggerFactory.getLogger(CustomErrorController.class);
 
+	@Autowired
+	private ErrorAttributes errorAttributes;
+	
 	@Autowired
 	private BodyFillerService bf;	
 	
 	@Autowired
 	private MailService errorMailNotificationService;
-
-    @Autowired
-    public CustomErrorController(ErrorAttributes errorAttributes) {
-        this.errorAttributes = errorAttributes;
-    }
     
     /**
      * Will be used from Spring Boot if user is authenticated but not authorised.
@@ -69,9 +65,10 @@ public class CustomErrorController implements ErrorController {
 	@GetMapping(path = URL_ERROR_DEFAULT)
 	public String handleError(HttpServletRequest request, Authentication auth, WebRequest webRequest, Model model) {
 	
-        String errorMessage = (String)request.getAttribute(RequestDispatcher.ERROR_MESSAGE);
-        Exception errorException = (Exception)request.getAttribute(RequestDispatcher.ERROR_EXCEPTION);
+        String errorMessage = (String) request.getAttribute(RequestDispatcher.ERROR_MESSAGE);
+        Exception errorException = (Exception) request.getAttribute(RequestDispatcher.ERROR_EXCEPTION);
 
+        //TODO what is inside body?
         // Get error stack trace map object
         Map<String, Object> body = errorAttributes.getErrorAttributes(webRequest, true);
         // Extract stack trace string

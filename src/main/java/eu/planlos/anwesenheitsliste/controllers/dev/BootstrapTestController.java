@@ -25,9 +25,7 @@ public class BootstrapTestController {
 
 	@RequestMapping(path = URL_BS_TEST)
 	public String permissionOverview(Model model, Authentication auth) {
-		
 		logger.error("Testcontroller wurde aufgerufen: " + this.getClass().toString());
-		
 		bf.fill(model, auth, "Tests", "FontAwesome Testseite");
 		return RES_BS_TEST;
 	}

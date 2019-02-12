@@ -75,6 +75,9 @@ public class MeetingDetailController {
 			return "redirect:" + URL_ERROR_403;
 		}
 		
+		
+		//TODO only authorization for team is tested, but not for meeting. What??
+		//TODO idTeam even necessary here?
 		Meeting meeting = meetingService.loadMeeting(idMeeting);
 		model.addAttribute(meeting);
 		prepareContent(model, auth, meeting);
@@ -130,9 +133,10 @@ public class MeetingDetailController {
 	// -> View with participants for chosen team
 	@RequestMapping(path = URL_MEETINGADDPARTICIPANTS, method = RequestMethod.POST)
 	public String addWithoutTeam(Model model, Authentication auth, Principal principal, HttpSession session, @Valid @ModelAttribute Meeting meeting, Errors errors) {
-			
-		String loginName = principal.getName();
 		
+		String loginName = principal.getName();
+				
+		//TODO law of delemeter, Use MeetingFormContainer with idTeam?? 
 		if(meeting.getTeam() != null && !isAdmin(session) && isNotAuthorizedForTeam(meeting.getTeam().getIdTeam(), principal.getName())) {
 			logger.error("Benutzer \"" + loginName + "\" hat unauthorisiert versucht einen Termin für Gruppe id=" + meeting.getTeam().getIdTeam() + " anzulegen.");
 			return "redirect:" + URL_ERROR_403;
@@ -166,6 +170,7 @@ public class MeetingDetailController {
 			return RES_MEETING; 
 		}
 
+		// Team not null was already validated
 		if(!isAdmin(session) && isNotAuthorizedForTeam(meeting.getTeam().getIdTeam(), principal.getName())) {
 			logger.error("Benutzer \"" + loginName + "\" hat unauthorisiert versucht einen Termin für Gruppe id=" + meeting.getTeam().getIdTeam() + " zu speichern.");
 			return "redirect:" + URL_ERROR_403;

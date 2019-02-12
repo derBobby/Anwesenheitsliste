@@ -1,10 +1,16 @@
 package eu.planlos.anwesenheitsliste.controllers.user;
 
-import java.security.Principal;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.RES_PARTICIPANTLIST;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_PARTICIPANT;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_PARTICIPANTLIST;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_PARTICIPANTLISTFULL;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -17,13 +23,8 @@ import eu.planlos.anwesenheitsliste.model.Participant;
 import eu.planlos.anwesenheitsliste.model.Team;
 import eu.planlos.anwesenheitsliste.service.BodyFillerService;
 import eu.planlos.anwesenheitsliste.service.ParticipantService;
+import eu.planlos.anwesenheitsliste.service.SecurityService;
 import eu.planlos.anwesenheitsliste.service.TeamService;
-
-import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_PARTICIPANTLISTFULL;
-import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_PARTICIPANT;
-import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_PARTICIPANTLIST;
-
-import static eu.planlos.anwesenheitsliste.ApplicationPath.RES_PARTICIPANTLIST;
 
 @Controller
 public class ParticipantListController {
@@ -31,6 +32,9 @@ public class ParticipantListController {
 	public final String STR_MODULE = "Teilnehmerverwaltung";
 	public final String STR_TITLE = "Liste der Teilnehmer";
 
+	@Autowired
+	private SecurityService securityService;
+	
 	@Autowired
 	private BodyFillerService bf;
 
@@ -42,17 +46,17 @@ public class ParticipantListController {
 
 	// User
 	@RequestMapping(path = URL_PARTICIPANTLIST + "{markedParticipantId}")
-	public String markedParticipantList(Model model, Authentication auth, Principal principal, @PathVariable Long markedParticipantId) {
+	public String markedParticipantList(Model model, HttpSession session, Authentication auth, @PathVariable Long markedParticipantId) {
 	
-		prepareContent(model, auth, participantsForUser(principal.getName()), markedParticipantId);
+		prepareContent(model, auth, participantsForUser(securityService.getLoginName(session)), markedParticipantId);
 		return RES_PARTICIPANTLIST;
 	}
 
 	// User
 	@RequestMapping(path = URL_PARTICIPANTLIST)
-	public String participantList(Model model, Authentication auth, Principal principal) {
+	public String participantList(Model model, HttpSession session, Authentication auth) {
 
-		prepareContent(model, auth, participantsForUser(principal.getName()), null);
+		prepareContent(model, auth, participantsForUser(securityService.getLoginName(session)), null);
 		return RES_PARTICIPANTLIST;
 	}
 

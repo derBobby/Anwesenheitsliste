@@ -1,10 +1,12 @@
 package eu.planlos.anwesenheitsliste.controllers.user;
 
-import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_ERROR_403;
 import static eu.planlos.anwesenheitsliste.ApplicationPath.RES_TEAM;
-import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_TEAM;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_ERROR_403;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_TEAMADD;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_TEAMEDIT;
 import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_TEAMLIST;
 import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_TEAMLISTFULL;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_TEAMSUBMIT;
 
 import java.security.Principal;
 
@@ -24,7 +26,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import eu.planlos.anwesenheitsliste.SessionAttributes;
 import eu.planlos.anwesenheitsliste.model.Team;
 import eu.planlos.anwesenheitsliste.model.exception.EmptyIdException;
 import eu.planlos.anwesenheitsliste.service.BodyFillerService;
@@ -57,62 +58,56 @@ public class TeamDetailController {
 	@Autowired
 	private SecurityService securityService;
 	
-	@RequestMapping(path = URL_TEAM + "{idTeam}", method = RequestMethod.GET)
-	public String edit(Model model, Authentication auth, Principal principal, HttpSession session, @PathVariable Long idTeam) {
+	@RequestMapping(path = URL_TEAMEDIT + "{idTeam}", method = RequestMethod.GET)
+	public String edit(Model model, Authentication auth, HttpSession session, @PathVariable Long idTeam) {
 
-		String loginName = principal.getName();
-		boolean isAdmin = isAdmin(session);
+		String loginName = securityService.getLoginName(session);
 		
-		if(!isAdmin && !securityService.isUserAuthorizedForTeam(idTeam, loginName)) {
+		if(isNotAuthorizedForTeam(session, idTeam)) {
 			logger.error("Benutzer \"" + loginName + "\" hat unauthorisiert versucht auf Gruppe id=" + idTeam + " zuzugreifen.");
 			return "redirect:" + URL_ERROR_403;
 		}
 		
 		Team team = teamService.loadTeam(idTeam);
 		model.addAttribute(team);
-		prepareContent(model, auth, team, isAdmin);
+		prepareContent(model, auth, team, false, securityService.isAdmin(session));
 				
 		return RES_TEAM;
 	}
 	
-	@RequestMapping(path = URL_TEAM, method = RequestMethod.GET)
+	@RequestMapping(path = URL_TEAMADD, method = RequestMethod.GET)
 	public String add(Model model, Authentication auth, Principal principal, HttpSession session) {
 
-		boolean isAdmin = isAdmin(session);
-		
-		//TODO should be admin url
-		if(!isAdmin) {
-			logger.error("Benutzer \"" + principal.getName() + "\" hat unauthorisiert versucht eine Gruppe anzulegen.");
-			return "redirect:" + URL_ERROR_403;
-		}
-		
 		Team team = new Team();
 		model.addAttribute(team);
-		prepareContent(model, auth, team, isAdmin);
+		prepareContent(model, auth, team, true, true);
 				
 		return RES_TEAM;
 	}
 
 	//TODO Transactional
-	@RequestMapping(path = URL_TEAM, method = RequestMethod.POST)
+	@RequestMapping(path = URL_TEAMSUBMIT, method = RequestMethod.POST)
 	public String submit(Model model, Authentication auth, Principal principal, HttpSession session, @Valid @ModelAttribute Team team, Errors errors) {
 
 		String loginName = principal.getName();
 		
-		boolean isAuthorizedForTeam = securityService.isUserAuthorizedForTeam(team.getIdTeam(), loginName);
-		boolean isAdmin = isAdmin(session);
+		boolean isNotAuthorizedForTeam = isNotAuthorizedForTeam(session, team.getIdTeam());
+		boolean isAdmin = securityService.isAdmin(session);
 		boolean isAddTeam = team.getIdTeam() == null;
 		
 		// Admin is always allowed, others if it is edit and is authorized
-		if(!isAdmin && ( isAddTeam || !isAuthorizedForTeam) ) {
-			String teamInfo = team.getIdTeam() == null ? "" : "(id= " + team.getIdTeam() + ") " ;
-			logger.error("Benutzer \"" + loginName + "\" hat unauthorisiert versucht eine Gruppe " + teamInfo + "zu speichern.");
+		if(isAddTeam || isNotAuthorizedForTeam) {
+			if(team.getIdTeam() == null) {
+				logger.error("Benutzer \"" + loginName + "\" hat unauthorisiert versucht eine neue Gruppe zu speichern.");
+				return "redirect:" + URL_ERROR_403;
+			}
+			logger.error("Benutzer \"" + loginName + "\" hat unauthorisiert versucht die Gruppe mit id=" + team.getIdTeam() + " zu speichern.");
 			return "redirect:" + URL_ERROR_403;
 		}
 		
 		if(errors.hasErrors()) {
 			logger.error("Validierungsfehler beim Submit von Gruppe \"" + team.getTeamName() + "\" von Benutzer \"" + loginName + "\" .");
-			prepareContent(model, auth, team, isAdmin);
+			prepareContent(model, auth, team, isAddTeam, isAdmin);
 			return RES_TEAM;
 		}
 		
@@ -123,10 +118,10 @@ public class TeamDetailController {
 			userService.updateTeamForUsers(team);
 			participantService.updateTeamForParticipants(team);
 			
-			if(isAuthorizedForTeam) {
-				return "redirect:" + URL_TEAMLIST + savedTeam.getIdTeam();
+			if(isAdmin && isNotAuthorizedForTeam) {
+				return "redirect:" + URL_TEAMLISTFULL + savedTeam.getIdTeam();
 			}
-			return "redirect:" + URL_TEAMLISTFULL + savedTeam.getIdTeam();
+			return "redirect:" + URL_TEAMLIST + savedTeam.getIdTeam();
 
 		} catch (EmptyIdException e) {
 			logger.error("Team "+ team.getIdTeam() +": " + team.getTeamName() + " konnte nicht gespeichert werden -> ID eines Benutzers nicht gesetzt?.");
@@ -137,11 +132,11 @@ public class TeamDetailController {
 			model.addAttribute("customError", e.getMessage());
 		}
 		
-		prepareContent(model, auth, team, isAdmin);
+		prepareContent(model, auth, team, isAddTeam, isAdmin);
 		return RES_TEAM;
 	}
 	
-	private void prepareContent(Model model, Authentication auth, Team team, boolean isAdmin) {
+	private void prepareContent(Model model, Authentication auth, Team team, boolean isAddTeam, boolean isAdmin) {
 		
 		if(team.getIdTeam() != null) {
 			bf.fill(model, auth, STR_MODULE, STR_TITLE_EDIT_TEAM);
@@ -151,16 +146,23 @@ public class TeamDetailController {
 		
 		model.addAttribute("users", userService.loadAllUsers());
 		model.addAttribute("participants", participantService.loadAllParticipants());
-		model.addAttribute("formAction", URL_TEAM);
+
 		
-		if(isAdmin) {
-			model.addAttribute("formCancel", URL_TEAMLISTFULL);
-			return;
+		String formAction = URL_TEAMEDIT;
+		if(isAddTeam) {
+			formAction = URL_TEAMADD;
 		}
-		model.addAttribute("formCancel", URL_TEAMLIST + team.getIdTeam());
+		model.addAttribute("formAction", formAction);
+		
+		
+		String formCancel = URL_TEAMLIST + team.getIdTeam();
+		if(isAdmin) {
+			formCancel = URL_TEAMLISTFULL;
+		}
+		model.addAttribute("formCancel", formCancel);
 	}
-	
-	private boolean isAdmin(HttpSession session) {
-		return (boolean) session.getAttribute(SessionAttributes.ISADMIN);
+
+	private boolean isNotAuthorizedForTeam(HttpSession session, Long idTeam) {
+		return !securityService.isUserAuthorizedForTeam(session, idTeam);
 	}
 }

@@ -2,13 +2,12 @@ package eu.planlos.anwesenheitsliste.controllers.user;
 
 import static eu.planlos.anwesenheitsliste.ApplicationPath.DELIMETER;
 import static eu.planlos.anwesenheitsliste.ApplicationPath.RES_MEETINGLIST;
+import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_ERROR_403;
 import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_MEETINGCHOOSETEAM;
 import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_MEETINGFORTEAM;
 import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_MEETINGLIST;
 import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_MEETINGLISTFULL;
-import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_ERROR_403;
 
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +22,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import eu.planlos.anwesenheitsliste.SessionAttributes;
 import eu.planlos.anwesenheitsliste.model.Meeting;
 import eu.planlos.anwesenheitsliste.service.BodyFillerService;
 import eu.planlos.anwesenheitsliste.service.MeetingService;
@@ -48,12 +46,10 @@ public class MeetingListController {
 	
 	// User
 	@RequestMapping(path = URL_MEETINGLIST + "{idTeam}")
-	public String meetingListForTeam(Model model, Authentication auth, Principal principal, HttpSession session, @PathVariable Long idTeam) {
-		
-		boolean isAdmin = (boolean) session.getAttribute(SessionAttributes.ISADMIN);
-		
-		if(!isAdmin && !hasPermissionForTeam(idTeam, principal.getName())) {
-			logger.error("Benutzer \"" + principal.getName() + "\" hat unauthorisiert versucht auf Terminliste von Gruppe id=" + idTeam + " zuzugreifen.");
+	public String meetingListForTeam(Model model, Authentication auth, HttpSession session, @PathVariable Long idTeam) {
+			
+		if(isNotAuthorizedForTeam(session, idTeam)) {
+			logger.error("Benutzer \"" + securityService.getLoginName(session) + "\" hat unauthorisiert versucht auf Terminliste von Gruppe id=" + idTeam + " zuzugreifen.");
 			return "redirect:" + URL_ERROR_403;
 		}
 		
@@ -63,10 +59,10 @@ public class MeetingListController {
 
 	// User
 	@RequestMapping(path = URL_MEETINGLIST + "{idTeam}" + DELIMETER + "{idMeeting}")
-	public String meetingListForTeamMarked(Model model, Authentication auth, Principal principal, HttpSession session, @PathVariable Long idTeam, @PathVariable Long idMeeting) {
+	public String meetingListForTeamMarked(Model model, Authentication auth, HttpSession session, @PathVariable Long idTeam, @PathVariable Long idMeeting) {
 
 		model.addAttribute("markedMeetingId", idMeeting);
-		return meetingListForTeam(model, auth, principal, session, idTeam);
+		return meetingListForTeam(model, auth, session, idTeam);
 	}
 	
 	// Admin
@@ -84,7 +80,6 @@ public class MeetingListController {
 	/*
 	 * CONTENT PREPARATION
 	 */
-	
 	private void prepareContentForTeam(Model model, Authentication auth, Long idTeam) {
 		
 		model.addAttribute("idTeam", idTeam);
@@ -125,8 +120,8 @@ public class MeetingListController {
 		}
 		return meetingService.loadMeetingsForTeam(idTeam);
 	}
-	
-	private boolean hasPermissionForTeam(long idTeam, String loginName) {
-		return securityService.isUserAuthorizedForTeam(idTeam, loginName);
+
+	private boolean isNotAuthorizedForTeam(HttpSession session, Long idTeam) {
+		return !securityService.isUserAuthorizedForTeam(session, idTeam);
 	}
 }

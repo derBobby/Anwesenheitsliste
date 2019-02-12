@@ -14,6 +14,7 @@ import org.springframework.security.web.authentication.SavedRequestAwareAuthenti
 import org.springframework.stereotype.Component;
 
 import eu.planlos.anwesenheitsliste.ApplicationRole;
+import eu.planlos.anwesenheitsliste.SessionAttributes;
 
 @Component
 public class LoginAuthenticationSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
@@ -30,7 +31,8 @@ public class LoginAuthenticationSuccessHandler extends SavedRequestAwareAuthenti
 		if(authentication.getAuthorities().contains(new SimpleGrantedAuthority(ApplicationRole.ROLE_ADMIN))) {
 			isAdmin = true;
 		}
-		request.getSession().setAttribute("isAdmin", isAdmin);
+		request.getSession().setAttribute(SessionAttributes.ISADMIN, isAdmin);
+		request.getSession().setAttribute(SessionAttributes.LOGINNAME, authentication.getPrincipal());
 		
 		logger.error("Erfolgreicher Loginversuch für : \"" + authentication.getName() + "\"");
 

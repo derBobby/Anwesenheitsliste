@@ -4,7 +4,6 @@ import static eu.planlos.anwesenheitsliste.ApplicationPath.RES_TEAMPHONELIST;
 import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_ERROR_403;
 import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_TEAMPHONELIST;
 
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +24,6 @@ import eu.planlos.anwesenheitsliste.service.BodyFillerService;
 import eu.planlos.anwesenheitsliste.service.ParticipantService;
 import eu.planlos.anwesenheitsliste.service.SecurityService;
 import eu.planlos.anwesenheitsliste.service.TeamService;
-import eu.planlos.anwesenheitsliste.SessionAttributes;
 
 @Controller
 public class TeamPhonelistController {
@@ -48,12 +46,11 @@ public class TeamPhonelistController {
     private SecurityService securityService;
 
 	@RequestMapping(value = URL_TEAMPHONELIST + "{idTeam}")
-	public String teamPhoneList(Model model, Authentication auth, HttpSession session, Principal principal, @PathVariable Long idTeam) {
+	public String teamPhoneList(Model model, Authentication auth, HttpSession session, @PathVariable Long idTeam) {
 
-		String loginName = principal.getName();
-		boolean isAdmin = (boolean) session.getAttribute(SessionAttributes.ISADMIN);
+		String loginName = securityService.getLoginName(session);
 		
-		if(!isAdmin && !securityService.isUserAuthorizedForTeam(idTeam, loginName)) {
+		if(isNotAuthorizedForTeam(session, idTeam)) {
 			logger.error("Benutzer \"" + loginName + "\" hat unauthorisiert versucht auf Telefonliste von Gruppe id=" + idTeam + " zuzugreifen.");
 			return "redirect:" + URL_ERROR_403;
 		}
@@ -77,5 +74,9 @@ public class TeamPhonelistController {
 		Team team = teamService.loadTeam(idTeam);
 		
 		bf.fill(model, auth, STR_MODULE, STR_TITLE + " für " + team.getTeamName());
+	}
+
+	private boolean isNotAuthorizedForTeam(HttpSession session, Long idTeam) {
+		return !securityService.isUserAuthorizedForTeam(session, idTeam);
 	}
 }

@@ -13,6 +13,7 @@ public class ApplicationPath {
 	// Web paths
 	public static final String URL_AREA_ADMIN = "/admin";
 	
+	public static final String URL_TEAMADD = URL_AREA_ADMIN + DELIMETER + "teamadd" + DELIMETER;
 	public static final String URL_TEAMLISTFULL = URL_AREA_ADMIN + DELIMETER + "teamlist" + DELIMETER;
 	public static final String URL_MEETINGLISTFULL = URL_AREA_ADMIN + DELIMETER + "meetinglist" + DELIMETER;
 	public static final String URL_PARTICIPANTLISTFULL = URL_AREA_ADMIN + DELIMETER + "participantlist" + DELIMETER;
@@ -69,7 +70,8 @@ public class ApplicationPath {
 	public static final String URL_PARTICIPANT = URL_AREA_USER + DELIMETER + "participantdetail" + DELIMETER;
 	public static final String URL_PARTICIPANTLIST = URL_AREA_USER + DELIMETER + "participantlist" + DELIMETER;
 
-	public static final String URL_TEAM = URL_AREA_USER + DELIMETER + "teamdetail" + DELIMETER;
+	public static final String URL_TEAMEDIT = URL_AREA_USER + DELIMETER + "teamedit" + DELIMETER;
+	public static final String URL_TEAMSUBMIT = URL_AREA_USER + DELIMETER + "teamsubmit" + DELIMETER;
 	public static final String URL_TEAMLIST = URL_AREA_USER + DELIMETER + "teamlist" + DELIMETER;
 	public static final String URL_TEAMPHONELIST = URL_AREA_USER + DELIMETER + "teamphonelist" + DELIMETER;
 

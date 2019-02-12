@@ -6,8 +6,6 @@ import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_PARTICIPANT;
 import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_PARTICIPANTLIST;
 import static eu.planlos.anwesenheitsliste.ApplicationPath.URL_PARTICIPANTLISTFULL;
 
-import java.security.Principal;
-
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
@@ -54,12 +52,12 @@ public class ParticipantDetailController {
 	
 	// User
 	@RequestMapping(path = URL_PARTICIPANT + "{idParticipant}", method = RequestMethod.GET)
-	public String edit(Model model, Authentication auth, Principal principal, HttpSession session, @PathVariable Long idParticipant) {
+	public String edit(Model model, Authentication auth, HttpSession session, @PathVariable Long idParticipant) {
 
-		String loginName = principal.getName();
+		String loginName = securityService.getLoginName(session);
 		
 		if(!isAdmin(session) && !hasPermissionForParticipant(idParticipant, loginName)) {
-			logger.error("Benutzer \"" + principal.getName() + "\" hat unauthorisiert versucht auf Teilnehmer id=" + idParticipant + " zuzugreifen.");
+			logger.error("Benutzer \"" + loginName + "\" hat unauthorisiert versucht auf Teilnehmer id=" + idParticipant + " zuzugreifen.");
 			return "redirect:" + URL_ERROR_403;
 		}
 		
@@ -76,20 +74,20 @@ public class ParticipantDetailController {
 
 	// User
 	@RequestMapping(path = URL_PARTICIPANT, method = RequestMethod.GET)
-	public String add(Model model, Authentication auth, Principal principal) {
+	public String add(Model model, HttpSession session, Authentication auth) {
 		
 		Participant participant = new Participant();
 		model.addAttribute(participant);
-		prepareContent(model, auth, participant, principal.getName());
+		prepareContent(model, auth, participant, securityService.getLoginName(session));
 		
 		return RES_PARTICIPANT;
 	}
 
 	// User
 	@RequestMapping(path = URL_PARTICIPANT, method = RequestMethod.POST)
-	public String submit(Model model, Authentication auth, Principal principal, HttpSession session, @Valid @ModelAttribute Participant participant, Errors errors) {
+	public String submit(Model model, Authentication auth, HttpSession session, @Valid @ModelAttribute Participant participant, Errors errors) {
 
-		String loginName = principal.getName();
+		String loginName = securityService.getLoginName(session);
 		
 		// Admin is always allowed, others if adding new or edited with permission
 		if(!isAdmin(session) && participant.getIdParticipant() != null && !hasPermissionForParticipant(participant.getIdParticipant(), loginName) ) {

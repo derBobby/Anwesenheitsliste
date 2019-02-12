@@ -47,7 +47,6 @@ public class ParticipantListController {
 	// User
 	@RequestMapping(path = URL_PARTICIPANTLIST + "{markedParticipantId}")
 	public String markedParticipantList(Model model, HttpSession session, Authentication auth, @PathVariable Long markedParticipantId) {
-	
 		prepareContent(model, auth, participantsForUser(securityService.getLoginName(session)), markedParticipantId);
 		return RES_PARTICIPANTLIST;
 	}
@@ -55,30 +54,23 @@ public class ParticipantListController {
 	// User
 	@RequestMapping(path = URL_PARTICIPANTLIST)
 	public String participantList(Model model, HttpSession session, Authentication auth) {
-
 		prepareContent(model, auth, participantsForUser(securityService.getLoginName(session)), null);
 		return RES_PARTICIPANTLIST;
 	}
 
 	private List<Participant> participantsForUser(String loginName) {
-		
 		List<Team> teams = teamService.loadTeamsForUser(loginName);
-		
 		Set<Participant> participants = new HashSet<>();
-		
 		for(Team team : teams) {
 			participants.addAll(team.getParticipants());
 		}
-				
 		return new ArrayList<Participant>(participants);
 	}
 
 	// Admin
 	@RequestMapping(path = URL_PARTICIPANTLISTFULL)
 	public String participantListFull(Model model, Authentication auth) {
-
 		List<Participant> participants = participantService.loadAllParticipants();
-
 		prepareContent(model, auth, participants, null);
 		return RES_PARTICIPANTLIST;
 	}
@@ -86,9 +78,7 @@ public class ParticipantListController {
 	// Admin
 	@RequestMapping(path = URL_PARTICIPANTLISTFULL + "{markedParticipantId}")
 	public String markedParticipantListFull(Model model, Authentication auth, @PathVariable Long markedParticipantId) {
-
 		List<Participant> participants = participantService.loadAllParticipants();
-
 		prepareContent(model, auth, participants, markedParticipantId);
 		return RES_PARTICIPANTLIST;
 	}

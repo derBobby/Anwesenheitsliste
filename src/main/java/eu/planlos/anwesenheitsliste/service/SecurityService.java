@@ -25,16 +25,13 @@ public class SecurityService {
 	 * @return
 	 */
 	public boolean isUserAuthorizedForTeam(HttpSession session, long idTeam) {
-		
-		String loginName = (String) session.getAttribute(SessionAttributes.LOGINNAME);
-		logger.debug("Prüfe ob Benutzer " + loginName + " Zugriff hat auf Team mit id " + idTeam);
-		
-		return isAdmin(session) || teamRepo.existsByIdTeamAndUsersLoginName(idTeam, loginName);
+		logger.debug("Prüfe ob Benutzer " + getLoginName(session) + " Zugriff hat auf Team mit id " + idTeam);
+		return isAdmin(session) || teamRepo.existsByIdTeamAndUsersLoginName(idTeam, getLoginName(session));
 	}
 	
-	public boolean isUserStaffForParticipant(long idParticipant, String loginName) {
-		logger.debug("Prüfe ob Benutzer " + loginName + " Zugriff hat auf Teilnehmer mit id " + idParticipant);
-		return teamRepo.existsByParticipantsIdParticipantAndUsersLoginName(idParticipant, loginName);
+	public boolean isUserAuthorizedForParticipant(HttpSession session, long idParticipant) {
+		logger.debug("Prüfe ob Benutzer " + getLoginName(session) + " Zugriff hat auf Teilnehmer mit id " + idParticipant);
+		return isAdmin(session) || teamRepo.existsByParticipantsIdParticipantAndUsersLoginName(idParticipant, getLoginName(session));
 	}
 	
 	public boolean isAdmin(HttpSession session) {

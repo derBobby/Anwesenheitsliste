@@ -68,6 +68,9 @@ public class TeamDetailController {
 			return "redirect:" + URL_ERROR_403;
 		}
 		
+		/*
+		 * LOGIC
+		 */
 		Team team = teamService.loadTeam(idTeam);
 		model.addAttribute(team);
 		prepareContent(model, auth, team, false, securityService.isAdmin(session));
@@ -110,7 +113,10 @@ public class TeamDetailController {
 			prepareContent(model, auth, team, isAddTeam, isAdmin);
 			return RES_TEAM;
 		}
-		
+
+		/*
+		 * LOGIC
+		 */
 		try {
 			Team savedTeam = teamService.saveTeam(team);
 
@@ -144,6 +150,7 @@ public class TeamDetailController {
 			bf.fill(model, auth, STR_MODULE, STR_TITLE_ADD_TEAM);
 		}
 		
+		//TODO really all??
 		model.addAttribute("users", userService.loadAllUsers());
 		model.addAttribute("participants", participantService.loadAllParticipants());
 

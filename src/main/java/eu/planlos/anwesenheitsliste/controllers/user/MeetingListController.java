@@ -47,12 +47,10 @@ public class MeetingListController {
 	// User
 	@RequestMapping(path = URL_MEETINGLIST + "{idTeam}")
 	public String meetingListForTeam(Model model, Authentication auth, HttpSession session, @PathVariable Long idTeam) {
-			
 		if(isNotAuthorizedForTeam(session, idTeam)) {
 			logger.error("Benutzer \"" + securityService.getLoginName(session) + "\" hat unauthorisiert versucht auf Terminliste von Gruppe id=" + idTeam + " zuzugreifen.");
 			return "redirect:" + URL_ERROR_403;
 		}
-		
 		prepareContentForTeam(model, auth, idTeam);
 		return RES_MEETINGLIST;
 	}
@@ -60,7 +58,6 @@ public class MeetingListController {
 	// User
 	@RequestMapping(path = URL_MEETINGLIST + "{idTeam}" + DELIMETER + "{idMeeting}")
 	public String meetingListForTeamMarked(Model model, Authentication auth, HttpSession session, @PathVariable Long idTeam, @PathVariable Long idMeeting) {
-
 		model.addAttribute("markedMeetingId", idMeeting);
 		return meetingListForTeam(model, auth, session, idTeam);
 	}
@@ -68,12 +65,9 @@ public class MeetingListController {
 	// Admin
 	@RequestMapping(path = URL_MEETINGLISTFULL)
 	public String meetingListFull(Model model, Authentication auth) {
-		
 		model.addAttribute("functionEdit", URL_MEETINGFORTEAM);
 		model.addAttribute("functionAdd", URL_MEETINGCHOOSETEAM);
-		
 		prepareContent(model, auth, null);
-		
 		return RES_MEETINGLIST;
 	}
 	
@@ -81,20 +75,15 @@ public class MeetingListController {
 	 * CONTENT PREPARATION
 	 */
 	private void prepareContentForTeam(Model model, Authentication auth, Long idTeam) {
-		
 		model.addAttribute("idTeam", idTeam);
-		
 		model.addAttribute("functionEdit", URL_MEETINGFORTEAM);
 		model.addAttribute("functionAdd", URL_MEETINGFORTEAM);
-		
 		prepareContent(model, auth, idTeam);
 	}
 
 	private void prepareContent(Model model, Authentication auth, Long idTeam) {
-
 		model.addAttribute("headings", getHeadingsForTeam(idTeam));
 		model.addAttribute("meetings", getMeetingsForTeam(idTeam));
-		
 		bf.fill(model, auth, STR_MODULE, STR_TITLE);
 	}
 	

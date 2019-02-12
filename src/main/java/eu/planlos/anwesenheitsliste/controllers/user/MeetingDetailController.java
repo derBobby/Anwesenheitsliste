@@ -73,6 +73,9 @@ public class MeetingDetailController {
 			return "redirect:" + URL_ERROR_403;
 		}
 		
+		/*
+		 * LOGIC
+		 */
 		//TODO only authorization for team is tested, but not for meeting. What??
 		//TODO idTeam even necessary here?
 		Meeting meeting = meetingService.loadMeeting(idMeeting);
@@ -93,6 +96,9 @@ public class MeetingDetailController {
 			return "redirect:" + URL_ERROR_403;
 		}
 		
+		/*
+		 * LOGIC
+		 */
 		Meeting meeting = new Meeting();
 		meeting.setMeetingDate(today());
 		model.addAttribute(meeting);
@@ -165,6 +171,10 @@ public class MeetingDetailController {
 			return "redirect:" + URL_ERROR_403;
 		}
 
+
+		/*
+		 * LOGIC
+		 */
 		participantService.correctParticipantsInMeeting(meeting);
 		meeting = meetingService.saveMeeting(meeting);
 		

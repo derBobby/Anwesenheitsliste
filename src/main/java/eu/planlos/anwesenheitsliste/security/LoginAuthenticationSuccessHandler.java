@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
@@ -27,12 +28,15 @@ public class LoginAuthenticationSuccessHandler extends SavedRequestAwareAuthenti
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 			Authentication authentication) throws IOException, ServletException {
 		
+		User user = (User) authentication.getPrincipal();
+		String loginName = user.getUsername();
+		
 		boolean isAdmin = false;
 		if(authentication.getAuthorities().contains(new SimpleGrantedAuthority(ApplicationRole.ROLE_ADMIN))) {
 			isAdmin = true;
 		}
 		request.getSession().setAttribute(SessionAttributes.ISADMIN, isAdmin);
-		request.getSession().setAttribute(SessionAttributes.LOGINNAME, authentication.getPrincipal());
+		request.getSession().setAttribute(SessionAttributes.LOGINNAME, loginName);
 		
 		logger.error("Erfolgreicher Loginversuch für : \"" + authentication.getName() + "\"");
 

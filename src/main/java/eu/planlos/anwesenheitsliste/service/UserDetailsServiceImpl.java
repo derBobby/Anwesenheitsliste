@@ -47,5 +47,4 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		// (UserDetails)
 		return springSecurityUser;
 	}
-
 }

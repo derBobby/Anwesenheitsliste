@@ -38,28 +38,104 @@ public class SecurityServiceTest {
 	public void setUp() throws Exception {
 	}
 	
-	//TODO something is wrong...
+	String testLoginName = "My Loginname";
+	
+	//TODO Tests missing for isAdmin==true
+	
+	/*
+	 * Tests for isUserAuthorizedForTeam()
+	 */
+	
+	 @Test
+	public final void userIsNotAuthorizedForTeam_returnsTrueTeamAuthorization() {
+		when(session.getAttribute(SessionAttributes.ISADMIN)).thenReturn(true);
+		when(session.getAttribute(SessionAttributes.LOGINNAME)).thenReturn(testLoginName);
+		 
+		boolean givenIsAuthorized = securityService.isUserAuthorizedForTeam(session, 1);
+		 
+		assertTrue(givenIsAuthorized);
+	 }
+	 
+	 @Test
+	public final void userIsAdmin_returnsTrue() {
+		when(session.getAttribute(SessionAttributes.ISADMIN)).thenReturn(false);
+		when(session.getAttribute(SessionAttributes.LOGINNAME)).thenReturn(testLoginName);
+		when(teamRepo.existsByIdTeamAndUsersLoginName(1, testLoginName)).thenReturn(false);
+		 
+		boolean givenIsAuthorized = securityService.isUserAuthorizedForTeam(session, 1);
+		 
+		assertFalse(givenIsAuthorized);
+	 }
+	 
+	@Test
+	public final void userIsAuthorizedForTeam_returnsTrue() {
+		when(session.getAttribute(SessionAttributes.ISADMIN)).thenReturn(false);
+		when(session.getAttribute(SessionAttributes.LOGINNAME)).thenReturn(testLoginName);
+		when(teamRepo.existsByIdTeamAndUsersLoginName(1, testLoginName)).thenReturn(true);
+		 
+		boolean givenIsAuthorized = securityService.isUserAuthorizedForTeam(session, 1);
+			 
+		assertTrue(givenIsAuthorized);		 
+	 }
+	 
+	@Test
+	public final void sessionIsNull_returnsFalseTeamAuthorization() {
+		 HttpSession session = null;
+		 
+		 boolean givenIsAuthorized = securityService.isUserAuthorizedForTeam(session, 1);
+		 
+		 assertFalse(givenIsAuthorized);
+	 }
+	
+	/*
+	 * Tests for isUserAuthorizedForParticipant()
+	 */
+	
+	@Test
+	public final void userIsAdmin_returnsTrueParticipantAuthorization() {
+		when(session.getAttribute(SessionAttributes.LOGINNAME)).thenReturn(testLoginName);
+		when(session.getAttribute(SessionAttributes.ISADMIN)).thenReturn(true);
+		
+		boolean givenIsAuthorized = securityService.isUserAuthorizedForParticipant(session, 1);
+
+		assertTrue(givenIsAuthorized);
+	}
+	
 	@Test
 	public final void userIsAuthorizedForParticipant_returnsTrue() {
 		when(session.getAttribute(SessionAttributes.ISADMIN)).thenReturn(false);
-		when(session.getAttribute(SessionAttributes.LOGINNAME)).thenReturn("My Loginname");
-		when(teamRepo.existsByParticipantsIdParticipantAndUsersLoginName(1, "My Loginname")).thenReturn(true);
+		when(session.getAttribute(SessionAttributes.LOGINNAME)).thenReturn(testLoginName);
+		when(teamRepo.existsByParticipantsIdParticipantAndUsersLoginName(1, testLoginName)).thenReturn(true);
 		
 		boolean givenIsAuthorized = securityService.isUserAuthorizedForParticipant(session, 1);
 		
 		assertTrue(givenIsAuthorized);
 	}	
-	
+
 	@Test
 	public final void userIsNotAuthorizedForParticipant_returnsFalse() {
 		when(session.getAttribute(SessionAttributes.ISADMIN)).thenReturn(false);
-		when(session.getAttribute(SessionAttributes.LOGINNAME)).thenReturn("My Loginname");
-		when(teamRepo.existsByParticipantsIdParticipantAndUsersLoginName(1, "My Loginname")).thenReturn(false);
+		when(session.getAttribute(SessionAttributes.LOGINNAME)).thenReturn(testLoginName);
+		when(teamRepo.existsByParticipantsIdParticipantAndUsersLoginName(1, testLoginName)).thenReturn(false);
 		
 		boolean givenIsAuthorized = securityService.isUserAuthorizedForParticipant(session, 1);
 		
 		assertFalse(givenIsAuthorized);
 	}
+	
+	@Test
+	public final void sessionIsNull_returnsFalseParticipantAuthorization() {
+		HttpSession session = null;
+		
+		boolean givenIsAuthorized = securityService.isUserAuthorizedForParticipant(session, 1);
+		
+		assertFalse(givenIsAuthorized);
+	}
+
+	
+	/*
+	 * Tests for isAdmin()
+	 */
 	
 	@Test
 	public final void isAdmin_returnsTrue() {
@@ -78,7 +154,20 @@ public class SecurityServiceTest {
 		
 		assertFalse(givenIsAdmin);	
 	}
-
+	
+	@Test
+	public final void sessionIsNull_returnsFalseForIsAdmin() {
+		HttpSession session = null;
+		
+		boolean givenIsAdmin = securityService.isAdmin(session);
+		
+		assertFalse(givenIsAdmin);
+	}
+	
+	/*
+	 * Tests for getLoginName()
+	 */
+	
 	@Test
 	public final void isLoggedIn_givesName() {
 		String expectedLoginName = "testMcSwagger";
@@ -97,5 +186,14 @@ public class SecurityServiceTest {
 		String givenLoginName = securityService.getLoginName(session);
 		
 		assertEquals(givenLoginName, expectedLoginName);
+	}
+	
+	@Test
+	public final void sessionIsNull_givesNoName() {
+		String expectedLoginName = null;
+		
+		String givenLoginName = securityService.getLoginName(null);
+		
+		assertEquals(expectedLoginName, givenLoginName);
 	}
 }

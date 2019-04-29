@@ -42,8 +42,8 @@ public class SecurityServiceTest {
 	@Test
 	public final void userIsAuthorizedForParticipant_returnsTrue() {
 		when(session.getAttribute(SessionAttributes.ISADMIN)).thenReturn(false);
-		when(session.getAttribute(SessionAttributes.LOGINNAME)).thenReturn("Loginname");
-		when(teamRepo.existsByParticipantsIdParticipantAndUsersLoginName(1, "Loginname")).thenReturn(true);
+		when(session.getAttribute(SessionAttributes.LOGINNAME)).thenReturn("My Loginname");
+		when(teamRepo.existsByParticipantsIdParticipantAndUsersLoginName(1, "My Loginname")).thenReturn(true);
 		
 		boolean givenIsAuthorized = securityService.isUserAuthorizedForParticipant(session, 1);
 		
@@ -53,8 +53,8 @@ public class SecurityServiceTest {
 	@Test
 	public final void userIsNotAuthorizedForParticipant_returnsFalse() {
 		when(session.getAttribute(SessionAttributes.ISADMIN)).thenReturn(false);
-		when(session.getAttribute(SessionAttributes.LOGINNAME)).thenReturn("Loginname");
-		when(teamRepo.existsByParticipantsIdParticipantAndUsersLoginName(1, "Loginname")).thenReturn(false);
+		when(session.getAttribute(SessionAttributes.LOGINNAME)).thenReturn("My Loginname");
+		when(teamRepo.existsByParticipantsIdParticipantAndUsersLoginName(1, "My Loginname")).thenReturn(false);
 		
 		boolean givenIsAuthorized = securityService.isUserAuthorizedForParticipant(session, 1);
 		
@@ -89,7 +89,6 @@ public class SecurityServiceTest {
 		assertEquals(givenLoginName, expectedLoginName);
 	}
 
-	//TODO throw not authenticated error?
 	@Test
 	public final void isNotLoggedIn_givesNoName() {
 		String expectedLoginName = null;

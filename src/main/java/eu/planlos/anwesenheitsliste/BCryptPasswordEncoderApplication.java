@@ -1,4 +1,4 @@
-package eu.planlos.anwesenheitsliste.application;
+package eu.planlos.anwesenheitsliste;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 

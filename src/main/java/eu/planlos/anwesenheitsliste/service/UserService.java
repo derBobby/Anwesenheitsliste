@@ -13,7 +13,7 @@ import eu.planlos.anwesenheitsliste.model.Team;
 import eu.planlos.anwesenheitsliste.model.User;
 import eu.planlos.anwesenheitsliste.model.UserRepository;
 import eu.planlos.anwesenheitsliste.model.exception.EmptyIdException;
-import eu.planlos.anwesenheitsliste.model.exception.PasswordLengthError;
+import eu.planlos.anwesenheitsliste.model.exception.PasswordLengthException;
 import eu.planlos.anwesenheitsliste.model.exception.UnknownUserSaveException;
 
 @Service
@@ -26,38 +26,16 @@ public class UserService {
 	
 	private final String passwordLengthError = "Das Passwort muss zwischen " + User.passwordMinLength + " und " + User.passwordMaxLength + " Zeichen lang sein";
 	
-	public User save(User user) throws DuplicateKeyException, PasswordLengthError, UnknownUserSaveException {
+	public User save(User user) throws DuplicateKeyException, PasswordLengthException, UnknownUserSaveException {
 		
-		if(user.getIdUser() == null) {
-			String firstName = user.getFirstName();
-			String lastName = user.getLastName();
-			String email = user.getEmail();
-			String loginName = user.getLoginName();
-		
-			// Should cover all constraints of the Entity
-			if(userRepo.existsByLoginNameOrEmail(loginName, email)
-					|| userRepo.existsByFirstNameAndLastName(firstName, lastName)
-					) {
-				
-				logger.debug("Kann Benutzer nicht anlegen.");
-				throw new DuplicateKeyException("Ein Benutzer mit dem Namen \"" + firstName + " " + lastName + "\""
-						+ "oder dem Benutzernamen \"" + loginName + "\""
-								+ "oder der E-Mailadresse \"" + email + "\" existiert bereits");
-
-			}
-		}
+		// Is user null and name etc. taken -> dont save
+		checkUniqueConstraintsForNewUser(user); //TODO throw in method necessary?
 		
 		// Is user is added and password is not set properly dont save
-		if(user.getIdUser() == null && ! user.isPasswordLengthOK() ) {
-			logger.debug("Benutzer anlegen: das Passwort enspricht nicht den Anforderungen.");
-			throw new PasswordLengthError(passwordLengthError);
-		}
+		checkProperPasswordForUserAdd(user);
 		
-		// Is user is edited and password is not set properly dont save
-		if(user.getIdUser() != null && ! user.getPassword().equals("") && user.isPasswordLengthOK() ) {
-			logger.debug("Benutzer bearbeiten: das Passwort enspricht nicht den Anforderungen.");
-			throw new PasswordLengthError(passwordLengthError);
-		}
+		// If user is edited and password is not set properly dont save
+		checkProperPasswordForUserEdit(user);
 		
 		// If user is edited and password was not set load it back from db and save it
 		if(user.getIdUser() != null && ( user.getPassword().equals("")) ) {
@@ -77,25 +55,53 @@ public class UserService {
 		logger.error("Benutzer speichern: Hier hätten wir nicht ankommen dürfen.");
 		throw new UnknownUserSaveException("Ein unbekannter Fehler beim Speichern des Benutzers ist aufgetreten");
 	}
+
+	private void checkProperPasswordForUserEdit(User user) throws PasswordLengthException {
+		if(user.getIdUser() != null && ! user.getPassword().equals("") && user.isPasswordLengthOK() ) {
+			logger.debug("Benutzer bearbeiten: das Passwort enspricht nicht den Anforderungen.");
+			throw new PasswordLengthException(passwordLengthError);
+		}
+	}
+
+	private void checkProperPasswordForUserAdd(User user) throws PasswordLengthException {
+		if(user.getIdUser() == null && ! user.isPasswordLengthOK() ) {
+			logger.debug("Benutzer anlegen: das Passwort enspricht nicht den Anforderungen.");
+			throw new PasswordLengthException(passwordLengthError);
+		}
+	}
+
+	private void checkUniqueConstraintsForNewUser(User user) {
+		if(user.getIdUser() == null) {
+			String firstName = user.getFirstName();
+			String lastName = user.getLastName();
+			String email = user.getEmail();
+			String loginName = user.getLoginName();
+		
+			// Should cover all constraints of the Entity
+			if(userRepo.existsByLoginNameOrEmail(loginName, email)
+					|| userRepo.existsByFirstNameAndLastName(firstName, lastName)
+					) {
+				
+				logger.debug("Kann Benutzer nicht anlegen.");
+				throw new DuplicateKeyException("Ein Benutzer mit dem Namen \"" + firstName + " " + lastName + "\""
+						+ "oder dem Benutzernamen \"" + loginName + "\""
+								+ "oder der E-Mailadresse \"" + email + "\" existiert bereits");
+
+			}
+		}
+	}
 	
+	//TODO tests?
 	public List<User> loadAllUsers() {
 		logger.debug("Lade alle Benutzer");
 		return (List<User>) userRepo.findAll();
 	}
 	
+	//TODO tests?	
 	public User loadUser(Long idUser) {
 		logger.debug("Lade Benutzer mit id " + idUser);
 		return userRepo.findById(idUser).get();
 	}
-
-//	public User loadUser(String loginName) {
-//		return userRepo.findByLoginName(loginName);
-//	}
-
-//	public List<User> loadUsersAuthorizedForTeam(Long idTeam) {
-//		logger.debug("Lade Benutzer mit Berechtigung für Team mit id " + idTeam);
-//		return userRepo.findAllByTeamsIdTeam(idTeam);
-//	}
 
 	//TODO probably not working
 	//TODO LOGGING

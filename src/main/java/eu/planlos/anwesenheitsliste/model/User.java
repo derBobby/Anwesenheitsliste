@@ -181,7 +181,7 @@ public class User {
 	}
 
 	public boolean isPasswordLengthOK( ) {
-		return password.length() < passwordMinLength || passwordMaxLength < password.length();
+		return passwordMinLength <= password.length() && password.length() <= passwordMaxLength;
 	}
 	
 	/**

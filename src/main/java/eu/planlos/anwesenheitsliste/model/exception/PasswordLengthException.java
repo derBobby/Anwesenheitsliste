@@ -1,10 +1,10 @@
 package eu.planlos.anwesenheitsliste.model.exception;
 
-public class PasswordLengthError extends Exception {
+public class PasswordLengthException extends Exception {
 	
 	private static final long serialVersionUID = 1L;
 
-	public PasswordLengthError(String message) {
+	public PasswordLengthException(String message) {
 		super(message);
 	}
 }

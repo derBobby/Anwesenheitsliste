@@ -35,41 +35,41 @@ public class UserDetailsServiceImplTest {
 	@Mock
 	private UserRepository userRepo;
 
-	private String testLoginName = "My Loginname";
-	private String testPassword = "secret";
-	private User testUser = new User("Test", "User", testLoginName, "user@example.com", testPassword, true, false);
-	private User testAdminUser = new User("Test", "User", testLoginName, "user@example.com", testPassword, true, true);
+	private static final String TESTLOGINNAME = "My Loginname";
+	private static final String TESTPASSWORD = "secret";
+	private static final User TESTUSER = new User("Test", "User", TESTLOGINNAME, "user@example.com", TESTPASSWORD, true, false);
+	private static final User TESTADMINUSER = new User("Test", "User", TESTLOGINNAME, "user@example.com", TESTPASSWORD, true, true);
 
 	@Test
 	public final void userIsLoggedIn_givesUserDetails() {
-		when(userRepo.findByLoginName(testLoginName)).thenReturn(testUser);
+		when(userRepo.findByLoginName(TESTLOGINNAME)).thenReturn(TESTUSER);
 		
-		UserDetails springSecurityUser = userDetailsServiceImpl.loadUserByUsername(testLoginName);
+		UserDetails springSecurityUser = userDetailsServiceImpl.loadUserByUsername(TESTLOGINNAME);
 
-		assertTrue(springSecurityUser.getUsername().equals(testLoginName));
-		assertTrue(springSecurityUser.getPassword().equals(testPassword));
+		assertTrue(springSecurityUser.getUsername().equals(TESTLOGINNAME));
+		assertTrue(springSecurityUser.getPassword().equals(TESTPASSWORD));
 	}
 	
 	@Test(expected = UsernameNotFoundException.class)
 	public final void userIsNotLoggedIn_throwsException() {
-		when(userRepo.findByLoginName(testLoginName)).thenReturn(null);
+		when(userRepo.findByLoginName(TESTLOGINNAME)).thenReturn(null);
 		
-		userDetailsServiceImpl.loadUserByUsername(testLoginName);
+		userDetailsServiceImpl.loadUserByUsername(TESTLOGINNAME);
 	}
 
 	@Test
 	public final void userIsAdmin_hasAdminAuthority() {
-		when(userRepo.findByLoginName(testLoginName)).thenReturn(testAdminUser);
+		when(userRepo.findByLoginName(TESTLOGINNAME)).thenReturn(TESTADMINUSER);
 		
-		UserDetails userDetails = userDetailsServiceImpl.loadUserByUsername(testLoginName);
+		UserDetails userDetails = userDetailsServiceImpl.loadUserByUsername(TESTLOGINNAME);
 		
 		assertTrue(userDetails.getAuthorities().contains(new SimpleGrantedAuthority(ApplicationRole.ROLE_ADMIN)));
 	}
 	@Test
 	public final void userIsNotAdmin_hasNoAdminAuthority() {
-		when(userRepo.findByLoginName(testLoginName)).thenReturn(testUser);
+		when(userRepo.findByLoginName(TESTLOGINNAME)).thenReturn(TESTUSER);
 		
-		UserDetails userDetails = userDetailsServiceImpl.loadUserByUsername(testLoginName);
+		UserDetails userDetails = userDetailsServiceImpl.loadUserByUsername(TESTLOGINNAME);
 		
 		assertTrue(! userDetails.getAuthorities().contains(new SimpleGrantedAuthority(ApplicationRole.ROLE_ADMIN)));
 	}

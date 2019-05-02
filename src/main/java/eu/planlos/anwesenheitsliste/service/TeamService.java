@@ -21,14 +21,14 @@ public class TeamService {
 	
 	public Team saveTeam(Team team) throws DuplicateKeyException {
 		
-		if(team.getIdTeam() == null) {
-			String teamName = team.getTeamName();
+		String teamName = team.getTeamName();
+		
+		if(team.getIdTeam() == null 
+				// Should cover all constraints of the Entity
+				&& teamRepo.existsByTeamName(teamName)) {
 			
-			// Should cover all constraints of the Entity
-			if(teamRepo.existsByTeamName(teamName)) {
-				logger.debug("Gruppe speichern nicht möglich: Der Gruppenname wird bereits verwendet");
-				throw new DuplicateKeyException("Der Gruppenname wird bereits verwendet");
-			}
+			logger.debug("Gruppe speichern nicht möglich: Der Gruppenname wird bereits verwendet");
+			throw new DuplicateKeyException("Der Gruppenname wird bereits verwendet");
 		}
 		logger.debug("Speichere Gruppe");		
 		return teamRepo.save(team);

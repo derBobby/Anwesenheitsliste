@@ -1,5 +1,6 @@
 package eu.planlos.anwesenheitsliste.service;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
@@ -65,13 +66,14 @@ public class UserDetailsServiceImplTest {
 		
 		assertTrue(userDetails.getAuthorities().contains(new SimpleGrantedAuthority(ApplicationRole.ROLE_ADMIN)));
 	}
+	
 	@Test
 	public final void userIsNotAdmin_hasNoAdminAuthority() {
 		when(userRepo.findByLoginName(TESTLOGINNAME)).thenReturn(TESTUSER);
 		
 		UserDetails userDetails = userDetailsServiceImpl.loadUserByUsername(TESTLOGINNAME);
 		
-		assertTrue(! userDetails.getAuthorities().contains(new SimpleGrantedAuthority(ApplicationRole.ROLE_ADMIN)));
+		assertFalse(userDetails.getAuthorities().contains(new SimpleGrantedAuthority(ApplicationRole.ROLE_ADMIN)));
 	}
 
 }

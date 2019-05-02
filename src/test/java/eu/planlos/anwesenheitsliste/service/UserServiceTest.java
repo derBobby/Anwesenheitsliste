@@ -3,6 +3,8 @@ package eu.planlos.anwesenheitsliste.service;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
 
+import java.util.Optional;
+
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -104,7 +106,7 @@ public class UserServiceTest {
 		user.setIdUser((long) 1337);
 		
 		when(userRepo.save(user)).thenReturn(user);
-		when(userRepo.findById(user.getIdUser()).get()).thenReturn(user);
+		when(userRepo.findById(user.getIdUser())).thenReturn(Optional.of(user));
 		
 		User savedUser = userService.save(user);
 		

@@ -19,16 +19,13 @@ import eu.planlos.anwesenheitsliste.model.exception.UnknownUserSaveException;
 @Service
 public class UserService {
 
+	private static final Logger logger = LoggerFactory.getLogger(UserService.class);
+
 	@Autowired
 	private UserRepository userRepo;
 	
 	private BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-	
-	private static final Logger logger = LoggerFactory.getLogger(UserService.class);
-	
-	
 	private final String passwordLengthError = "Das Passwort muss zwischen " + User.passwordMinLength + " und " + User.passwordMaxLength + " Zeichen lang sein";
-	
 	
 	public User save(User user) throws DuplicateKeyException, PasswordLengthException, UnknownUserSaveException {
 		
@@ -39,8 +36,8 @@ public class UserService {
 
 			// Exception if credentials taken
 			checkUniqueConstraintsForNewUser(user); //TODO throw in method necessary?
-			// Exception if not proper
-			checkProperPasswordForNewUser(user);
+			// Exception if password not proper
+			checkProperPassword(user);
 			
 			encryptPassword(user);
 			
@@ -52,8 +49,8 @@ public class UserService {
 			
 			} else {
 				logger.debug("Benutzer bearbeiten: neues Passwort angegeben.");
-				// Exception if not proper
-				checkProperPasswordForUserEdit(user);
+				// Exception if password not proper
+				checkProperPassword(user);
 				
 				encryptPassword(user);
 			}
@@ -68,16 +65,9 @@ public class UserService {
 		user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
 	}
 
-	private void checkProperPasswordForUserEdit(User user) throws PasswordLengthException {
+	private void checkProperPassword(User user) throws PasswordLengthException {
 		if(! user.isPasswordLengthOK() ) {
-			logger.debug("Benutzer bearbeiten: das Passwort enspricht nicht den Anforderungen.");
-			throw new PasswordLengthException(passwordLengthError);
-		}
-	}
-
-	private void checkProperPasswordForNewUser(User user) throws PasswordLengthException {
-		if(! user.isPasswordLengthOK() ) {
-			logger.debug("Benutzer anlegen: das Passwort enspricht nicht den Anforderungen.");
+			logger.debug("Benutzer speichern: das Passwort enspricht nicht den Anforderungen.");
 			throw new PasswordLengthException(passwordLengthError);
 		}
 	}

@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import eu.planlos.anwesenheitsliste.model.Team;
 import eu.planlos.anwesenheitsliste.model.exception.EmptyIdException;
+import eu.planlos.anwesenheitsliste.model.exception.NotAuthorizedForTeamException;
 import eu.planlos.anwesenheitsliste.service.BodyFillerService;
 import eu.planlos.anwesenheitsliste.service.ParticipantService;
 import eu.planlos.anwesenheitsliste.service.SecurityService;
@@ -63,7 +64,7 @@ public class TeamDetailController {
 
 		String loginName = securityService.getLoginName(session);
 		
-		if(isNotAuthorizedForTeam(session, idTeam)) {
+		if(isUserNotAuthorizedForTeam(session, idTeam)) {
 			logger.error("Benutzer \"" + loginName + "\" hat unauthorisiert versucht auf Gruppe id=" + idTeam + " zuzugreifen.");
 			return "redirect:" + URL_ERROR_403;
 		}
@@ -94,18 +95,24 @@ public class TeamDetailController {
 
 		String loginName = principal.getName();
 		
-		boolean isNotAuthorizedForTeam = isNotAuthorizedForTeam(session, team.getIdTeam());
 		boolean isAdmin = securityService.isAdmin(session);
 		boolean isAddTeam = team.getIdTeam() == null;
+
 		
-		// Admin is always allowed, others if it is edit and is authorized
-		if(isAddTeam || isNotAuthorizedForTeam) {
-			if(team.getIdTeam() == null) {
-				logger.error("Benutzer \"" + loginName + "\" hat unauthorisiert versucht eine neue Gruppe zu speichern.");
+		//TODO better to use CustomErrorController somehow?
+		if(! isAdmin) {
+			
+			boolean isNotAuthorizedForTeam = false;
+			
+			try {
+					
+				if(! isAddTeam) {
+					isNotAuthorizedForTeam = isUserNotAuthorizedForTeam(session, team.getIdTeam());
+				}
+				checkUserAuthorization(team, loginName, isAddTeam, isNotAuthorizedForTeam);
+			} catch (NotAuthorizedForTeamException e) {
 				return "redirect:" + URL_ERROR_403;
 			}
-			logger.error("Benutzer \"" + loginName + "\" hat unauthorisiert versucht die Gruppe mit id=" + team.getIdTeam() + " zu speichern.");
-			return "redirect:" + URL_ERROR_403;
 		}
 		
 		if(errors.hasErrors()) {
@@ -124,15 +131,15 @@ public class TeamDetailController {
 			userService.updateTeamForUsers(team);
 			participantService.updateTeamForParticipants(team);
 			
-			if(isAdmin && isNotAuthorizedForTeam) {
+			if(isAdmin) {
 				return "redirect:" + URL_TEAMLISTFULL + savedTeam.getIdTeam();
 			}
-			return "redirect:" + URL_TEAMLIST + savedTeam.getIdTeam();
 
-		} catch (EmptyIdException e) {
-			logger.error("Team "+ team.getIdTeam() +": " + team.getTeamName() + " konnte nicht gespeichert werden -> ID eines Benutzers nicht gesetzt?.");
-			model.addAttribute("customError", e.getMessage());
+			return "redirect:" + URL_TEAMLIST + savedTeam.getIdTeam();
 			
+		} catch (EmptyIdException e) {
+			logger.error("Team "+ team.getIdTeam() +": " + team.getTeamName() + " konnte nicht gespeichert werden -> ID eines Benutzers oder Teilnehmers nicht gesetzt?.");
+			model.addAttribute("customError", e.getMessage());
 		} catch (DuplicateKeyException e) {
 			logger.error("Team "+ team.getIdTeam() +": " + team.getTeamName() + " konnte nicht gespeichert werden -> Unique Constraint.");
 			model.addAttribute("customError", e.getMessage());
@@ -140,6 +147,21 @@ public class TeamDetailController {
 		
 		prepareContent(model, auth, team, isAddTeam, isAdmin);
 		return RES_TEAM;
+	}
+
+	private void checkUserAuthorization(Team team, String loginName, boolean isAddTeam, boolean isNotAuthorizedForTeam) throws NotAuthorizedForTeamException {
+		
+		boolean isEditTeam = ! isAddTeam;
+		
+		if(isAddTeam) {
+			logger.error("Benutzer \"" + loginName + "\" hat unauthorisiert versucht eine neue Gruppe zu speichern.");
+			throw new NotAuthorizedForTeamException();
+		} else if (isEditTeam && isNotAuthorizedForTeam) {
+			logger.error("Benutzer \"" + loginName + "\" hat unauthorisiert versucht die Gruppe mit id=" + team.getIdTeam() + " zu speichern.");
+			throw new NotAuthorizedForTeamException();
+		}
+			
+		logger.error("Benutzer \"" + loginName + "\" ist authorisiert die Gruppe mit id=" + team.getIdTeam() + " zu ändern.");
 	}
 	
 	private void prepareContent(Model model, Authentication auth, Team team, boolean isAddTeam, boolean isAdmin) {
@@ -154,13 +176,7 @@ public class TeamDetailController {
 		model.addAttribute("users", userService.loadAllUsers());
 		model.addAttribute("participants", participantService.loadAllParticipants());
 
-		
-		String formAction = URL_TEAMEDIT;
-		if(isAddTeam) {
-			formAction = URL_TEAMADD;
-		}
-		model.addAttribute("formAction", formAction);
-		
+		model.addAttribute("formAction", URL_TEAMSUBMIT);
 		
 		String formCancel = URL_TEAMLIST + team.getIdTeam();
 		if(isAdmin) {
@@ -169,7 +185,7 @@ public class TeamDetailController {
 		model.addAttribute("formCancel", formCancel);
 	}
 
-	private boolean isNotAuthorizedForTeam(HttpSession session, Long idTeam) {
+	private boolean isUserNotAuthorizedForTeam(HttpSession session, Long idTeam) {
 		return !securityService.isUserAuthorizedForTeam(session, idTeam);
 	}
 }

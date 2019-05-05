@@ -22,87 +22,122 @@ public class UserService {
 	@Autowired
 	private UserRepository userRepo;
 	
+	private BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+	
 	private static final Logger logger = LoggerFactory.getLogger(UserService.class);
+	
 	
 	private final String passwordLengthError = "Das Passwort muss zwischen " + User.passwordMinLength + " und " + User.passwordMaxLength + " Zeichen lang sein";
 	
+	
 	public User save(User user) throws DuplicateKeyException, PasswordLengthException, UnknownUserSaveException {
 		
-		// Is user null and name etc. taken -> dont save
-		checkUniqueConstraintsForNewUser(user); //TODO throw in method necessary?
+		boolean isNewUser = (user.getIdUser() == null);
 		
-		// Is user is added and password is not set properly dont save
-		checkProperPasswordForUserAdd(user);
-		
-		// If user is edited and password is not set properly dont save
-		checkProperPasswordForUserEdit(user);
-		
-		// If user is edited and password was not set load it back from db and save it
-		if(user.getIdUser() != null && ( user.getPassword().equals("")) ) {
-			User dbUser = userRepo.findById(user.getIdUser()).get();
-			user.setPassword(dbUser.getPassword());
-			logger.debug("Benutzer bearbeiten: kein Passwort angegeben, benutze altes.");
-			return userRepo.save(user);
+		if(isNewUser) {
+			logger.debug("Benutzer hinzufügen");
+
+			// Exception if credentials taken
+			checkUniqueConstraintsForNewUser(user); //TODO throw in method necessary?
+			// Exception if not proper
+			checkProperPasswordForNewUser(user);
+			
+			encryptPassword(user);
+			
+		} else {
+			if(user.getPassword().equals("")) {
+				logger.debug("Benutzer bearbeiten: kein Passwort angegeben, benutze altes.");
+				User dbUser = loadUser(user.getIdUser());
+				user.setPassword(dbUser.getPassword());
+			
+			} else {
+				logger.debug("Benutzer bearbeiten: neues Passwort angegeben.");
+				// Exception if not proper
+				checkProperPasswordForUserEdit(user);
+				
+				encryptPassword(user);
+			}
 		}
 
-		// If user is added or edited and the password is OK then encrypt it and save it
-		if(user.isPasswordLengthOK()) { 
-			BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-			user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-			logger.debug("Benutzer bearbeiten: neues Passwort angegeben.");
-			return userRepo.save(user);
-		}
-		logger.error("Benutzer speichern: Hier hätten wir nicht ankommen dürfen.");
-		throw new UnknownUserSaveException("Ein unbekannter Fehler beim Speichern des Benutzers ist aufgetreten");
+		logger.debug("Benutzer speichern.");
+		return userRepo.save(user);
+	}
+
+	private void encryptPassword(User user) {
+		logger.debug("Verschlüssle Passwort");
+		user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
 	}
 
 	private void checkProperPasswordForUserEdit(User user) throws PasswordLengthException {
-		if(user.getIdUser() != null && ! user.getPassword().equals("") && user.isPasswordLengthOK() ) {
+		if(! user.isPasswordLengthOK() ) {
 			logger.debug("Benutzer bearbeiten: das Passwort enspricht nicht den Anforderungen.");
 			throw new PasswordLengthException(passwordLengthError);
 		}
 	}
 
-	private void checkProperPasswordForUserAdd(User user) throws PasswordLengthException {
-		if(user.getIdUser() == null && ! user.isPasswordLengthOK() ) {
+	private void checkProperPasswordForNewUser(User user) throws PasswordLengthException {
+		if(! user.isPasswordLengthOK() ) {
 			logger.debug("Benutzer anlegen: das Passwort enspricht nicht den Anforderungen.");
 			throw new PasswordLengthException(passwordLengthError);
 		}
 	}
 
 	private void checkUniqueConstraintsForNewUser(User user) {
-		if(user.getIdUser() == null) {
-			String firstName = user.getFirstName();
-			String lastName = user.getLastName();
-			String email = user.getEmail();
-			String loginName = user.getLoginName();
 		
-			// Should cover all constraints of the Entity
-			if(userRepo.existsByLoginNameOrEmail(loginName, email)
-					|| userRepo.existsByFirstNameAndLastName(firstName, lastName)
-					) {
-				
-				logger.debug("Kann Benutzer nicht anlegen.");
-				throw new DuplicateKeyException("Ein Benutzer mit dem Namen \"" + firstName + " " + lastName + "\""
-						+ "oder dem Benutzernamen \"" + loginName + "\""
-								+ "oder der E-Mailadresse \"" + email + "\" existiert bereits");
-
-			}
+		String firstName = user.getFirstName();
+		String lastName = user.getLastName();
+		String email = user.getEmail();
+		String loginName = user.getLoginName();
+	
+		// Should cover all constraints of the Entity
+		if(userRepo.existsByLoginNameOrEmail(loginName, email)
+				|| userRepo.existsByFirstNameAndLastName(firstName, lastName)
+				) {
+			
+			logger.debug("Benutzer anlegen: Constraints verletzt");
+			throw new DuplicateKeyException("Ein Benutzer mit dem Namen \"" + firstName + " " + lastName + "\""
+					+ "oder dem Benutzernamen \"" + loginName + "\""
+							+ "oder der E-Mailadresse \"" + email + "\" existiert bereits");
 		}
 	}
 	
-	//TODO tests?
 	public List<User> loadAllUsers() {
 		logger.debug("Lade alle Benutzer");
 		return (List<User>) userRepo.findAll();
 	}
 	
-	//TODO tests?	
 	public User loadUser(Long idUser) {
 		logger.debug("Lade Benutzer mit id " + idUser);
 		return userRepo.findById(idUser).get();
 	}
 
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	//TODO probably not working
 	//TODO LOGGING
 	/**
@@ -113,29 +148,33 @@ public class UserService {
 	 */
 	public void updateTeamForUsers(Team team) throws EmptyIdException {
 		
-		List<User> chosenUsers = team.getUsers();
+		List<User> uiUsers = team.getUsers();
 		
-		// Error if false user is passed
-		for(User chosenUser : chosenUsers) {
-			if(chosenUser.getIdUser() == null) {
-				throw new EmptyIdException("Aktualisierung fehlgeschlagen. Daten Fehlerhaft.");
-			}
-		}
+		checkUserlistForEmptyId(uiUsers);
 		
 		// For all active users who were added but are not yet linked to the team
-		List<User> usersForTeam = userRepo.findAllByTeamsIdTeam(team.getIdTeam());
-		for(User chosenUser : chosenUsers) {
-			if(chosenUser.getIsActive() && ! usersForTeam.contains(chosenUser)) {
-				chosenUser.addTeam(team);
-				userRepo.save(chosenUser);
+		List<User> dbUsers = userRepo.findAllByTeamsIdTeam(team.getIdTeam());
+		for(User uiUser : uiUsers) {
+			if(uiUser.getIsActive() && ! dbUsers.contains(uiUser)) {
+				uiUser.addTeam(team);
+				userRepo.save(uiUser);
 			}
 		}
 		
 		// For all active users in DB check if are chosen but should not be
-		for(User userForTeam : usersForTeam) {
-			if(userForTeam.getIsActive() && ! chosenUsers.contains(userForTeam)) {
-				userForTeam.removeTeam(team);
-				userRepo.save(userForTeam);
+		for(User dbUser : dbUsers) {
+			if(dbUser.getIsActive() && ! uiUsers.contains(dbUser)) {
+				dbUser.removeTeam(team);
+				userRepo.save(dbUser);
+			}
+		}
+	}
+
+	private void checkUserlistForEmptyId(List<User> chosenUsers) throws EmptyIdException {
+		// Error if false user is passed
+		for(User chosenUser : chosenUsers) {
+			if(chosenUser.getIdUser() == null) {
+				throw new EmptyIdException("Aktualisierung fehlgeschlagen. Daten Fehlerhaft.");
 			}
 		}
 	}

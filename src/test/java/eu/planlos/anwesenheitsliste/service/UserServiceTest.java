@@ -1,6 +1,7 @@
 package eu.planlos.anwesenheitsliste.service;
 
-import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Optional;
@@ -13,6 +14,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import eu.planlos.anwesenheitsliste.model.User;
 import eu.planlos.anwesenheitsliste.model.UserRepository;
@@ -35,6 +37,9 @@ public class UserServiceTest {
 	
 	@Mock
 	private UserRepository userRepo;
+	
+	@Mock
+	private BCryptPasswordEncoder bCryptPasswordEncoder;
 
 	private static final String TESTLOGINNAME = "My Loginname";
 	private static final String TESTPASSWORD = "secret";
@@ -90,7 +95,7 @@ public class UserServiceTest {
 	@Test(expected = PasswordLengthException.class)
 	public final void editedUserPasswordNotProper_throwsPasswordLengthException() throws DuplicateKeyException, PasswordLengthException, UnknownUserSaveException {
 		String unsafePassword = "";
-		for(int i=0 ; i<User.passwordMinLength; i++) {
+		for(int i=0 ; i<User.passwordMinLength-1; i++) {
 			unsafePassword+="*";
 		}
 		User user = new User("Test", "User", TESTLOGINNAME, "user@example.com", unsafePassword, true, false);
@@ -98,20 +103,48 @@ public class UserServiceTest {
 		
 		userService.save(user);
 	}
-	
+		
 	@Test
-	public final void editedUserProperPassword_savesinDb() throws DuplicateKeyException, PasswordLengthException, UnknownUserSaveException {
+	public final void editedUserEmptyPassword_savesUserWithLoadedPassword() throws DuplicateKeyException, PasswordLengthException, UnknownUserSaveException {
 		String emptyPassword = "";
 		User user = new User("Test", "User", TESTLOGINNAME, "user@example.com", emptyPassword, true, false);
 		user.setIdUser((long) 1337);
 		
-		when(userRepo.save(user)).thenReturn(user);
 		when(userRepo.findById(user.getIdUser())).thenReturn(Optional.of(user));
 		
-		User savedUser = userService.save(user);
-		
-		assertNotNull(savedUser);
+		userService.save(user);
+
+		verify(userRepo, times(1)).findById(user.getIdUser());
+		verify(userRepo, times(1)).save(user);
 	}
 	
+	@Test
+	public final void editedUserProperPassword_savesUserWithEncodedPassword() throws DuplicateKeyException, PasswordLengthException, UnknownUserSaveException {
+		String safePassword = "";
+		for(int i=0 ; i<User.passwordMinLength; i++) {
+			safePassword+="*";
+		}
+		
+		User user = new User("Test", "User", TESTLOGINNAME, "user@example.com", safePassword, true, false);
+		user.setIdUser((long) 1337);
+			
+		userService.save(user);
+		
+		verify(bCryptPasswordEncoder, times(1)).encode(safePassword);
+		verify(userRepo, times(1)).save(user);
+	}
 	
+	@Test
+	public final void addedUserProperPassword_savesUserWithEncodedPassword() throws DuplicateKeyException, PasswordLengthException, UnknownUserSaveException {
+		String safePassword = "";
+		for(int i=0 ; i<User.passwordMinLength; i++) {
+			safePassword+="*";
+		}		User user = new User("Test", "User", TESTLOGINNAME, "user@example.com", safePassword, true, false);
+		user.setIdUser((long) 1337);
+			
+		userService.save(user);
+		
+		verify(bCryptPasswordEncoder, times(1)).encode(safePassword);
+		verify(userRepo, times(1)).save(user);
+	}
 }

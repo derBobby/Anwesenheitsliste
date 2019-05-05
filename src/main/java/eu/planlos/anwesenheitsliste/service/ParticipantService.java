@@ -1,6 +1,7 @@
 package eu.planlos.anwesenheitsliste.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.validation.Valid;
 
@@ -10,10 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
+import eu.planlos.anwesenheitsliste.model.Meeting;
 import eu.planlos.anwesenheitsliste.model.Participant;
 import eu.planlos.anwesenheitsliste.model.ParticipantRepository;
 import eu.planlos.anwesenheitsliste.model.Team;
-import eu.planlos.anwesenheitsliste.model.Meeting;
 import eu.planlos.anwesenheitsliste.model.exception.EmptyIdException;
 
 @Service
@@ -45,10 +46,10 @@ public class ParticipantService {
 		return (List<Participant>) participantRepo.findAll();
 	}
 	
-	//TODO throws doesnotexist?
 	public Participant loadParticipant(Long idParticipant) {
 		logger.debug("Lade Teilnehmer mit id " + idParticipant);
-		return participantRepo.findById(idParticipant).get();
+		Optional<Participant> oParticipant = participantRepo.findById(idParticipant);	
+		return oParticipant.get();
 	}
 	
 	public List<Participant> loadParticipantsForTeam(Long idTeam) {
@@ -56,31 +57,44 @@ public class ParticipantService {
 		return participantRepo.findAllByTeamsIdTeam(idTeam);
 	}
 	
-	//TODO errors here probably
-	//TODO logging
+	//TODO TESTS !!!!
+	/**
+	 * Updates relation for participant to the team. Participants not active will be ignored.
+	 * @param team containing the users to update their ralation
+	 * @throws EmptyIdException
+	 */
 	public void updateTeamForParticipants(Team team) throws EmptyIdException {
 
-		List<Participant> chosenParticipants = team.getParticipants();
+		List<Participant> uiParticipants = team.getParticipants();
 		
-		for(Participant chosenParticipant : chosenParticipants) {
-			if(chosenParticipant.getIdParticipant() == null) {
+		checkParticipantListForEmptyId(uiParticipants);
+
+		logger.debug("Füge dem übergebenen Teilnehmern das Team hinzu, wenn notwendig");
+		List<Participant> dbParticipants = participantRepo.findAllByTeamsIdTeam(team.getIdTeam());
+		
+		for(Participant uiParticipant : uiParticipants) {
+			if(uiParticipant.getIsActive() && ! dbParticipants.contains(uiParticipant)) {
+				logger.debug("Füge Team zu Teilnehmer hinzu: "+ uiParticipant.getIdParticipant());
+				uiParticipant.addTeam(team);
+				participantRepo.save(uiParticipant);
+			}
+		}
+
+		logger.debug("Entferne dem Teilnehmer aus der Datenbank das Team, wenn notwendig");
+		for(Participant dbParticipant : dbParticipants) {
+			if(dbParticipant.getIsActive() && ! uiParticipants.contains(dbParticipant)) {
+				logger.debug("Entferne Team von Teilnehmer: "+ dbParticipant.getIdParticipant());
+				dbParticipant.removeTeam(team);
+				participantRepo.save(dbParticipant);
+			}
+		}
+	}
+
+	private void checkParticipantListForEmptyId(List<Participant> uiParticipants) throws EmptyIdException {
+		logger.debug("Prüfe Übergebene Teilnehmer auf idParticipant=Null");
+		for(Participant uiParticipant : uiParticipants) {
+			if(uiParticipant.getIdParticipant() == null) {
 				throw new EmptyIdException("Aktualisierung fehlgeschlagen. Daten Fehlerhaft.");
-			}
-		}
-		
-		List<Participant> participantsForTeam = participantRepo.findAllByTeamsIdTeam(team.getIdTeam());
-		
-		for(Participant chosenParticipant : chosenParticipants) {
-			if(chosenParticipant.getIsActive() && ! participantsForTeam.contains(chosenParticipant)) {
-				chosenParticipant.addTeam(team);
-				participantRepo.save(chosenParticipant);
-			}
-		}
-		
-		for(Participant participantForTeam : participantsForTeam) {
-			if(participantForTeam.getIsActive() && ! chosenParticipants.contains(participantForTeam)) {
-				participantForTeam.removeTeam(team);
-				participantRepo.save(participantForTeam);
 			}
 		}
 	}

@@ -30,6 +30,7 @@ public class TeamService {
 			logger.debug("Gruppe speichern nicht möglich: Der Gruppenname wird bereits verwendet");
 			throw new DuplicateKeyException("Der Gruppenname wird bereits verwendet");
 		}
+		
 		logger.debug("Speichere Gruppe");		
 		return teamRepo.save(team);
 	}

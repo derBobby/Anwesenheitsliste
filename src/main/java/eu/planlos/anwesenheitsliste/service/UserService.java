@@ -101,39 +101,10 @@ public class UserService {
 		return userRepo.findById(idUser).get();
 	}
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	//TODO probably not working
-	//TODO LOGGING
+	//TODO TESTS !!!!
 	/**
-	 * Updates relation between team and users. Users not active will be ignored.
-	 * @param team
-	 * @param chosenUsers
+	 * Updates relation for user to the team. Users not active will be ignored.
+	 * @param team containing the users to update their ralation
 	 * @throws EmptyIdException
 	 */
 	public void updateTeamForUsers(Team team) throws EmptyIdException {
@@ -142,18 +113,21 @@ public class UserService {
 		
 		checkUserlistForEmptyId(uiUsers);
 		
-		// For all active users who were added but are not yet linked to the team
+		logger.debug("Füge dem übergebenen Benutzer das Team hinzu, wenn notwendig");
 		List<User> dbUsers = userRepo.findAllByTeamsIdTeam(team.getIdTeam());
+		
 		for(User uiUser : uiUsers) {
 			if(uiUser.getIsActive() && ! dbUsers.contains(uiUser)) {
+				logger.debug("Füge Team zu Benutzer hinzu: "+ uiUser.getIdUser());
 				uiUser.addTeam(team);
 				userRepo.save(uiUser);
 			}
 		}
 		
-		// For all active users in DB check if are chosen but should not be
+		logger.debug("Entferne dem Benutzer aus der Datenbank das Team, wenn notwendig");
 		for(User dbUser : dbUsers) {
 			if(dbUser.getIsActive() && ! uiUsers.contains(dbUser)) {
+				logger.debug("Entferne Team von Benutzer: "+ dbUser.getIdUser());
 				dbUser.removeTeam(team);
 				userRepo.save(dbUser);
 			}
@@ -161,7 +135,7 @@ public class UserService {
 	}
 
 	private void checkUserlistForEmptyId(List<User> chosenUsers) throws EmptyIdException {
-		// Error if false user is passed
+		logger.debug("Prüfe Übergebene Benutzer auf idUser=Null");
 		for(User chosenUser : chosenUsers) {
 			if(chosenUser.getIdUser() == null) {
 				throw new EmptyIdException("Aktualisierung fehlgeschlagen. Daten Fehlerhaft.");

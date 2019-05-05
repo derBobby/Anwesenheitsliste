@@ -127,8 +127,10 @@ public class TeamDetailController {
 		try {
 			Team savedTeam = teamService.saveTeam(team);
 
-			//TODO what happens in this two methods?
+			// Set or unset the team reference for the users
 			userService.updateTeamForUsers(team);
+			
+			// Set or unset the team reference for the participants
 			participantService.updateTeamForParticipants(team);
 			
 			if(isAdmin) {

@@ -1,9 +1,12 @@
 package eu.planlos.anwesenheitsliste.service;
 
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.Before;
@@ -16,8 +19,10 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import eu.planlos.anwesenheitsliste.model.Team;
 import eu.planlos.anwesenheitsliste.model.User;
 import eu.planlos.anwesenheitsliste.model.UserRepository;
+import eu.planlos.anwesenheitsliste.model.exception.EmptyIdException;
 import eu.planlos.anwesenheitsliste.model.exception.PasswordLengthException;
 import eu.planlos.anwesenheitsliste.model.exception.UnknownUserSaveException;
 
@@ -146,5 +151,26 @@ public class UserServiceTest {
 		
 		verify(bCryptPasswordEncoder, times(1)).encode(safePassword);
 		verify(userRepo, times(1)).save(user);
+	}
+	
+	@Test(expected = EmptyIdException.class)
+	public final void newUserWithoutIdGiven_throwsException() throws EmptyIdException {
+		Team testTeam = new Team("Testteam");
+		User newUser = new User();
+		List<User> userList = new ArrayList<>();
+		userList.add(newUser);
+		testTeam.setUsers(userList);
+		
+		userService.updateTeamForUsers(testTeam);		
+	}
+	
+	@Test
+	public final void inactiveUserAddedToTeam_UserIsIgnored() {
+		fail();
+	}
+	
+	@Test
+	public final void inactiveUserRemovedFromTeam_UserIsIgnored() {
+		fail();
 	}
 }

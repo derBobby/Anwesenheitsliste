@@ -111,6 +111,7 @@ public class UserService {
 		
 		List<User> uiUsers = team.getUsers();
 		
+		// throws exception if new user is passed
 		checkUserlistForEmptyId(uiUsers);
 		
 		logger.debug("Füge dem übergebenen Benutzer das Team hinzu, wenn notwendig");

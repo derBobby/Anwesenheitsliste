@@ -67,6 +67,7 @@ public class ParticipantService {
 
 		List<Participant> uiParticipants = team.getParticipants();
 		
+		// throws exception if new participant is passed
 		checkParticipantListForEmptyId(uiParticipants);
 
 		logger.debug("Füge dem übergebenen Teilnehmern das Team hinzu, wenn notwendig");

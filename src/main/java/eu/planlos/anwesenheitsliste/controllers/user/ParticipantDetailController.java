@@ -85,7 +85,7 @@ public class ParticipantDetailController {
 
 		String loginName = securityService.getLoginName(session);
 		
-		if(participant.getTeams().isEmpty()) {
+		if(participant.getTeams() == null) {
 			//TODO go in try ant throw error instead?
 			//TODO NEW set own error for attribute "team"?
 			logger.debug("Benutzer \"" + loginName + "\" hat versucht den Teilnehmer id=" + participant.getIdParticipant() + " ohne Gruppe zu speichern.");
@@ -101,11 +101,11 @@ public class ParticipantDetailController {
 			return RES_PARTICIPANT; 
 		}
 		
-		boolean isAddTeam = participant.getIdParticipant() == null;
+		boolean isNewParticipant = participant.getIdParticipant() == null;
 		boolean isAdmin = securityService.isAdmin(session);
 		
 		// Admin is always allowed, others if adding new or edited with permission
-		if(isAddTeam && isNotAuthorizedForParticipant(session, participant.getIdParticipant()) ) {
+		if(! isNewParticipant && isNotAuthorizedForParticipant(session, participant.getIdParticipant()) ) {
 			logger.error("Benutzer \"" + loginName + "\" hat unauthorisiert versucht auf Teilnehmer mit id=" + participant.getIdParticipant() + " zuzugreifen.");
 			return "redirect:" + URL_ERROR_403;
 		}
@@ -117,9 +117,9 @@ public class ParticipantDetailController {
 			Participant savedParticipant = participantService.saveParticipant(participant);
 
 			if(isAdmin && isNotAuthorizedForParticipant(session, participant.getIdParticipant()) ) {
-				return "redirect:" + URL_PARTICIPANTLIST + savedParticipant.getIdParticipant();
+				return "redirect:" + URL_PARTICIPANTLISTFULL + savedParticipant.getIdParticipant();
 			}
-			return "redirect:" + URL_PARTICIPANTLISTFULL + savedParticipant.getIdParticipant();
+			return "redirect:" + URL_PARTICIPANTLIST + savedParticipant.getIdParticipant();
 			
 		} catch (DuplicateKeyException e) {
 			logger.error("Benutzer \"" + loginName + "\" hat versucht den Teilnehmer id=" + participant.getIdParticipant() + " zu speichern: " + e.getMessage());

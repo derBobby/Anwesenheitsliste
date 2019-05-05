@@ -38,6 +38,9 @@
 						</div>
 						<div class="form-group">
             				<label>Teilnehmer in Gruppen</label>
+            				<div th:if="${teams} and ${#lists.isEmpty(teams)}">
+            					<span th:class="text-warning">Du hast keine Berechtigung zu irgendeiner Gruppe! :-(</span>
+            				</div>
 							<div th:each="team : ${teams}" class="custom-control custom-checkbox">
 						  		<input type="checkbox" th:id="${#ids.seq('team')}" th:field="*{teams}" th:value="${team.idTeam}" class="custom-control-input" />
 						  		<label th:for="${#ids.prev('team')}" class="custom-control-label" th:inline="text">[[${team.teamName}]]</label>

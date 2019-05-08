@@ -27,6 +27,15 @@ public class ParticipantService {
 		
 	public Participant saveParticipant(Participant participant) throws DuplicateKeyException {
 		
+		// Exception if new and constraints violated taken
+		checkUniqueConstraintsForNewParticipant(participant);
+		
+		logger.debug("Teilnehmer speichern");		
+		return participantRepo.save(participant);
+	}
+
+	private void checkUniqueConstraintsForNewParticipant(Participant participant) throws DuplicateKeyException {
+
 		if(participant.getIdParticipant() == null) {
 			String firstName = participant.getFirstName();
 			String lastName = participant.getLastName();
@@ -37,8 +46,6 @@ public class ParticipantService {
 				throw new DuplicateKeyException("Die Kombination Vor- und Nachname wird bereits verwendet");
 			}
 		}
-		logger.debug("Speichere Teilnehmer");		
-		return participantRepo.save(participant);
 	}
 	
 	public List<Participant> loadAllParticipants() {
@@ -78,7 +85,9 @@ public class ParticipantService {
 				logger.debug("Füge Team zu Teilnehmer hinzu: "+ uiParticipant.getIdParticipant());
 				uiParticipant.addTeam(team);
 				participantRepo.save(uiParticipant);
+				continue;
 			}
+			logger.debug("Ignoriere Teilnehmer: "+ uiParticipant.getIdParticipant());
 		}
 
 		logger.debug("Entferne dem Teilnehmer aus der Datenbank das Team, wenn notwendig");
@@ -87,7 +96,9 @@ public class ParticipantService {
 				logger.debug("Entferne Team von Teilnehmer: "+ dbParticipant.getIdParticipant());
 				dbParticipant.removeTeam(team);
 				participantRepo.save(dbParticipant);
+				continue;
 			}
+			logger.debug("Ignoriere Teilnehmer: "+ dbParticipant.getIdParticipant());
 		}
 	}
 

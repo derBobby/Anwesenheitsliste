@@ -34,7 +34,7 @@ public class UserService {
 		if(isNewUser) {
 			logger.debug("Benutzer hinzufügen");
 
-			// Exception if credentials taken
+			// Exception if new and credentials taken
 			checkUniqueConstraintsForNewUser(user); //TODO throw in method necessary?
 			// Exception if password not proper
 			checkProperPassword(user);
@@ -101,7 +101,6 @@ public class UserService {
 		return userRepo.findById(idUser).get();
 	}
 
-	//TODO TESTS !!!!
 	/**
 	 * Updates relation for user to the team. Users not active will be ignored.
 	 * @param team containing the users to update their ralation
@@ -122,7 +121,9 @@ public class UserService {
 				logger.debug("Füge Team zu Benutzer hinzu: "+ uiUser.getIdUser());
 				uiUser.addTeam(team);
 				userRepo.save(uiUser);
+				continue;
 			}
+			logger.debug("Ignoriere Benutzer: "+ uiUser.getIdUser());
 		}
 		
 		logger.debug("Entferne dem Benutzer aus der Datenbank das Team, wenn notwendig");
@@ -131,7 +132,9 @@ public class UserService {
 				logger.debug("Entferne Team von Benutzer: "+ dbUser.getIdUser());
 				dbUser.removeTeam(team);
 				userRepo.save(dbUser);
+				continue;
 			}
+			logger.debug("Ignoriere Benutzer: "+ dbUser.getIdUser());
 		}
 	}
 

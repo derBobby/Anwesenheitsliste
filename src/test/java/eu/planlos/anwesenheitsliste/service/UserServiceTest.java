@@ -1,6 +1,5 @@
 package eu.planlos.anwesenheitsliste.service;
 
-import static org.junit.Assert.fail;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -153,6 +152,10 @@ public class UserServiceTest {
 		verify(userRepo, times(1)).save(user);
 	}
 	
+	/*
+	 * Test für Methode: updateTeamForUsers
+	 */
+	
 	@Test(expected = EmptyIdException.class)
 	public final void newUserWithoutIdGiven_throwsException() throws EmptyIdException {
 		Team testTeam = new Team("Testteam");
@@ -165,12 +168,71 @@ public class UserServiceTest {
 	}
 	
 	@Test
-	public final void inactiveUserAddedToTeam_UserIsIgnored() {
-		fail();
+	public final void inactiveUserSubmitted_UserIsIgnored() throws EmptyIdException {
+		User inactiveUser = new User();
+		inactiveUser.setIdUser(1L);
+		inactiveUser.setIsActive(false);
+		List<User> userList = new ArrayList<>();
+		userList.add(inactiveUser);
+		Team team = new Team();
+		team.setUsers(userList);
+		
+		userService.updateTeamForUsers(team);
+		
+		verify(userRepo, times(0)).save(inactiveUser);
 	}
 	
 	@Test
-	public final void inactiveUserRemovedFromTeam_UserIsIgnored() {
-		fail();
+	public final void userAdditionallyAdded_UserIsSaved() throws EmptyIdException {
+		User uiUser = new User();
+		uiUser.setIdUser(1L);
+		uiUser.setIsActive(true);
+		List<User> uiUserList = new ArrayList<>();
+		uiUserList.add(uiUser);
+		Team team = new Team();
+		team.setUsers(uiUserList);
+		
+		List<User> dbUserList = new ArrayList<>();
+		
+		when(userRepo.findAllByTeamsIdTeam(team.getIdTeam())).thenReturn(dbUserList);
+		
+		userService.updateTeamForUsers(team);
+		
+		verify(userRepo, times(1)).save(uiUser);
+	}
+	
+	@Test
+	public final void userAlreadyAdded_UserIsNotSaved() throws EmptyIdException {
+		User uiUser = new User();
+		uiUser.setIdUser(1L);
+		uiUser.setIsActive(true);
+		List<User> uiUserList = new ArrayList<>();
+		uiUserList.add(uiUser);
+		Team team = new Team();
+		team.setUsers(uiUserList);
+				
+		when(userRepo.findAllByTeamsIdTeam(team.getIdTeam())).thenReturn(uiUserList);
+		
+		userService.updateTeamForUsers(team);
+		
+		verify(userRepo, times(0)).save(uiUser);
+	}
+	
+	@Test
+	public final void userAdditionallyRemoved_UserIsNotSaved() throws EmptyIdException {
+		List<User> uiUserList = new ArrayList<>();
+		Team team = new Team();
+		team.setUsers(uiUserList);
+
+		User dbUser = new User();
+		dbUser.setIsActive(true);
+		List<User> dbUserList = new ArrayList<>();
+		dbUserList.add(dbUser);
+		
+		when(userRepo.findAllByTeamsIdTeam(team.getIdTeam())).thenReturn(dbUserList);
+		
+		userService.updateTeamForUsers(team);
+		
+		verify(userRepo, times(1)).save(dbUser);
 	}
 }

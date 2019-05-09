@@ -125,12 +125,12 @@ public class TeamDetailController {
 		 * LOGIC
 		 */
 		try {
+			// Team doesn't know the P's or U's
 			Team savedTeam = teamService.saveTeam(team);
 
-			// Set or unset the team reference for the users
+			// Users must get the team set because they own the relation
 			userService.updateTeamForUsers(team);
-			
-			// Set or unset the team reference for the participants
+			// Participants must get the team set because they own the relation
 			participantService.updateTeamForParticipants(team);
 			
 			if(isAdmin) {
@@ -174,7 +174,6 @@ public class TeamDetailController {
 			bf.fill(model, auth, STR_MODULE, STR_TITLE_ADD_TEAM);
 		}
 		
-		//TODO really all??
 		model.addAttribute("users", userService.loadAllUsers());
 		model.addAttribute("participants", participantService.loadAllParticipants());
 

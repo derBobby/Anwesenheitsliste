@@ -35,7 +35,7 @@ public class UserService {
 			logger.debug("Benutzer hinzufügen");
 
 			// Exception if new and credentials taken
-			checkUniqueConstraintsForNewUser(user); //TODO throw in method necessary?
+			checkUniqueConstraintsForNewUser(user);
 			// Exception if password not proper
 			checkProperPassword(user);
 			

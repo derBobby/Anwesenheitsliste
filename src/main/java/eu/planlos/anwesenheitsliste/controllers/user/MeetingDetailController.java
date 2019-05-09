@@ -171,13 +171,13 @@ public class MeetingDetailController {
 			return "redirect:" + URL_ERROR_403;
 		}
 
-
 		/*
 		 * LOGIC
 		 */
-		participantService.correctParticipantsInMeeting(meeting);
+		// Meeting owns relationship so Participants must be corrected before saving meeting
+		meetingService.correctInactiveParticipants(meeting);		
 		meeting = meetingService.saveMeeting(meeting);
-		
+
 		return "redirect:" + URL_MEETINGLIST + meeting.getTeam().getIdTeam() + DELIMETER + meeting.getIdMeeting();
 	}
 	

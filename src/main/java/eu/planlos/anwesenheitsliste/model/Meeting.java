@@ -46,7 +46,7 @@ public class Meeting {
 	 */
 	public Meeting() {
 		super();
-		participants = new ArrayList<Participant>();
+		participants = new ArrayList<>();
 	}
 
 	/**

@@ -3,15 +3,12 @@ package eu.planlos.anwesenheitsliste.service;
 import java.util.List;
 import java.util.Optional;
 
-import javax.validation.Valid;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
-import eu.planlos.anwesenheitsliste.model.Meeting;
 import eu.planlos.anwesenheitsliste.model.Participant;
 import eu.planlos.anwesenheitsliste.model.ParticipantRepository;
 import eu.planlos.anwesenheitsliste.model.Team;
@@ -64,7 +61,6 @@ public class ParticipantService {
 		return participantRepo.findAllByTeamsIdTeam(idTeam);
 	}
 	
-	//TODO TESTS !!!!
 	/**
 	 * Updates relation for participant to the team. Participants not active will be ignored.
 	 * @param team containing the users to update their ralation
@@ -109,23 +105,5 @@ public class ParticipantService {
 				throw new EmptyIdException("Aktualisierung fehlgeschlagen. Daten Fehlerhaft.");
 			}
 		}
-	}
-
-	//TODO errors here probably
-	//TODO logging
-	public void correctParticipantsInMeeting(@Valid Meeting meeting) {
-	
-		List<Participant> givenParticipants = meeting.getParticipants();
-		
-		// 1.) HTML currently doesn't send disabled checkboxes so we need to correct these
-		// 2.) Disabled checkboxes (=inactive participants) can be manipulated so that:
-		// ----> unchecked could be checked -> remove db-inactive from POST
-		// ----> checked could be unchecked -> find in POST missing and insert from db
-		
-		List<Participant> remove = participantRepo.findAllByTeamsContainingAndIsActive(meeting.getTeam(), false);
-		givenParticipants.removeAll(remove);
-		
-		List<Participant> add = participantRepo.findAllByMeetingsContainingAndIsActive(meeting, false);
-		givenParticipants.addAll(add);
 	}
 }

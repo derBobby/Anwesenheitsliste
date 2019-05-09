@@ -2,9 +2,9 @@ package eu.planlos.anwesenheitsliste;
 
 import java.text.ParseException;
 import java.util.Calendar;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -101,6 +101,10 @@ public class SampleDataCreater implements ApplicationRunner {
 
 		u5.addTeam(team1);
 		u5.addTeam(team2);
+
+		u6.addTeam(team1);
+		u6.addTeam(team2);
+		u6.addTeam(team3);
 		
 		userRepo.save(u1);
 		userRepo.save(u2);

@@ -47,7 +47,7 @@ public class MailService {
 			mailHelper = new MimeMessageHelper(mail, true, CharsetNames.UTF_8);
 			mailHelper.setSubject("Fehler in Anwesenheitsliste: " + title);
 			mailHelper.setFrom(mailSender);
-			mailHelper.setTo(mailSender);
+			mailHelper.setTo(mailRecipient);
 			
 			String htmlBody =
 							"<h1>Nachricht</h1><br/><br/>"

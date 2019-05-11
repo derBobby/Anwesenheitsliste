@@ -34,6 +34,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
+import eu.planlos.anwesenheitsliste.ApplicationProfile;
+
 @Service
 public class BodyFillerService implements EnvironmentAware {
 
@@ -45,7 +47,13 @@ public class BodyFillerService implements EnvironmentAware {
 	public void fill(Model model, Authentication auth, String module, String title) {
 
 		List<String> profiles = Arrays.asList(environment.getActiveProfiles());
-		if (profiles.contains("DEV")) {
+		boolean isDevProfile = profiles.contains(ApplicationProfile.DEV_PROFILE);
+		
+		/*
+		 * Texts
+		 * =======================================================================
+		 */
+		if (isDevProfile) {
 			logger.debug("Preparing model for DEV profile.");
 			model.addAttribute("isDevProfile", true);
 		}
@@ -53,11 +61,11 @@ public class BodyFillerService implements EnvironmentAware {
 		model.addAttribute("module", module);
 		model.addAttribute("title", title);
 
-		fillMenu(model, auth);
-	}
-
-	private void fillMenu(Model model, Authentication auth) {
-
+		/*
+		 * URLs
+		 * =======================================================================
+		 */
+		
 		model.addAttribute("URL_HOME", URL_HOME);
 
 		/*
@@ -78,10 +86,10 @@ public class BodyFillerService implements EnvironmentAware {
 		model.addAttribute("URL_PERMISSIONSOVERVIEW", URL_PERMISSIONSOVERVIEW);
 		model.addAttribute("URL_PARTICIPATIONOVERVIEW", URL_PARTICIPATIONOVERVIEW);
 
-		// URLs for DEV profile
-		List<String> profiles = Arrays.asList(environment.getActiveProfiles());
-
-		if (profiles.contains("DEV")) {
+		/*
+		 * URLs for DEV profile
+		 */
+		if (isDevProfile) {
 			logger.debug("Preparing menu model for DEV profile.");
 			model.addAttribute("URL_FA_TEST", URL_FA_TEST);
 			model.addAttribute("URL_403_TEST", URL_403_TEST);

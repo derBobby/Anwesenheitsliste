@@ -10,8 +10,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import eu.planlos.anwesenheitsliste.ApplicationProfile;
+
 @Controller
-@Profile(value = "DEV")
+@Profile(value = ApplicationProfile.DEV_PROFILE)
 public class Always500Controller {
 	
 	private static final Logger logger = LoggerFactory.getLogger(Always500Controller.class);

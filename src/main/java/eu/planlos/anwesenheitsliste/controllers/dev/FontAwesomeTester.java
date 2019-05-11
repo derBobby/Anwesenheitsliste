@@ -12,10 +12,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import eu.planlos.anwesenheitsliste.ApplicationProfile;
 import eu.planlos.anwesenheitsliste.service.BodyFillerService;
 
 @Controller
-@Profile(value = "DEV")
+@Profile(value = ApplicationProfile.DEV_PROFILE)
 public class FontAwesomeTester {
 
 	private static final Logger logger = LoggerFactory.getLogger(FontAwesomeTester.class);

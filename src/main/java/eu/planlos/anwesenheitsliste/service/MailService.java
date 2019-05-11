@@ -2,7 +2,6 @@ package eu.planlos.anwesenheitsliste.service;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-
 import org.apache.commons.compress.utils.CharsetNames;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,10 +39,11 @@ public class MailService {
 		
 		logger.debug("Sending email with error notification.");
 		
-		MimeMessage mail = javaMailSender.createMimeMessage();
 		MimeMessageHelper mailHelper;
+		MimeMessage mail = javaMailSender.createMimeMessage();
 		
 		try {
+			
 			mailHelper = new MimeMessageHelper(mail, true, CharsetNames.UTF_8);
 			mailHelper.setSubject("Fehler in Anwesenheitsliste: " + title);
 			mailHelper.setFrom(mailSender);

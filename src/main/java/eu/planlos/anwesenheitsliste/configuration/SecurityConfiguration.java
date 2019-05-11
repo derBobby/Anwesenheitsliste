@@ -45,7 +45,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		        
+		
+		// H2-Console uses iFrame
+		http.headers().frameOptions().disable();
+
+		//
 		http.csrf().disable()
 		
 			.sessionManagement()
@@ -89,14 +93,19 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 									 
 				// Technical like actuator
 				.antMatchers(URL_AREA_ACTUATOR + "/**")
-					 .hasAnyAuthority(ApplicationRole.ROLE_ADMIN)
+					.hasAnyAuthority(ApplicationRole.ROLE_ADMIN)
+					 
+				 /*
+				  * H2-Console TODO
+				  */
+				 .antMatchers("/console/**")
+				 	.hasAnyAuthority(ApplicationRole.ROLE_ADMIN)
 
 				/*
 				 * DENY REMAINING
 				 */
 				.antMatchers("/**")
 					.denyAll()
-						
 					
 			// Login procedure
 			.and().formLogin()

@@ -1,3 +1,6 @@
 /application-PROD.properties
 /application-TEST.properties
 /application-DEV.properties
+/anwesenheit-dev.trace.db
+/anwesenheit-dev.mv.db
+/application-H2.properties

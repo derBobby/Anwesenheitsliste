@@ -57,4 +57,3 @@ public class SecurityService {
 		return (String) session.getAttribute(SessionAttributes.LOGINNAME);
 	}
 }
-

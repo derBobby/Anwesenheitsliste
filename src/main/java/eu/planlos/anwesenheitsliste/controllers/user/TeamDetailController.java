@@ -59,6 +59,7 @@ public class TeamDetailController {
 	@Autowired
 	private SecurityService securityService;
 	
+	// All
 	@RequestMapping(path = URL_TEAMEDIT + "{idTeam}", method = RequestMethod.GET)
 	public String edit(Model model, Authentication auth, HttpSession session, @PathVariable Long idTeam) {
 
@@ -79,6 +80,7 @@ public class TeamDetailController {
 		return RES_TEAM;
 	}
 	
+	// Admin
 	@RequestMapping(path = URL_TEAMADD, method = RequestMethod.GET)
 	public String add(Model model, Authentication auth, Principal principal, HttpSession session) {
 
